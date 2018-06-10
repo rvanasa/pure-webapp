@@ -3,7 +3,7 @@ module.exports = function BannerService()
 	this.queue = [];
 	this.current = null;
 	
-	this.current = {type:'warning', message:'Hi! I\'m a banner!'};
+	// this.current = {type:'info',message:'Hi! I\'m a banner!'};////
 	
 	this.add = function(banner)
 	{
