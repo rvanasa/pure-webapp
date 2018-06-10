@@ -1,3 +1,8 @@
+@keyframes logo-animated-start {
+	0% {transform: scaleY(0) rotate(-20deg)}
+	50% {transform: scaleY(.9) rotate(-5deg)}
+}
+
 @keyframes logo-animated-outer {
 	0% {transform: rotate(0) scale(.7)}
 	50% {transform: rotate(180deg) scale(.8)}
@@ -17,6 +22,10 @@ $brand-color: #5DB4E8;
 	height: 50vw;
 	max-width: 180px;
 	max-height: 180px;
+}
+
+.logo-animated {
+	animation: logo-animated-start 2s ease-in-out;
 }
 
 .logo-animated-outer {
