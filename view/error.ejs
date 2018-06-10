@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Crikey!</title>
+
+<%- include('common/head.ejs') %>
+
+</head>
+<body>
+	<div class="text-center pt-5">
+		<br>
+		<h3>Well, that was unexpected.</h3>
+		<h1><%= status %></h1>
+		<p><%= error.message %></p>
+		<!--<br>-->
+		<!--<a href="mailto:[]?subject=Error: <%= error.message %>&body=What you were doing when the error occurred: ">Let us know what happened</a>-->
+	</div>
+</body>
+</html>

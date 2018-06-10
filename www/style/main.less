@@ -1,0 +1,108 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
+
+:not(.no-transition) {
+	transition: .2s ease-out;
+	transition-property: background, color, opacity, border, box-shadow, transform, max-width, max-height, border-radius;
+}
+
+.no-transition, .no-transition * {
+	transition: none;
+}
+
+:root {
+	
+}
+
+html, body {
+	overflow-x: hidden;
+	width: 100%;
+	font-family: "Source Sans Pro", sans-serif;
+}
+
+textarea {
+	resize: none;
+}
+
+.clickable, .btn, a {
+	cursor: pointer;
+}
+
+.btn:not(.rounded-circle), .badge, input {
+	border-radius: 0 !important;
+}
+
+.btn:hover {
+	transform: scale(1.1);
+	opacity: 1;
+}
+
+.text-thin {
+	font-weight: 300;
+}
+
+.text-label {
+	text-transform: uppercase;
+	letter-spacing: 2px;
+}
+
+.bg-landing {
+	background: url(/assets/img/background.jpg) var(--darker);
+	background-attachment: fixed;
+	background-size: cover;
+	color: #FFF;
+}
+
+.bg-dark {
+	background: var(--dark);
+	color: #FFF;
+}
+
+.bg-darker {
+	background: var(--darker);
+	color: #FFF;
+}
+
+.bg-darkest {
+	background: var(--darkest);
+	color: #FFF;
+}
+
+.bg-dark hr, .bg-darker hr, .bg-darkest hr {
+	border-color: var(--gray-dark);
+}
+
+::selection {
+    background: #DDE;
+    /*color: #444;*/
+    color: #DDE;
+}
+
+.noselect {
+	cursor: default;
+}
+
+.noselect ::selection, .noselect::selection {
+	background: inherit;
+	color: inherit;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #DDD;
+}
+
+::-webkit-scrollbar-track:hover {
+    background: #CCC;
+}
+ 
+::-webkit-scrollbar-thumb {
+    background: #777;
+}
+ 
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
