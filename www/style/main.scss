@@ -1,5 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
 
+@import "branding.scss";
+
 :not(.no-transition) {
 	transition: .2s ease-out;
 	transition-property: background, color, opacity, border, box-shadow, transform, max-width, max-height, border-radius;

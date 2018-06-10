@@ -1,0 +1,41 @@
+@keyframes logo-animated-outer {
+	0% {transform: rotate(0) scale(.7)}
+	50% {transform: rotate(180deg) scale(.8)}
+	100% {transform: rotate(360deg) scale(.7)}
+}
+
+@keyframes logo-animated-inner {
+	0% {transform: scale(.7)}
+	40% {transform: scale(1.05)}
+	100% {transform: scale(.7)}
+}
+
+$brand-color: #5DB4E8;
+
+.logo-animated-large, .logo-animated-large * {
+	width: 50vw;
+	height: 50vw;
+	max-width: 180px;
+	max-height: 180px;
+}
+
+.logo-animated-outer {
+	animation: logo-animated-outer 20s linear infinite;
+	background: $brand-color;
+	box-shadow: 0 0 20px #DDD;
+}
+
+.logo-animated-inner {
+	animation: logo-animated-inner 8s ease-in-out infinite;
+	background: white;
+	box-shadow: 0 0 20px #DDD inset;
+	border-radius: 50%;
+}
+
+.title-main {
+	text-transform: lowercase;
+	font-weight: 200;
+	font-size: 100px;
+	line-height: .5;
+	color: $brand-color;
+}
