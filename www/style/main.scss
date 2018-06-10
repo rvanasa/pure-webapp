@@ -39,7 +39,8 @@ textarea {
 }
 
 .text-thin {
-	font-weight: 300;
+	text-transform: lowercase;
+	font-weight: 200;
 }
 
 .text-label {
@@ -47,30 +48,13 @@ textarea {
 	letter-spacing: 2px;
 }
 
-.bg-landing {
-	background: url(/assets/img/background.jpg) var(--darker);
-	background-attachment: fixed;
-	background-size: cover;
-	color: #FFF;
+.display-main {
+	font-size: 100px;
+	line-height: .5;
 }
 
-.bg-dark {
-	background: var(--dark);
-	color: #FFF;
-}
-
-.bg-darker {
-	background: var(--darker);
-	color: #FFF;
-}
-
-.bg-darkest {
-	background: var(--darkest);
-	color: #FFF;
-}
-
-.bg-dark hr, .bg-darker hr, .bg-darkest hr {
-	border-color: var(--gray-dark);
+.text-primary {
+	color: $brand-color !important;
 }
 
 ::selection {

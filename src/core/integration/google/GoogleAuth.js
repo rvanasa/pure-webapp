@@ -39,7 +39,7 @@ module.exports = function(UserModel, GoogleAccountModel)
 						displayName: profile.displayName,
 						firstName: profile.name.givenName,
 						lastName: profile.name.familyName,
-						iconURL: profile.image ? profile.image.url.replace(/\?sz=[0-9]+$/, '?sz=256') : null,
+						// iconURL: profile.image ? profile.image.url.replace(/\?sz=[0-9]+$/, '?sz=256') : null,
 					});
 					
 					async.parallel([user.save.bind(user), account.save.bind(account)], (err) => done(err, user));

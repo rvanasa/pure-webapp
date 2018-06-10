@@ -5,12 +5,6 @@ module.exports = function(Model, Database)
 		.prop('firstName', String)
 		.prop('lastName', String)
 		.prop('email', String).lowercase()
-		.prop('iconURL', String).opt() // TODO switch to Gravatar
-		.prop('settings', Object).default(getDefaultSettings)
+		// .prop('iconURL', String).opt() // TODO switch to Gravatar
 		.build(Database);
-}
-
-function getDefaultSettings()
-{
-	return {};
 }

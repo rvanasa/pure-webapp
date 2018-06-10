@@ -21,10 +21,11 @@ module.exports = function()
 		
 		prop(name, type, options)
 		{
-			this.prev = Object.assign({
-				type, required: true,
+			this.current = Object.assign({
+				type,
+				required: true,
 			}, options);
-			this.props[name] = this.prev;
+			this.props[name] = this.current;
 			if(typeof type === 'string')
 			{
 				this.ref(type);
@@ -34,40 +35,40 @@ module.exports = function()
 		
 		ref(type)
 		{
-			this.prev.type = mongoose.Schema.Types.ObjectId;
-			this.prev.ref = type;
+			this.current.type = mongoose.Schema.Types.ObjectId;
+			this.current.ref = type;
 			return this;
 		}
 		
 		opt()
 		{
-			this.prev.required = false;
+			this.current.required = false;
 			return this;
 		}
 		
 		lowercase()
 		{
-			this.prev.lowercase = true;
+			this.current.lowercase = true;
 			return this;
 		}
 		
 		array()
 		{
-			delete this.prev.required;
-			this.prev.type = [this.prev.type];
+			delete this.current.required;
+			this.current.type = [this.current.type];
 			return this;
 		}
 		
 		default(provider)
 		{
-			this.prev.default = provider;
+			this.current.default = provider;
 			return this;
 		}
 		
 		unique()
 		{
-			if(!this.prev.index) this.prev.index = {};
-			this.prev.index.unique = true;
+			if(!this.current.index) this.current.index = {};
+			this.current.index.unique = true;
 			return this;
 		}
 		

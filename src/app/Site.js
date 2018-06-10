@@ -23,12 +23,12 @@ module.exports = function(App, API, Config, AuthMiddleware)
 		}));
 	}
 	
-	App.use('/assets', express.static(this.config.basePath + '/www/assets'));
+	App.use(morgan('dev'));
+	
+	App.use('/assets', express.static(this.config.basePath + '/www/assets'), (req, res, next) => res.status(404).send('Unknown asset'));
 	App.use('/api', API);
 	
 	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {user: req.user.toJSON()}));
-	
-	App.use(morgan('dev'));
 	
 	App.use((err, req, res, next) =>
 	{
