@@ -1,7 +1,6 @@
 var webpack = require('webpack');
 
-// var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var CopyPlugin = require('copy-webpack-plugin');
 
 var ENV = process.env.npm_lifecycle_event;
@@ -11,6 +10,7 @@ var srcPath = __dirname + '/www';
 var destPath = __dirname + '/dist';
 
 var config = {
+	mode: isBuild ? 'production' : 'development',
 	entry: {
 		app: srcPath + '/app/main.js',
 		module: srcPath + '/app/module.js',
@@ -26,18 +26,9 @@ var config = {
 	devtool: 'source-map',
 	module: {
 		rules: [{
-			test: /\.less$/,
-			use: ExtractTextPlugin.extract({
-				fallback: 'style-loader',
-				use: ['css-loader?sourceMap', 'less-loader'],
-			}),
+			test: /\.scss/,
+			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 		}, {
-		// 	test: /\.css$/,
-		// 	use: ExtractTextPlugin.extract({
-		// 		fallback: 'style-loader',
-		// 		use: 'css-loader?sourceMap',
-		// 	}),
-		// }, {
 			test: /\.html$/,
 			use: 'html-loader',
 		}, {
@@ -51,18 +42,17 @@ var config = {
 		// new webpack.optimize.UglifyJsPlugin({
 		// 	sourceMap: true,
 		// }),
-		// new HtmlWebpackPlugin({
-		// 	// chunks: ['app'],
-		// 	template: srcPath + '/../view/webapp.ejs',
-		// 	inject: 'head',
-		// }),
-		new ExtractTextPlugin('bundle/[name].css'),
+		new MiniCssExtractPlugin({
+			filename: 'bundle/[name].css',
+		}),
 	],
 };
 
 if(isBuild)
 {
-	config.plugins.push(new CopyPlugin([{from: srcPath}]));
+	config.plugins.push(
+		new CopyPlugin([{from: srcPath}]),
+	);
 }
 
 module.exports = config;

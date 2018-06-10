@@ -1,4 +1,4 @@
-require('../style/main.less');
+require('../style/main.scss');
 
 var camelize = require('camelize');
 
@@ -17,6 +17,8 @@ register('filter', require.context('.', true, /\.filter\.js$/i));
 
 registerSpecial('run', require.context('.', true, /\.run\.js$/i));
 registerSpecial('config', require.context('.', true, /\.config\.js$/i));
+
+requireAll(require.context('.', true, /\.scss/i)); ////
 
 angular.element(() => angular.bootstrap(document, ['app']));
 
