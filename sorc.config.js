@@ -12,7 +12,7 @@ module.exports = {
         path: '/src/lib',
     }, {
         env: 'dev',
-        path: '/src/debug',
+        path: '/src/dev',
         eager: true,
         include: {
             Config: () => require('../config/dev.config'),

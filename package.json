@@ -12,6 +12,7 @@
     "async": "^2.6.1",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
+    "bs58": "^4.0.1",
     "compression": "^1.7.2",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
@@ -23,6 +24,7 @@
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.1.6",
     "promise-events": "^0.1.4",
+    "sha256": "^0.2.0",
     "sorc": "^0.3.14",
     "yargs": "^11.0.0"
   },
