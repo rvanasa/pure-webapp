@@ -4,5 +4,5 @@ module.exports = function($animateProvider, $locationProvider, $compileProvider)
 	
 	$locationProvider.html5Mode(true);
 	
-	$compileProvider.preAssignBindingsEnabled(true);
+	// $compileProvider.preAssignBindingsEnabled(true);
 }

@@ -2,11 +2,10 @@
   "name": "pure-webapp",
   "version": "0.1.0",
   "description": "Pure Learning Webapp",
-  "main": "index.js",
   "repository": "rvanasa/pure-webapp",
   "author": "Pure Learning Team",
   "scripts": {
-    "start": "node index"
+    "start": "node index prod"
   },
   "dependencies": {
     "async": "^2.6.1",

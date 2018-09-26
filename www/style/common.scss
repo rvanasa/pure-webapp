@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
 
-@import "branding.scss";
+$brand-color: #5DB4E8; ///temp
 
 :not(.no-transition) {
 	transition: .2s ease-out;
@@ -29,12 +29,12 @@ textarea {
 	cursor: pointer;
 }
 
-.btn:not(.rounded-circle), .badge, input {
+.btn:not(.rounded-circle), .badge, input, select, textarea {
 	border-radius: 0 !important;
 }
 
 .btn:hover {
-	transform: scale(1.1);
+	// transform: scale(1.1);
 	opacity: 1;
 }
 
@@ -45,12 +45,8 @@ textarea {
 
 .text-label {
 	text-transform: uppercase;
-	letter-spacing: 2px;
-}
-
-.display-main {
-	font-size: 100px;
-	line-height: .5;
+	font-weight: bold;
+	opacity: .6;
 }
 
 .text-primary {
@@ -85,9 +81,9 @@ textarea {
 }
  
 ::-webkit-scrollbar-thumb {
-    background: #777;
+    background: #AAA;
 }
  
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #999;
 }

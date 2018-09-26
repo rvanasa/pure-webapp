@@ -1,3 +1,5 @@
+@import "common.scss";
+
 @keyframes logo-animated-start {
 	0% {transform: scaleY(0) rotate(-20deg)}
 	50% {transform: scaleY(.9) rotate(-5deg)}
@@ -15,7 +17,10 @@
 	100% {transform: scale(.7)}
 }
 
-$brand-color: #5DB4E8;
+.display-main {
+	font-size: 100px;
+	line-height: .5;
+}
 
 .logo-animated-large, .logo-animated-large * {
 	width: 50vw;

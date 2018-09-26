@@ -1,0 +1,59 @@
+<div class="container my-2">
+	<div class="card">
+		<div class="card-body">
+			<h4 ng-bind="$ctrl.question.prompt"></h4>
+			<hr>
+			<div class="btn-group d-flex">
+				<span class="btn w-100"
+					ng-repeat="option in $ctrl.question.options"
+					ng-class="$ctrl.question.selected == $index ? 'btn-primary' : 'btn-outline-primary'"
+					ng-click="$ctrl.question.selected = $index"
+					ng-bind="option">
+				</span>
+			</div>
+			<div ng-show="$ctrl.question.selected != null">
+				<h5 class="text-muted my-3">Importance to me:</h5>
+				<div class="btn-group d-flex">
+					<span class="btn btn-success text-white btn-lg w-100"
+						ng-repeat="rating in [1,2,3,4,5]"
+						ng-style="{opacity:.2+.6*(rating/5)}"
+						ng-click="$ctrl.question.importance = rating; $ctrl.answerQuestion()"
+						ng-bind="rating">
+					</span>
+				</div>
+			</div>
+			<hr>
+			<div class="text-center text-muted">
+				<span class="btn btn-light btn-sm" ng-show="$ctrl.hasPrev()" ng-click="$ctrl.prevQuestion()">
+					<i class="fa fa-caret-left mr-2"></i>
+					Back
+				</span>
+				<span class="btn btn-light btn-sm" ng-click="$ctrl.nextQuestion()">
+					<span ng-if="!$ctrl.hasNext()">Skip</span>
+					<span ng-if="$ctrl.hasNext()">Next</span>
+					<i class="fa fa-caret-right ml-2"></i>
+				</span>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="card">
+		<div class="card-body">
+			<h5>Share your interests to find people you'll enjoy working with:</h5>
+			<hr>
+			<form ng-submit="$ctrl.addInterest()">
+				<div class="input-group">
+					<input type="text" class="form-control" ng-model="$ctrl.newInterest">
+					<div class="input-group-append" ng-if="$ctrl.newInterest">
+						<button class="btn btn-primary"><i class="fa fa-caret-right"></i></button>
+					</div>
+				</div>
+			</form>
+			<div class="mt-2" style="overflow-y:auto; max-height:10em">
+				<div ng-repeat="interest in $ctrl.interests | orderBy:'$index':true">
+					<interest-tag interest="interest"></interest-tag>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

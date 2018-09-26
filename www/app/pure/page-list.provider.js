@@ -11,12 +11,17 @@ module.exports = function PageList($routeProvider)
 			template = '<' + elem + '></' + elem + '>';
 		}
 		
-		var path = page.path || '/' + page.id;
-		
-		$routeProvider.when(path, {
+		var data = {
 			id: page.id,
 			template: template,
-		});
+		};
+		
+		var path = page.path || '/' + page.id;
+		$routeProvider.when(path, data);
+		if(page.params)
+		{
+			$routeProvider.when(path + page.params.map(s => '/' + s).join(''), data);
+		}
 		
 		if(page.default) $routeProvider.otherwise(page.id);
 		

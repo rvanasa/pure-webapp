@@ -11,7 +11,15 @@ module.exports = function BannerService()
 		this.show();
 	}
 	
-	this.close = function(banner)
+	this.addInfo = function(message)
+	{
+		return this.add({
+			type: 'info',
+			message,
+		});
+	}
+	
+	this.close = function()
 	{
 		this.banner = this.queue.shift();
 		this.show();

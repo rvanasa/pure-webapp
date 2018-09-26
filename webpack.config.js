@@ -12,8 +12,8 @@ var destPath = __dirname + '/dist';
 var config = {
 	mode: isBuild ? 'production' : 'development',
 	entry: {
-		app: srcPath + '/app/main.js',
-		module: srcPath + '/app/module.js',
+		login: srcPath + '/app/login.js',
+		webapp: srcPath + '/app/webapp.js',
 	},
 	output: {
 		path: destPath,

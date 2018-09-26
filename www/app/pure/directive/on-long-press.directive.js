@@ -4,7 +4,7 @@ module.exports = function($timeout)
 		restrict: 'A',
 		link($scope, $elem, $attrs)
 		{
-			$elem.bind('touchstart', evt =>
+			$elem.on('touchstart', evt =>
 			{
 				$scope.longPress = true;
 				$timeout(() =>
@@ -16,7 +16,7 @@ module.exports = function($timeout)
 				}, 500);
 			});
 			
-			$elem.bind('touchend', evt =>
+			$elem.on('touchend', evt =>
 			{
 				$scope.longPress = false;
 				if($attrs.onTouchEnd)

@@ -1,10 +1,17 @@
-require('../style/main.scss');
+require('./common');
+
+require('../style/webapp.scss');
 
 var camelize = require('camelize');
 
 var angular = window.angular;
 
-var app = angular.module('app');
+var app = angular.module('pure.app', [
+	'ngAnimate',
+	'ngTouch',
+	'ngRoute',
+	'ui.bootstrap',
+]);
 
 register('component', require.context('.', true, /\.component\.js$/i));
 register('directive', require.context('.', true, /\.directive\.js$/i));
@@ -20,7 +27,7 @@ registerSpecial('config', require.context('.', true, /\.config\.js$/i));
 
 requireAll(require.context('.', true, /\.scss/i)); ////
 
-angular.element(() => angular.bootstrap(document, ['app']));
+angular.element(() => angular.bootstrap(document, ['pure.app']));
 
 function requireAll(context)
 {

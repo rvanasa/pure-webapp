@@ -1,0 +1,14 @@
+<div class="bg-light pb-2">
+	<div class="container">
+		<span class="input-group input-group-lg">
+			<input type="text" class="form-control" ng-model="$ctrl.query">
+			<span class="input"></span>
+			<!--<div class="input-group-append">-->
+			<!--	<span class="btn btn-outline-secondary"><i class="fa fa-angle-right"></i></span>-->
+			<!--</div>-->
+		</span>
+	</div>
+</div>
+<div class="container my-2">
+	<search-result topic="result" selected="$ctrl.selected" ng-repeat="result in $ctrl.results"></search-result>
+</div>
