@@ -32,7 +32,7 @@ module.exports = function(App, API, Config, AuthMiddleware)
 	
 	App.use((err, req, res, next) =>
 	{
-		console.error(err.stack);
+		if(err.stack) console.error(err.stack);
 		res.render('error', {
 			error: err,
 			status: res.statusCode,

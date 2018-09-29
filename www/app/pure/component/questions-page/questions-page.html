@@ -1,0 +1,50 @@
+<div class="bg-light">
+	<div class="container pb-2">
+		<span class="btn btn-outline-success bg-white text-success btn-lg d-block" ng-click="$ctrl.startQuestion()">Create Question</span>
+	</div>
+</div>
+<div class="container">
+	<loading status="$ctrl.questions">
+		<hr>
+		<div class="list-hover"
+			ng-repeat="question in $ctrl.questions | orderBy:'$index':true"
+			ng-class="{selected:question.selected}"
+			ng-click="question.selected = true">
+			<div class="container" ng-if="!question.selected">
+				<h5 ng-bind="question.prompt"></h5>
+				<div class="d-flex flex-row">
+					<span class="badge badge-light mr-2" ng-repeat="option in question.options" ng-bind="option"></span>
+				</div>
+			</div>
+			<div class="container" ng-if="question.selected">
+				<form class="form-group" ng-submit="$ctrl.updateQuestion(question)">
+					<label class="text-label mt-1">Prompt:</label>
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="question.prompt">
+					</div>
+					<!--<hr>-->
+					<label class="text-label mt-2">Choices:</label>
+					<div class="btn-group d-flex" ng-if="!question.options">
+						<span class="btn btn-secondary w-100" ng-click="question.options = ['Yes', 'No']">Yes / No</span>
+						<span class="btn btn-success w-100" ng-click="question.options = ['', '']">Custom...</span>
+					</div>
+					<div class="input-group d-flex" ng-if="question.options">
+						<input type="text" class="form-control" ng-repeat="option in question.options track by $index" ng-model="question.options[$index]">
+						<div class="form-control-append">
+							<span class="btn btn-outline-success" ng-click="question.options.push('')"><b>+</b></span>
+						</div>
+					</div>
+				</form>
+				<hr>
+				<div class="text-right">
+					<delete-button class="float-left mt-1" ng-if="question._id" on-confirm="$ctrl.deleteQuestion(question)"></delete-button>
+					<span class="btn-group">
+						<span class="btn btn-primary" ng-click="$ctrl.updateQuestion(question); $event.stopPropagation()" ng-bind="question._id ? 'Update' : 'Submit'"></span>
+						<span class="btn btn-outline-secondary" ng-click="$ctrl.closeQuestion(question); $event.stopPropagation()">Cancel</span>
+					</span>
+				</div>
+			</div>
+			<hr>
+		</div>
+	</loading>
+</div>

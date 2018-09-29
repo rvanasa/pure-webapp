@@ -14,14 +14,6 @@
 	cursor: pointer;
 }
 
-.pending-panel {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	border-radius: 50% 50% 0 0;
-}
-
 .list-hover:hover {
 	background: rgba(0,5,10,.03);
 }
@@ -30,34 +22,19 @@
 	background: rgba(0,5,10,.02);
 }
 
-.whiteboard {
-	cursor: crosshair;
-}
-
-.whiteboard-toolbar {
-	position: relative;
-	bottom: 3em;
-}
-
-.whiteboard-button {
-	display: inline-block;
-	width: 2em;
-	height: 2em;
-	border-radius: 50%;
-	opacity: .5;
-	cursor: pointer;
-}
-
-.whiteboard-button:not(.selected):hover {
-	transform: scale(1.1);
-}
-
-.whiteboard-button.selected {
-	transform: scale(.5);
-}
-
 .scroll-region {
 	box-shadow: 0 0 20px #DDD inset;
 	padding: 1em;
 	overflow-y: scroll;
+}
+
+.emphasize-left {
+	border-radius: 3em !important;
+	border: .1em solid transparent;
+	border-left: .5em solid $brand-color;
+}
+
+.tease-right:hover {
+	transition-duration: .1s;
+	transform: translateX(1em);
 }

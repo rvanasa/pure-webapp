@@ -1,45 +1,15 @@
-module.exports = function API(RequestService, BannerService)
+var feathers = require('@feathersjs/feathers');
+var rest = require('@feathersjs/rest-client');
+// var socketio = require('@feathersjs/socketio-client');
+
+module.exports = function API($window)
 {
-	var prefix = '/api/';
+	var API = feathers();
 	
-	function request(method, path, params)
-	{
-		console.log(method, prefix + path);////
-		return RequestService[method.toLowerCase()](prefix + path, params)
-			.then(wrapResponse, wrapError);
-	}
+	var socket = $window.io();
 	
-	function wrapResponse(response)
-	{
-		return response.data;
-	}
+	API.configure(rest('/api').jquery($window.jQuery));
+	// API.configure(socketio(socket));
 	
-	function wrapError(error)
-	{
-		BannerService.error(error.responseText);
-		throw error;
-	}
-	
-	return {
-		bind(component, path, params)
-		{
-			return window.Observable.fromPromise(this.get(path, params)); // TODO
-		},
-		get(path, params)
-		{
-			return request('GET', path, params);
-		},
-		create(path, data)
-		{
-			return request('POST', path, data);
-		},
-		update(path, data)
-		{
-			return request('PUT', path, data);
-		},
-		delete(path, params)
-		{
-			return request('DELETE', path, params);
-		},
-	};
+	return API;
 }

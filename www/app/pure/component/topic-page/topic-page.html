@@ -2,7 +2,14 @@
 	
 </div>
 <div class="container my-2" ng-if="$ctrl.topic">
+	<hr class="mt-1">
 	<h3>
+		<if-owned class="float-right" user="$ctrl.topic.user">
+			<delete-button on-confirm="$ctrl.deleteTopic()"></delete-button>
+		</if-owned>
+		<if-owned class="float-right" user="$ctrl.topic.user" invert="true">
+			<favorite-button topic="$ctrl.topic"></favorite-button>
+		</if-owned>
 		<user-status class="mr-2" user="$ctrl.topic.user"></user-status>
 		<span ng-bind="$ctrl.topic.user.name"></span>
 	</h3>
@@ -10,25 +17,37 @@
 	<hr>
 	<div class="row">
 		<div class="col-8 col-sm-5 col-md-4">
-			<span ng-if="$ctrl.sessions.current == $ctrl.topic" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>
-			<div ng-if="$ctrl.sessions.current != $ctrl.topic" ng-switch="$ctrl.topic.user.status">
-				<span ng-switch-when="available" class="btn btn-primary d-block my-1" ng-click="$ctrl.sessions.request($ctrl.topic)">Start Session</span>
-				<span ng-switch-default class="btn btn-outline-primary d-block my-1" ng-click="$ctrl.showSchedule = true">View Schedule</span>
-			</div>
+			<if-owned user="$ctrl.topic.user">
+				<span class="btn btn-success d-block my-1" ng-click="$ctrl.editTopic()">Edit Details</span>
+			</if-owned>
+			<if-owned user="$ctrl.topic.user" invert="true">
+				<span ng-if="$ctrl.sessions.current == $ctrl.topic" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>
+				<div ng-if="$ctrl.sessions.current != $ctrl.topic" ng-switch="$ctrl.status()">
+					<span ng-switch-when="available" class="btn btn-primary d-block my-1" ng-click="$ctrl.sessions.request($ctrl.topic)">
+						<i class="fa fa-pencil-square-o mr-1"></i> Start Session
+					</span>
+					<span ng-switch-default class="btn btn-outline-primary d-block my-1" ng-click="$ctrl.showSchedule = true">
+						<i class="fa fa-calendar-o mr-1"></i> Schedule
+					</span>
+				</div>
+			</if-owned>
 			<topic-rate topic="$ctrl.topic"></topic-rate>
-			<div ng-switch="$ctrl.topic.user.status">
-				<b ng-switch-when="available" class="text-success">Available now!</b>
-				<span ng-switch-when="busy" class="text-muted">Busy</span>
-				<span ng-switch-when="offline" class="text-muted">Offline</span>
-			</div>
+			<if-owned user="$ctrl.topic.user" invert="true">
+				<div ng-switch="$ctrl.status()">
+					<b ng-switch-when="available" class="text-success">Available now!</b>
+					<span ng-switch-when="busy" class="text-muted">Busy at the moment</span>
+					<span ng-switch-when="offline" class="text-muted">Offline</span>
+				</div>
+			</if-owned>
 			<span class="d-sm-none">
 				<div class="my-2" ng-bind="$ctrl.topic.blurb"></div>
 			</span>
 			<div ng-if="$ctrl.topic.user.interests.length">
 				<hr>
-				<h5>Interest<span ng-if="$ctrl.topic.user.sharedInterests.length != 1">s</span>:</h5>
-				<interest-tag ng-repeat="interest in $ctrl.topic.user.interests" ng-if="$ctrl.isShared(interest)" interest="interest"></interest-tag>
-				<div class="text-muted" ng-repeat="interest in $ctrl.topic.user.interests" ng-if="!$ctrl.isShared(interest)" ng-bind="interest"></div>
+				<h5>Interest<span ng-if="$ctrl.topic.user.interests.length != 1">s</span>:</h5>
+				<interest-tag ng-repeat="interest in $ctrl.topic.user.interests" interest="interest"></interest-tag>
+				<!--<interest-tag ng-repeat="interest in $ctrl.topic.user.interests" ng-if="$ctrl.isShared(interest)" interest="interest"></interest-tag>-->
+				<!--<div class="text-muted" ng-repeat="interest in $ctrl.topic.user.interests" ng-if="!$ctrl.isShared(interest)" ng-bind="interest"></div>-->
 			</div>
 		</div>
 		<div class="d-none d-sm-block col-sm-4 col-md-6">

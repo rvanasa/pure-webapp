@@ -2,7 +2,7 @@
 	<h5 class="sio-page-heading mb-0" ng-bind="$ctrl.banners.current.message"></h5>
 	<small class="text-white-50">Tap to dismiss</small>
 </div>
-<div>
+<div ng-swipe-left="$ctrl.leftPage()" ng-swipe-right="$ctrl.rightPage()">
 	<div class="bg-light d-flex">
 		<!--<h2 line-clamp="1" class="w-100 m-2" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h2>-->
 		<a class="text-center w-100" ng-click="$ctrl.setPage(id)" ng-repeat="id in $ctrl.sessions.current ? $ctrl.sessionPages : $ctrl.menuPages">

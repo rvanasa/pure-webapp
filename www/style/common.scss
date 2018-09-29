@@ -1,5 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
 
+@import "util/scrolling.scss";
+
 $brand-color: #5DB4E8; ///temp
 
 :not(.no-transition) {
@@ -29,13 +31,21 @@ textarea {
 	cursor: pointer;
 }
 
-.btn:not(.rounded-circle), .badge, input, select, textarea {
-	border-radius: 0 !important;
+// .btn:not(.rounded-circle), .badge:not(.badge-pill), input, select, textarea {
+// 	border-radius: 0 !important;
+// }
+
+.btn, .form-control, .card {
+	border-radius: 1.5em !important;
 }
 
-.btn:hover {
-	// transform: scale(1.1);
-	opacity: 1;
+.btn:not(:disabled):hover {
+	transform: scale(1.05);
+	// opacity: 1;
+}
+
+.btn:disabled {
+	cursor: default;
 }
 
 .text-thin {
@@ -44,6 +54,7 @@ textarea {
 }
 
 .text-label {
+	white-space: nowrap;
 	text-transform: uppercase;
 	font-weight: bold;
 	opacity: .6;
@@ -51,6 +62,10 @@ textarea {
 
 .text-primary {
 	color: $brand-color !important;
+}
+
+.badge-primary {
+	background: $brand-color !important;
 }
 
 ::selection {
@@ -68,8 +83,8 @@ textarea {
 }
 
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {

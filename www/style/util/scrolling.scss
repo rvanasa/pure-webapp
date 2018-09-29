@@ -1,0 +1,13 @@
+// Better scrolling on mobile devices
+
+html {
+    overflow: hidden;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    position: fixed;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+} 

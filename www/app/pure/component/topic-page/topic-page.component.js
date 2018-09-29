@@ -1,41 +1,44 @@
 module.exports = {
 	template: require('./topic-page.html'),
-	controller: function($routeParams, SessionService)
+	controller: function($location, $routeParams, API, SessionService, StatusService)
 	{
 		var $ctrl = this;
 		
+		var TopicAPI = API.service('topics');
+		
 		$ctrl.sessions = SessionService;
 		
-		$ctrl.topic = null;
-		
-		$ctrl.isShared = function(interest)
+		$ctrl.status = function()
 		{
-			return interest == 'environment'/////
+			return $ctrl.topic && StatusService.status($ctrl.topic.user);
 		}
+		
+		$ctrl.topic = null;
 		
 		var id = $routeParams.id;
 		if(id)
 		{
-			$ctrl.topic = {
-				type: 'tutor',
-				user: {
-					name: 'Ahmed K.',
-					status: 'available',
-					interests: ['environment', 'sustainability', 'ecology'],
-				},
-				name: 'Arabic lessons',
-				blurb: 'I\'m a native speaker.',
-				lessons: 9,
-				reputation: 4.5,
-				match: .95,
-				rate: 10,
-				hourly: true,
-				duration: 47,
-			};
+			TopicAPI.get(id)
+				.then(topic => $ctrl.topic = topic);
 		}
 		else if(SessionService.current)
 		{
 			$ctrl.topic = SessionService.current.topic;
+		}
+		else
+		{
+			$location.path('/user');
+		}
+		
+		$ctrl.editTopic = function(topic)
+		{
+			$location.path('/edit/' + id);
+		}
+		
+		$ctrl.deleteTopic = function()
+		{
+			TopicAPI.remove(id)
+				.then(() => $location.path('/user'));
 		}
 	}
 };

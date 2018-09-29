@@ -1,43 +1,59 @@
 module.exports = {
 	template: require('./search-page.html'),
-	controller: function($location)
+	controller: function($location, Binder, API, CategoryService, FavoriteService)
 	{
 		var $ctrl = this;
 		
-		$ctrl.query = $location.search()['q'] || 'Arabic',
+		var SearchAPI = API.service('search');
 		
-		$ctrl.results = [{
-			type: 'tutor',
-			user: {
-				name: 'Ahmed K.',
-				status: 'available',
-			},
-			name: 'Arabic lessons',
-			blurb: 'I\'m a native speaker.',
-			lessons: 9,
-			reputation: 4.5,
-			match: .95,
-			rate: 10,
-			hourly: true,
-		}, {
-			type: 'tutor',
-			user: {
-				name: 'Vlad P.',
-				status: 'busy',
-			},
-			name: 'Modern Soviet history',
-			blurb: 'Electoral politics specialist here, with plenty of experience in office. Thus I have confidential information about Gulag operations and other intriguing aspects of the Soviet Union.',
-			lessons: 143,
-			reputation: 3.9,
-			match: .91,
-			rate: 35,
-			hourly: false,
-		}];
+		$ctrl.categories = CategoryService.categories;
 		
-		///TODO
-		$ctrl.isHighlighted = function()
+		FavoriteService.request()
+			.then(results => $ctrl.favorites = results);
+		
+		$ctrl.results = [];
+		
+		$ctrl.updateResults = function(query)
 		{
+			if(arguments.length > 0)
+			{
+				$ctrl.query = query;
+			}
 			
+			if(!$ctrl.query && !$ctrl.category)
+			{
+				$ctrl.results.length = 0;
+				return;
+			}
+			
+			var query = {q: $ctrl.query};
+			if($ctrl.category)
+			{
+				query['c'] = $ctrl.category.id;
+			}
+			return SearchAPI.find({query})
+				.then(results =>
+				{
+					$ctrl.results.length = 0;
+					$ctrl.results.push(...results);
+				});
 		}
+		
+		$ctrl.setCategory = function(category)
+		{
+			$ctrl.category = category;
+			$ctrl.updateResults();
+		}
+		
+		var params = $location.search();
+		$ctrl.query = params['q'];
+		$ctrl.category = params['c'];
+		$ctrl.updateResults();
+		
+		Binder($ctrl).onDestroy(() =>
+		{
+			$location.search('q', null);
+			$location.search('c', null);
+		});
 	}
 };

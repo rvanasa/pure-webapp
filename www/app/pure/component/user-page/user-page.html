@@ -1,0 +1,24 @@
+<if-owned user="$ctrl.user">
+	<div class="bg-light">
+		<div class="container pb-2">
+			<span class="btn btn-outline-success bg-white text-success btn-lg d-block" ng-click="$ctrl.startNewTopic()">Create Topic</span>
+		</div>
+	</div>
+</if-owned>
+<div class="container">
+	<loading status="$ctrl.topics">
+		<hr>
+		<div class="list-hover" ng-repeat="topic in $ctrl.topics | orderBy:'$index':true" ng-click="$ctrl.viewTopic(topic)">
+			<div class="row">
+				<div class="col-8 col-sm-9 col-md-10">
+					<h5 line-clamp="1" ng-bind="topic.name"></h5>
+					<topic-rate topic="topic"></topic-rate>
+				</div>
+				<div class="col-4 col-sm-3 col-md-2">
+					<topic-badges topic="topic" include="['reputation', 'lessons']"></topic-badges>
+				</div>
+			</div>
+			<hr>
+		</div>
+	</loading>
+</div>

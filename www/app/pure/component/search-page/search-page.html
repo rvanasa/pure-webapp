@@ -1,14 +1,38 @@
 <div class="bg-light pb-2">
 	<div class="container">
-		<span class="input-group input-group-lg">
-			<input type="text" class="form-control" ng-model="$ctrl.query">
-			<span class="input"></span>
-			<!--<div class="input-group-append">-->
-			<!--	<span class="btn btn-outline-secondary"><i class="fa fa-angle-right"></i></span>-->
-			<!--</div>-->
-		</span>
+		<div class="input-group input-group-lg">
+			<input type="text"
+				class="form-control"
+				placeholder="Search for a topic..."
+				focus-if="$ctrl.query || $ctrl.category"
+				ng-model="$ctrl.query"
+				ng-change="$ctrl.updateResults()">
+		</div>
+	</div>
+	<div class="container">
+		<h5 class="text-muted mt-2" ng-if="$ctrl.category">
+			<span class="badge badge-primary ml-2" ng-bind="$ctrl.category.name" ng-click="$ctrl.setCategory(null)"></span>
+		</h5>
 	</div>
 </div>
 <div class="container my-2">
-	<search-result topic="result" selected="$ctrl.selected" ng-repeat="result in $ctrl.results"></search-result>
+	<div ng-show="!$ctrl.results.length && !$ctrl.category">
+		<div class="row">
+			<div class="col-lg-4">
+				<div class="emphasize-left tease-right bg-light px-4 pt-2 pb-1 my-3" ng-repeat="category in $ctrl.categories" ng-click="$ctrl.setCategory(category)">
+					<i class="fa fa-2x float-left ml-3 mr-4" ng-class="'fa-' + category.icon"></i>
+					<h3 ng-bind="category.name"></h3>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				<hr class="d-lg-none">
+				<h4 class="text-muted mt-lg-2">Favorites:</h4>
+				<hr ng-if="$ctrl.favorites.length">
+				<search-result topic="topic" selected="$ctrl.selected" ng-repeat="topic in $ctrl.favorites | orderBy:'$index':true"></search-result>
+			</div>
+		</div>
+	</div>
+	<div ng-show="$ctrl.results.length">
+		<search-result topic="result" selected="$ctrl.selected" ng-repeat="result in $ctrl.results"></search-result>
+	</div>
 </div>

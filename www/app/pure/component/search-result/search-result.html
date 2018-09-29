@@ -1,4 +1,8 @@
-<div class="list-hover" ng-class="{selected:$ctrl.selected == $ctrl.topic}" ng-click="$ctrl.selected = $ctrl.topic">
+<div class="list-hover"
+	ng-class="{selected:$ctrl.selected == $ctrl.topic}"
+	ng-click="$ctrl.selected = $ctrl.topic"
+	ng-dblclick="$ctrl.viewDetails()"
+	on-long-press="$ctrl.viewDetails()">
 	<div class="row">
 		<div class="col-8 col-md-9 col-md-10">
 			<user-status class="float-left mr-2" user="$ctrl.topic.user"></user-status>
@@ -23,7 +27,8 @@
 			<div class="col-sm-6 col-md-5">
 				<span class="btn-group d-flex mt-sm-3">
 					<span class="btn btn-outline-primary w-100" ng-click="$ctrl.viewDetails()">More Details</span>
-					<span class="btn btn-primary w-100" ng-if="$ctrl.topic.user.status=='available'" ng-click="$ctrl.viewDetails(true)">Start Session</span>
+					<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">Start Session</span>
+					<favorite-button topic="$ctrl.topic" ng-if="$ctrl.status($ctrl.topic.user) != 'available'"></favorite-button>
 				</span>
 			</div>
 		</div>

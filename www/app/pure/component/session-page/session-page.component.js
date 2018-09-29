@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($interval, SessionService)
+	controller: function(Binder, SessionService)
 	{
 		var $ctrl = this;
 		
@@ -42,12 +42,6 @@ module.exports = {
 			}
 		}
 		
-		var interval = $interval(updateTime, 1000);
-		updateTime();
-		
-		$ctrl.$onDestroy = function()
-		{
-			$interval.cancel(interval);
-		}
+		Binder($ctrl).interval(updateTime, 1000);
 	}
 };

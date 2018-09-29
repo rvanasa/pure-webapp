@@ -4,11 +4,13 @@ module.exports = {
 		topic: '<',
 		selected: '=',
 	},
-	controller: function($location, SessionService)
+	controller: function($location, SessionService, StatusService)
 	{
 		var $ctrl = this;
 		
 		$ctrl.sessions = SessionService;
+		
+		$ctrl.status = StatusService.status;
 		
 		$ctrl.viewDetails = function(requestSession)
 		{
@@ -16,7 +18,7 @@ module.exports = {
 			{
 				SessionService.request($ctrl.topic);
 			}
-			$location.path('/topic/' + encodeURIComponent(123));
+			$location.path('/topic/' + $ctrl.topic._id);
 		}
 	}
 };

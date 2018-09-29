@@ -8,11 +8,12 @@ module.exports = function(App, Database, UserModel, Config, AuthRegistry)
 	passport.serializeUser((user, done) => done(null, user.id));
 	passport.deserializeUser((id, done) => UserModel.findById(id, done));
 	
-	App.use(session({
+	var Auth = session({
 		store: new MongoStore({mongooseConnection: Database}),
 		resave: false, saveUninitialized: false,
 		secret: Config.session.secret,
-	}));
+	});
+	App.use(Auth);
 	
 	App.use(passport.initialize());
 	App.use(passport.session());
@@ -40,4 +41,6 @@ module.exports = function(App, Database, UserModel, Config, AuthRegistry)
 			}));
 		}
 	}
+	
+	return Auth;
 }

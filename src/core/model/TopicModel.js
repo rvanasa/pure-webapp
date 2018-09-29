@@ -4,8 +4,9 @@ module.exports = function(Model, Database)
 		.prop('user', 'User')
 		.prop('name', String)
 		.prop('blurb', String)
-		.prop('rate', String)
+		.prop('rate', Number)
 		.prop('hourly', Boolean)
-		.prop('group', Boolean)
+		.prop('category', String)
+		// .prop('spectate', Boolean).default(false)
 		.build(Database);
 }

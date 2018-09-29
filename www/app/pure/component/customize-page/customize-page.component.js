@@ -1,30 +1,40 @@
 module.exports = {
 	template: require('./customize-page.html'),
-	controller: function()
+	controller: function($location, API, InterestService, UserService)
 	{
 		var $ctrl = this;
 		
+		var AnswerAPI = API.service('answers');
+		
+		$ctrl.interests = InterestService;
+		
+		$ctrl.user = UserService.user;
+		
 		$ctrl.index = 0;
-		$ctrl.history = [{
-			prompt: 'What is the answer to this question?',
-			options: ['Yes', 'No'],
-		}];
-		$ctrl.question = $ctrl.history[0];
+		
+		AnswerAPI.find({query: {history: true, next: 3}})
+			.then(results =>
+			{
+				$ctrl.history = results.reverse();
+				$ctrl.index = 0;
+				while($ctrl.index + 1 < $ctrl.history.length && !$ctrl.history[$ctrl.index + 1].answer)
+				{
+					$ctrl.index++;
+				}
+				if(!$ctrl.history[$ctrl.index].answer)
+				{
+					$ctrl.question = $ctrl.history[$ctrl.index];
+				}
+			});
 		
 		$ctrl.nextQuestion = function()
 		{
+			$ctrl.question = $ctrl.history[--$ctrl.index];
+			
 			if(!$ctrl.index)
 			{
-				// load question
-				$ctrl.question = {
-					prompt: 'A?',
-					options: ['B', 'C'],
-				};
-				$ctrl.history.unshift($ctrl.question);
-			}
-			else
-			{
-				$ctrl.question = $ctrl.history[--$ctrl.index];
+				AnswerAPI.find({query: {next: 1}})
+					.then(results => $ctrl.history.unshift(...results));
 			}
 		}
 		
@@ -38,8 +48,16 @@ module.exports = {
 		
 		$ctrl.answerQuestion = function()
 		{
-			// save answer
-			$ctrl.nextQuestion();
+			if($ctrl.question && $ctrl.question.answer)
+			{
+				AnswerAPI.create(Object.assign({}, $ctrl.question.answer, {question: $ctrl.question._id}))
+					.catch(err =>
+					{
+						$ctrl.prevQuestion();
+						throw err;
+					});
+				$ctrl.nextQuestion();
+			}
 		}
 		
 		$ctrl.hasPrev = function()
@@ -49,25 +67,12 @@ module.exports = {
 		
 		$ctrl.hasAnswer = function()
 		{
-			return $ctrl.question && $ctrl.question.selected != null && $ctrl.question.importance;
+			return $ctrl.question && $ctrl.question.answer;
 		}
 		
-		$ctrl.interests = ['environment', 'community'];
-		
-		$ctrl.addInterest = function()
+		$ctrl.createQuestion = function()
 		{
-			var interest = $ctrl.newInterest;
-			if(interest)
-			{
-				$ctrl.newInterest = null;
-				
-				var index = $ctrl.interests.indexOf(interest);
-				if(index != -1)
-				{
-					$ctrl.interests.splice(index, 1);
-				}
-				$ctrl.interests.push(interest);
-			}
+			return $location.path('/questions');
 		}
 	}
 };

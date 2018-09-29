@@ -1,21 +1,56 @@
-var express = require('express');
+var feathers = require('@feathersjs/feathers');
+var express = require('@feathersjs/express');
+// var socketio = require('@feathersjs/socketio');
 
-module.exports = function(App, AuthMiddleware)
+var sanitize = require('mongo-sanitize');
+
+module.exports = function(AuthMiddleware)
 {
-	console.log('Loading API...');
+	var API = express(feathers());
 	
-	var router = express.Router();
+	API.configure(express.rest());
+	// API.configure(socketio());
 	
-	router.use(AuthMiddleware);
+	API.use(express.json());
+	
+	API.use(AuthMiddleware);
+	API.use((req, res, next) =>
+	{
+		req.body = sanitize(req.body);
+		
+		req.feathers.user = req.user;
+		req.feathers = Object.assign({filter: {}, select: {}, options: {}}, req.feathers);//temp
+		next();
+	});
 	
 	setTimeout(() =>
 	{
-		router.use((err, req, res, next) =>
+		if(this.env === 'dev')
 		{
-			console.error(err instanceof Error ? err.stack : err);
-			res.status(500).send(err instanceof Error ? 'Something unexpected happened' : err);
-		});
+			API.use(express.errorHandler());
+			// API.use((err, req, res, next) =>
+			// {
+			// 	console.error(err.stack || err);
+			// 	res.status(500).send(err.message || err.stack || err);
+			// });
+		}
+		else
+		{
+			API.use((err, req, res, next) =>
+			{
+				if(typeof err === 'string')
+				{
+					return res.status(400).send(err);
+				}
+				console.error(err.stack || err);
+				res.status(500).end();
+			});
+		}
+		
+		API.use((req, res, next) => res.status(404).send(`Unknown endpoint: ${req.path}`));
+		
+		// API.setup()
 	});
 	
-	return router;
+	return API;
 }

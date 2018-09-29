@@ -6,11 +6,11 @@ module.exports = function()
 {
 	class Model
 	{
-		constructor(name)
+		constructor(name, props)
 		{
 			this.name = name;
 			
-			this.props = {};
+			this.props = props || {};
 			this.methods = {};
 		}
 		
@@ -72,6 +72,12 @@ module.exports = function()
 			return this;
 		}
 		
+		validate(...args)
+		{
+			this.current.validate = args.length === 1 ? args[0] : args;
+			return this;
+		}
+		
 		method(name, handler)
 		{
 			if(!handler)
@@ -112,5 +118,5 @@ module.exports = function()
 		}
 	}
 	
-	return (name) => new Model(name);
+	return (...args) => new Model(...args);
 }
