@@ -1,8 +1,11 @@
 var express = require('express');
 var morgan = require('morgan');
 
-module.exports = function(App, API, Config, AuthMiddleware)
+module.exports = function(App, Auth, API, Config, AuthMiddleware)
 {
+	App.set('views', 'view');
+	App.set('view engine', 'ejs');
+	
 	if(Config.resourcePath)
 	{
 		App.use(express.static(Config.resourcePath));
@@ -13,15 +16,18 @@ module.exports = function(App, API, Config, AuthMiddleware)
 		var devMiddleware = require('webpack-dev-middleware');
 		
 		var compiler = webpack(require(this.config.basePath + '/webpack.config'));
-		App.use(require('webpack-hot-middleware')(compiler, {
-			log: console.log,
-		}));
+		// App.use(require('webpack-hot-middleware')(compiler, {
+		// 	log: console.log,
+		// }));
 		App.use(devMiddleware(compiler, {
 			stats: {colors: true},
 			inline: true,
 			hot: true,
 		}));
 	}
+	
+	Auth.setup(App);
+	Auth.routes(App);
 	
 	App.use(morgan('dev'));
 	

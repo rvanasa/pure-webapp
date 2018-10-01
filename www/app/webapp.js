@@ -4,7 +4,7 @@ require('../style/webapp.scss');
 
 var camelize = require('camelize');
 
-var angular = window.angular;
+var angular = require('angular');
 
 var app = angular.module('pure.app', [
 	'ngAnimate',

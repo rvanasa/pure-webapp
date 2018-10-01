@@ -13,11 +13,9 @@ if(!env)
 
 config.argv = argv;
 
-require('sorc')(config, env, (Log, Server) =>
-{
-	Log(`Server started successfully [${env}]`);
-}).catch(err =>
-{
-	console.error(err.stack);
-	process.exit(1);
-});
+require('sorc')(config, env, 'Server')
+	.catch(err =>
+	{
+		console.error(err.stack);
+		process.exit(1);
+	});

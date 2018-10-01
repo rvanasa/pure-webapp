@@ -21,8 +21,7 @@
 				<span class="btn btn-success d-block my-1" ng-click="$ctrl.editTopic()">Edit Details</span>
 			</if-owned>
 			<if-owned user="$ctrl.topic.user" invert="true">
-				<span ng-if="$ctrl.sessions.current == $ctrl.topic" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>
-				<div ng-if="$ctrl.sessions.current != $ctrl.topic" ng-switch="$ctrl.status()">
+				<div ng-switch="$ctrl.status()">
 					<span ng-switch-when="available" class="btn btn-primary d-block my-1" ng-click="$ctrl.sessions.request($ctrl.topic)">
 						<i class="fa fa-pencil-square-o mr-1"></i> Start Session
 					</span>
@@ -30,6 +29,8 @@
 						<i class="fa fa-calendar-o mr-1"></i> Schedule
 					</span>
 				</div>
+				<span ng-if="$ctrl.sessions.current.topic._id == $ctrl.topic._id" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>
+				<span ng-if="$ctrl.sessions.pending" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">Cancel</span>
 			</if-owned>
 			<topic-rate topic="$ctrl.topic"></topic-rate>
 			<if-owned user="$ctrl.topic.user" invert="true">

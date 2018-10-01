@@ -44,9 +44,15 @@ textarea {
 	// opacity: 1;
 }
 
-.btn:disabled {
+:disabled {
 	cursor: default;
 }
+
+// .text-white {
+// 	hr {
+// 		border-color: white;
+// 	}
+// }
 
 .text-thin {
 	text-transform: lowercase;
@@ -75,11 +81,10 @@ textarea {
 
 .noselect {
 	cursor: default;
-}
-
-.noselect ::selection, .noselect::selection {
-	background: inherit;
-	color: inherit;
+	&::selection, ::selection {
+		background: inherit;
+		color: inherit;
+	}
 }
 
 ::-webkit-scrollbar {
@@ -89,16 +94,14 @@ textarea {
 
 ::-webkit-scrollbar-track {
     background: #DDD;
-}
-
-::-webkit-scrollbar-track:hover {
-    background: #CCC;
+    &:hover {
+    	background: #CCC;
+    }
 }
  
 ::-webkit-scrollbar-thumb {
     background: #AAA;
-}
- 
-::-webkit-scrollbar-thumb:hover {
-    background: #999;
+    &:hover {
+    	background: #999;
+    }
 }

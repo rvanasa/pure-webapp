@@ -2,7 +2,7 @@
 	<h5 class="sio-page-heading mb-0" ng-bind="$ctrl.banners.current.message"></h5>
 	<small class="text-white-50">Tap to dismiss</small>
 </div>
-<div ng-swipe-left="$ctrl.leftPage()" ng-swipe-right="$ctrl.rightPage()">
+<div ng-swipe-right="$ctrl.leftPage()" ng-swipe-left="$ctrl.rightPage()">
 	<div class="bg-light d-flex">
 		<!--<h2 line-clamp="1" class="w-100 m-2" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h2>-->
 		<a class="text-center w-100" ng-click="$ctrl.setPage(id)" ng-repeat="id in $ctrl.sessions.current ? $ctrl.sessionPages : $ctrl.menuPages">
@@ -11,11 +11,27 @@
 	</div>
 </div>
 <ng-view></ng-view>
-<div class="pending-panel bg-primary text-white text-center pt-3" ng-if="$ctrl.sessions.pending">
+<div class="pending-backdrop" ng-class="{visible:$ctrl.sessions.pending}"></div>
+<div class="pending-panel bg-secondary text-white text-center pt-3" ng-if="$ctrl.sessions.pending">
 	<div ng-if="$ctrl.sessions.pending.outbound">
-		<h2>Waiting...</h2>
+		<h2 class="noselect mb-3">Waiting...</h2>
+		<!--<hr>-->
+		<div class="container my-3">
+			<span class="btn btn-outline-light btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Cancel</span>
+		</div>
 	</div>
 	<div ng-if="!$ctrl.sessions.pending.outbound">
-		
+		<h2 class="noselect">Are you ready?</h2>
+		<hr class="mb-0">
+		<div class="py-2 bg-light text-dark">
+			<h4 ng-bind="$ctrl.sessions.pending.user.name"></h4>
+			<h5>is requesting a session on</h5>
+			<h4><b ng-bind="$ctrl.sessions.pending.topic.name"></b><h4>
+			<hr>
+			<div class="container">
+				<span class="btn btn-primary btn-lg d-block py-3 my-2" style="font-size:1em" ng-click="$ctrl.sessions.accept()">Start Session</span>
+				<span class="btn btn-outline-secondary btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Decline</span>
+			</div>
+		</div>
 	</div>
 </div>

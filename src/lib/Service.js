@@ -7,6 +7,7 @@ module.exports = function()
 			this.name = name;
 			this.methods = methods || {};
 			this.hooksArray = hooksArray || [];
+			this.listeners = [];
 		}
 		
 		add(id, fn)
@@ -49,6 +50,12 @@ module.exports = function()
 			return this;
 		}
 		
+		on(...args)
+		{
+			this.listeners.push(args);
+			return this;
+		}
+		
 		build(api)
 		{
 			api.use(this.name, this.methods);
@@ -56,6 +63,10 @@ module.exports = function()
 			for(var hook of this.hooksArray)
 			{
 				service.hooks(hook);
+			}
+			for(var args of this.listeners)
+			{
+				service.on(...args);
 			}
 			return service;
 		}

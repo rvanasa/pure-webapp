@@ -12,6 +12,7 @@ module.exports = {
 		
 		$ctrl.index = 0;
 		
+		// TODO answer service
 		AnswerAPI.find({query: {history: true, next: 3}})
 			.then(results =>
 			{

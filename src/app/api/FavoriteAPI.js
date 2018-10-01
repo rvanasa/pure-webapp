@@ -6,9 +6,9 @@ module.exports = function(API, Service, ModelService, Hooks, TopicAPI)
 			var params = {user, query, filter: {}, select: {}, options: {}};
 			return await Promise.all(user.favorites.map(id => TopicAPI.get(id, params)));
 		})
-		.add('create', async ({topic}, {user}) =>
+		.add('create', async ({topic: id}, {user}) =>
 		{
-			user.favorites.addToSet(topic);
+			user.favorites.addToSet(id);
 			await user.save();
 			return 'Added';
 		})

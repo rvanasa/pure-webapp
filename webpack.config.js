@@ -26,7 +26,7 @@ var config = {
 	devtool: 'source-map',
 	module: {
 		rules: [{
-			test: /\.scss/,
+			test: /\.scss$/,
 			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 		}, {
 			test: /\.html$/,
@@ -37,7 +37,6 @@ var config = {
 		}],
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
 		new webpack.optimize.ModuleConcatenationPlugin(),
 		// new webpack.optimize.UglifyJsPlugin({
 		// 	sourceMap: true,
@@ -46,6 +45,12 @@ var config = {
 			filename: 'bundle/[name].css',
 		}),
 	],
+	externals: {
+		'jquery': 'jQuery',
+		'angular': 'angular',
+		'socket.io-client': 'io',
+		'push.js': 'Push',
+	},
 };
 
 if(isBuild)
@@ -53,6 +58,16 @@ if(isBuild)
 	config.plugins.push(
 		new CopyPlugin([{from: srcPath}]),
 	);
+}
+else
+{
+	// for(var key in config.entry)
+	// {
+	// 	config.entry[key] = [config.entry[key], 'webpack-hot-middleware/client'];
+	// }
+	// config.plugins.push(
+	// 	new webpack.HotModuleReplacementPlugin(),
+	// );
 }
 
 module.exports = config;

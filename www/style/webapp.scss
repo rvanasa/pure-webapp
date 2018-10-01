@@ -14,6 +14,11 @@
 	cursor: pointer;
 }
 
+[ng-click] ::selection, [ng-click]::selection {
+	background: inherit;
+	color: inherit;
+}
+
 .list-hover:hover {
 	background: rgba(0,5,10,.03);
 }

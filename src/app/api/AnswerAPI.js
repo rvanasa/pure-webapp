@@ -5,7 +5,7 @@ module.exports = function(API, Service, ModelService, Hooks, QuestionModel, Answ
 		var filter = {};
 		// var select = {prompt: 1, options: 1};
 		var promises = [];
-		var count = await QuestionModel.count(filter);
+		var count = await QuestionModel.estimatedDocumentCount(filter);
 		for(var i = 0; i < limit; i++)
 		{
 			promises.push(QuestionModel.findOne(filter/*, select*/).lean().skip(Math.floor(Math.random() * count)));

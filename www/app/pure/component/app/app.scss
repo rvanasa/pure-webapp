@@ -1,7 +1,25 @@
+.pending-backdrop {
+	z-index: 10;
+	transition-duration: .4s;
+	pointer-events: none;
+	position: fixed;
+	min-width: 100vw;
+	min-height: 100vh;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	
+	&.visible {
+		background: rgba(0,10,20,.2);
+	}
+}
+
 .pending-panel {
+	z-index: 100;
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	border-radius: 50% 50% 0 0;
+	border-radius: 3em 3em 0 0;
 }

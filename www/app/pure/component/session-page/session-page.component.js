@@ -35,13 +35,14 @@ module.exports = {
 		{
 			if(SessionService.current)
 			{
-				var seconds = Math.round((Date.now() - SessionService.current.startTime) / 1000);
+				var seconds = Math.round((Date.now() - new Date(SessionService.current.begin)) / 1000);
 				var minutes = Math.floor(seconds / 60);
 				var hours = Math.floor(minutes / 60);
 				$ctrl.time = [hours, minutes % 60, seconds % 60].map(t => String(t).padStart(2, '0')).join(' : ');
 			}
 		}
 		
+		updateTime();
 		Binder($ctrl).interval(updateTime, 1000);
 	}
 };

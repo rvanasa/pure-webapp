@@ -3,44 +3,51 @@ var MongoStore = require('connect-mongo')(session);
 
 var passport = require('passport');
 
-module.exports = function(App, Database, UserModel, Config, AuthRegistry)
+module.exports = function(Database, UserModel, Config, AuthRegistry)
 {
 	passport.serializeUser((user, done) => done(null, user.id));
 	passport.deserializeUser((id, done) => UserModel.findById(id, done));
 	
-	var Auth = session({
+	var sessionMiddleware = session({
 		store: new MongoStore({mongooseConnection: Database}),
-		resave: false, saveUninitialized: false,
+		resave: false,
+		saveUninitialized: false,
 		secret: Config.session.secret,
 	});
-	App.use(Auth);
 	
-	App.use(passport.initialize());
-	App.use(passport.session());
-	
-	App.get('/login', (req, res) => res.redirect('/login/google'));
-	App.get('/logout', (req, res) =>
+	for(var key of Object.keys(AuthRegistry))
 	{
-		req.logout();
-		res.redirect('/');
-	});
-	
-	for(var key in AuthRegistry)
-	{
-		if(AuthRegistry.hasOwnProperty(key))
-		{
-			var config = Object.assign({
-				callback: `https://${Config.server.domain}/login/${key}`,
-			}, Config.provider[key]);
-			
-			var strategy = AuthRegistry[key](config);
-			passport.use(key, strategy);
-			
-			App.get(`/login/${key}`, passport.authenticate(key, {
-				successRedirect: '/',
-			}));
-		}
+		var config = Object.assign({
+			callback: `https://${Config.server.domain}/login/${key}`,
+		}, Config.provider[key]);
+		
+		var strategy = AuthRegistry[key](config);
+		passport.use(key, strategy);
 	}
 	
-	return Auth;
+	var ident = m => m;
+	return {
+		setup(app, wrap = ident)
+		{
+			app.use(wrap(sessionMiddleware));
+			app.use(wrap(passport.initialize()));
+			app.use(wrap(passport.session()));
+		},
+		routes(app)
+		{
+			app.get('/login', (req, res) => res.redirect('/login/google'));
+			app.get('/logout', (req, res) =>
+			{
+				req.logout();
+				res.redirect('/');
+			});
+			
+			for(var key of Object.keys(AuthRegistry))
+			{
+				app.get(`/login/${key}`, passport.authenticate(key, {
+					successRedirect: '/',
+				}));
+			}
+		},
+	};
 }

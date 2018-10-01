@@ -6,10 +6,13 @@ var sanitize = require('mongo-sanitize');
 
 module.exports = function(AuthMiddleware)
 {
-	var API = express(feathers());
+	function setupFeathers(req)
+	{
+		Object.assign(req.feathers, {user: req.user, filter: {}, select: {}, options: {}});
+	}
 	
+	var API = express(feathers());
 	API.configure(express.rest());
-	// API.configure(socketio());
 	
 	API.use(express.json());
 	
@@ -17,9 +20,7 @@ module.exports = function(AuthMiddleware)
 	API.use((req, res, next) =>
 	{
 		req.body = sanitize(req.body);
-		
-		req.feathers.user = req.user;
-		req.feathers = Object.assign({filter: {}, select: {}, options: {}}, req.feathers);//temp
+		setupFeathers(req);
 		next();
 	});
 	
@@ -27,12 +28,11 @@ module.exports = function(AuthMiddleware)
 	{
 		if(this.env === 'dev')
 		{
-			API.use(express.errorHandler());
-			// API.use((err, req, res, next) =>
-			// {
-			// 	console.error(err.stack || err);
-			// 	res.status(500).send(err.message || err.stack || err);
-			// });
+			API.use((err, req, res, next) =>
+			{
+				console.error(err.stack || err);
+				res.status(500).send(err.message || err.stack || err);
+			});
 		}
 		else
 		{
@@ -48,8 +48,6 @@ module.exports = function(AuthMiddleware)
 		}
 		
 		API.use((req, res, next) => res.status(404).send(`Unknown endpoint: ${req.path}`));
-		
-		// API.setup()
 	});
 	
 	return API;
