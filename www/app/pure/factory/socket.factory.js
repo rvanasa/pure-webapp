@@ -4,17 +4,19 @@ module.exports = function Socket($rootScope)
 {
 	var connection = io();
 	
-	return {
+	var _on = connection.on;
+	var _emit = connection.emit;
+	return Object.assign(connection, {
 		on(id, listener)
 		{
-			connection.on(id, function()
+			return _on.call(this, id, function()
 			{
 				$rootScope.$apply(() => listener.apply(this, arguments));
 			});
 		},
 		emit(...args)
 		{
-			connection.emit(...args);
+			return _emit.apply(this, args);
 		},
-	};
+	});
 }

@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./search-page.html'),
-	controller: function($location, Binder, API, CategoryService, FavoriteService)
+	controller: function($location, Binder, API, CategoryService, TopicService, FavoriteService)
 	{
 		var $ctrl = this;
 		
@@ -13,11 +13,11 @@ module.exports = {
 		
 		$ctrl.results = [];
 		
-		$ctrl.updateResults = function(query)
+		$ctrl.updateResults = function(input)
 		{
 			if(arguments.length > 0)
 			{
-				$ctrl.query = query;
+				$ctrl.query = input;
 			}
 			
 			if(!$ctrl.query && !$ctrl.category)
@@ -26,16 +26,20 @@ module.exports = {
 				return;
 			}
 			
-			var query = {q: $ctrl.query};
+			var params = {q: $ctrl.query};
 			if($ctrl.category)
 			{
-				query['c'] = $ctrl.category.id;
+				params['c'] = $ctrl.category.id;
 			}
-			return SearchAPI.find({query})
+			return SearchAPI.find({query: params})
 				.then(results =>
 				{
 					$ctrl.results.length = 0;
 					$ctrl.results.push(...results);
+					for(var topic of results)
+					{
+						TopicService.register(topic);
+					}
 				});
 		}
 		

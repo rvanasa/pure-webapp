@@ -12,8 +12,10 @@ module.exports = {
 			background: '#343A40',
 		};
 		
-		$ctrl.whiteboard = {
-			color: $ctrl.colors[1],
+		$ctrl.whiteboardOptions = {
+			cursor: {
+				color: $ctrl.colors[1],
+			},
 		};
 		
 		$ctrl.history = [];
@@ -27,7 +29,7 @@ module.exports = {
 		{
 			$ctrl.add({
 				type: 'screenshot',
-				src: $ctrl.whiteboard.actions.screenshot(),
+				src: $ctrl.whiteboardOptions.board.screenshot(),
 			});
 		}
 		
@@ -43,6 +45,6 @@ module.exports = {
 		}
 		
 		updateTime();
-		Binder($ctrl).interval(updateTime, 1000);
+		Binder($ctrl).interval(updateTime, 500);
 	}
 };

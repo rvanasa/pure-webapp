@@ -1,10 +1,8 @@
 module.exports = {
 	template: require('./topic-page.html'),
-	controller: function($location, $routeParams, API, SessionService, StatusService)
+	controller: function($location, $routeParams, TopicService, SessionService, StatusService)
 	{
 		var $ctrl = this;
-		
-		var TopicAPI = API.service('topics');
 		
 		$ctrl.sessions = SessionService;
 		
@@ -18,7 +16,7 @@ module.exports = {
 		var id = $routeParams.id;
 		if(id)
 		{
-			TopicAPI.get(id)
+			TopicService.get(id)
 				.then(topic => $ctrl.topic = topic);
 		}
 		else if(SessionService.current)
@@ -32,12 +30,12 @@ module.exports = {
 		
 		$ctrl.editTopic = function(topic)
 		{
-			$location.path('/edit/' + id);
+			$location.path('/edit/' + $ctrl.topic._id);
 		}
 		
 		$ctrl.deleteTopic = function()
 		{
-			TopicAPI.remove(id)
+			TopicService.delete($ctrl.topic)
 				.then(() => $location.path('/user'));
 		}
 	}

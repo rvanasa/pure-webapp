@@ -8,14 +8,14 @@ module.exports = function PushService($window)
 	
 	this.create = function(title, options)
 	{
-		// return Push.create(title, Object.assign({
-		// 	icon: '/assets/img/favicon.png',
-		// 	// badge: '/assets/img/favicon.png',
-		// }, options)).then(notification =>
-		// {
-		// 	$window.focus();
-		// 	notification.close();
-		// });
+		return Push.create(title, Object.assign({
+			icon: '/assets/img/favicon.png',
+			// badge: '/assets/img/favicon.png',
+		}, options)).then(notification =>
+		{
+			$window.focus();
+			notification.close();
+		});
 	}
 	
 	this.createIfAway = function(title, options)

@@ -1,4 +1,4 @@
-module.exports = function FavoriteService(API)
+module.exports = function FavoriteService(API, TopicService)
 {
 	var FavoriteAPI = API.service('favorites');
 	
@@ -8,6 +8,10 @@ module.exports = function FavoriteService(API)
 		.then(results =>
 		{
 			this.favorites.push(...results);
+			for(var topic of results)
+			{
+				TopicService.register(topic);
+			}
 			return this.favorites;
 		});
 	

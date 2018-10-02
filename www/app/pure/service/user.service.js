@@ -1,4 +1,8 @@
-module.exports = function UserService()
+module.exports = function UserService($window, API, Cache)
 {
-	this.user = window.UserData;
+	var UserAPI = API.service('users');
+	
+	Object.assign(this, Cache(id => UserAPI.get(id)));
+	
+	this.user = $window.UserData;
 }

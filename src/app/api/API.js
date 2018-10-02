@@ -1,6 +1,5 @@
 var feathers = require('@feathersjs/feathers');
 var express = require('@feathersjs/express');
-// var socketio = require('@feathersjs/socketio');
 
 var sanitize = require('mongo-sanitize');
 

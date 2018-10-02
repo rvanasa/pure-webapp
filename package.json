@@ -10,7 +10,6 @@
   "dependencies": {
     "@feathersjs/express": "^1.2.7",
     "@feathersjs/feathers": "^3.2.3",
-    "@feathersjs/socketio": "^3.2.6",
     "async": "^2.6.1",
     "axios": "^0.18.0",
     "bluebird": "^3.5.2",
@@ -35,15 +34,16 @@
   },
   "devDependencies": {
     "@feathersjs/rest-client": "^1.4.5",
-    "@feathersjs/socketio-client": "^1.1.4",
     "camelize": "^1.0.0",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^0.28.11",
     "file-loader": "^1.1.11",
+    "freeice": "^2.2.2",
     "html-loader": "^0.5.5",
     "mini-css-extract-plugin": "^0.4.3",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
+    "simple-peer": "^9.1.2",
     "style-loader": "^0.21.0",
     "webpack": "^4.20.2",
     "webpack-dev-middleware": "^3.4.0"

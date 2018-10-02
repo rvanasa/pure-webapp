@@ -13,25 +13,43 @@
 <ng-view></ng-view>
 <div class="pending-backdrop" ng-class="{visible:$ctrl.sessions.pending}"></div>
 <div class="pending-panel bg-secondary text-white text-center pt-3" ng-if="$ctrl.sessions.pending">
-	<div ng-if="$ctrl.sessions.pending.outbound">
+	<if-owned user="$ctrl.sessions.pending.teacher" invert="true">
 		<h2 class="noselect mb-3">Waiting...</h2>
 		<!--<hr>-->
 		<div class="container my-3">
 			<span class="btn btn-outline-light btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Cancel</span>
 		</div>
-	</div>
-	<div ng-if="!$ctrl.sessions.pending.outbound">
-		<h2 class="noselect">Are you ready?</h2>
-		<hr class="mb-0">
-		<div class="py-2 bg-light text-dark">
-			<h4 ng-bind="$ctrl.sessions.pending.user.name"></h4>
-			<h5>is requesting a session on</h5>
-			<h4><b ng-bind="$ctrl.sessions.pending.topic.name"></b><h4>
-			<hr>
+	</if-owned>
+	<if-owned user="$ctrl.sessions.pending.teacher">
+		<h2 class="noselect pb-2">Are you ready?</h2>
+		<!--<hr class="mb-0">-->
+		<div class="py-3 bg-light text-dark">
+			<hr class="mt-0">
+			<div class="row">
+				<div class="col-md-4">
+					
+				</div>
+				<div class="col-md-4">
+					<h3 ng-bind="$ctrl.sessions.pending.students[0].name"></h3>
+					<h5 class="text-muted">is requesting a session on</h5>
+					<h4 class="text-success mb-0"><b ng-bind="$ctrl.sessions.pending.topic.name"></b></h4>
+					<topic-rate topic="$ctrl.sessions.pending.topic"></topic-rate>
+					<hr>
+				</div>
+				<div class="col-md-4 text-md-left">
+					<div ng-if="$ctrl.sessions.pending.students[0].interests.length">
+						<div style="overflow-y:auto; max-height:8em">
+							<h5 class="mx-2">Interest<span ng-if="$ctrl.sessions.pending.students[0].length != 1">s</span>:</h5>
+							<interest-tag ng-repeat="interest in $ctrl.sessions.pending.students[0].interests" interest="interest"></interest-tag>
+						</div>
+						<hr class="d-md-none">
+					</div>
+				</div>
+			</div>
 			<div class="container">
-				<span class="btn btn-primary btn-lg d-block py-3 my-2" style="font-size:1em" ng-click="$ctrl.sessions.accept()">Start Session</span>
+				<span class="btn btn-primary btn-lg d-block py-3 my-2" ng-click="$ctrl.sessions.accept()">Start Session</span>
 				<span class="btn btn-outline-secondary btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Decline</span>
 			</div>
 		</div>
-	</div>
+	</if-owned>
 </div>
