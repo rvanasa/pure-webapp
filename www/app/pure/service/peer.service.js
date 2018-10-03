@@ -1,13 +1,20 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
-var freeice = require('freeice');
 
 module.exports = function PeerService($window, Socket)
 {
+	Peer.config.iceServers.push({
+		url: 'turn:pure-rvanasa.c9users.io:8081', // TODO pass from server
+		username: 'pure',
+		credential: 'pass',
+	});
+	
 	this.events = new EventEmitter();
 	
 	this.outbound = {};
 	this.inbound = {};
+	
+	// setInterval(() => console.log(this.outbound, this.inbound), 2000)///
 	
 	function debug(...args)
 	{
@@ -15,7 +22,6 @@ module.exports = function PeerService($window, Socket)
 	}
 	
 	var audioStream;
-	
 	function getAudioStream()
 	{
 		if(audioStream)
@@ -37,21 +43,11 @@ module.exports = function PeerService($window, Socket)
 		debug('SIG', id, initiator);
 		
 		var peers = initiator ? this.inbound : this.outbound;
-		var peer = peers[id];
-		if(!peer)
-		{
-			// if(initiator)
-			// {
-				peer = this.createPeer(id, !initiator);
-			// }
-			// else
-			// {
-				// this.connect();/////
-				// return;
-			// }
-		}
+		var peer = peers[id] || this.createPeer(id, !initiator);
 		peer.signal(signal);
 	});
+	
+	$window.addEventListener('beforeunload', () => this.disconnect());
 	
 	this.connect = function()
 	{
@@ -60,25 +56,44 @@ module.exports = function PeerService($window, Socket)
 		Socket.emit('signal.ready');
 	}
 	
+	this.disconnect = function(peer)
+	{
+		if(!arguments.length)
+		{
+			for(peer of [...Object.values(this.inbound), ...Object.values(this.outbound)])
+			{
+				this.disconnect(peer);
+			}
+		}
+		else if(peer)
+		{
+			try
+			{
+				peer.send(JSON.stringify({_close: true}));
+			}
+			catch(e)
+			{
+				console.error(e);
+			}
+			peer.destroy();
+		}
+	}
+	
 	this.createPeer = function(id, initiator)
 	{
 		debug('CREATE', id, initiator);
 		
 		var peer = new Peer({
 			initiator,
-			stream: /*initiator && */audioStream,
-			options: {
-				iceServers: freeice(),
-			},
-			reconnectTimer: 5000,
-			trickle: false,
+			// stream: /*initiator && */audioStream,
+			// reconnectTimer: 5000,
 		});
 		
 		var peers = initiator ? this.outbound : this.inbound;
 		if(peers[id])
 		{
 			console.warn('Replace:',peers[id])///
-			peers[id].destroy();
+			this.disconnect(peers[id]);
 		}
 		peers[id] = peer;
 		
@@ -106,9 +121,15 @@ module.exports = function PeerService($window, Socket)
 		
 		peer.on('data', data =>
 		{
-			debug('DATA', String(data));
+			// debug('DATA', String(data));
 			
-			this.events.emit('receive', JSON.parse(data), doSend);
+			var packet = JSON.parse(data);
+			if(packet._close)
+			{
+				peer.destroy();
+				return;
+			}
+			this.events.emit('receive', packet, peer, doSend);
 		});
 		
 		this.events.on('send', doSend);
@@ -119,23 +140,27 @@ module.exports = function PeerService($window, Socket)
 			
 			var peers = initiator ? this.outbound : this.inbound;
 			delete peers[id];
-			this.events.removeListener(doSend);
+			this.events.removeListener('send', doSend);
 		});
 		
 		function doSend(packet)
 		{
-			peer.send(JSON.stringify(packet));
+			try
+			{
+				peer.send(JSON.stringify(packet));
+			}
+			catch(e)
+			{
+				console.error(e);
+			}
 		}
 		
-		if(initiator)///?
-		{
-			getAudioStream()
-				.then(stream =>
-				{
-					console.log('add',stream);
-					peer.addStream(stream);
-				});
-		}
+		// getAudioStream()
+		// 	.then(stream =>
+		// 	{
+		// 		console.log('add',stream);
+		// 		peer.addStream(stream);
+		// 	});
 		
 		return peer;
 	}

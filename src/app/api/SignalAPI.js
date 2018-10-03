@@ -1,29 +1,35 @@
 module.exports = function(API, Socket, Service, ModelService, Hooks, UserEvents, SessionAPI)
 {
+	async function findUsers(user)
+	{
+		var users = [];
+		var sessions = await SessionAPI.find({user: user._id});
+		for(var session of sessions)
+		{
+			if(session.begin)
+			{
+				users.push(session.teacher, ...session.students);
+			}
+		}
+		return users;
+	}
+	
 	UserEvents.on('join', (user, connection) =>
 	{
 		connection.on('signal.ready', async () =>
 		{
-			var sessions = await SessionAPI.find({user});
-			for(var session of sessions)
+			for(var _id of await findUsers(user))
 			{
-				if(session.begin)
+				if(!user._id.equals(_id))
 				{
-					var users = [session.teacher, ...session.students];
-					for(var _id of users)
-					{
-						if(!user._id.equals(_id))
-						{
-							UserEvents.emit(_id, 'signal.peer', {id: connection.id});
-						}
-					}
+					UserEvents.emit(_id, 'signal.peer', {id: connection.id});
 				}
 			}
 		});
 		
 		connection.on('signal', async ({id, signal, initiator}) =>
 		{
-			console.log(id,initiator)
+			// console.log(id, initiator);
 			
 			// TODO ensure in same session
 			Socket.to(id).emit('signal', {id: connection.id, signal, initiator});

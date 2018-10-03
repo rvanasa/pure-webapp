@@ -3,13 +3,19 @@
 		<div ng-style="{background:$ctrl.options.background}">
 			<canvas whiteboard class="whiteboard w-100" options="$ctrl.whiteboardOptions"></canvas>
 		</div>
-		<div class="whiteboard-toolbar d-flex bg-secondary text-white p-1 pt-2">
+		<div class="whiteboard-toolbar noselect d-flex bg-secondary text-white p-1 pt-2">
 			<span class="w-100">
 				<span class="whiteboard-button mx-2" ng-click="$ctrl.takeScreenshot()">
 					<i class="fa fa-camera fa-lg"></i>
 				</span>
-				<span class="whiteboard-button mx-2" ng-click="$ctrl.whiteboardOptions.board.clear()">
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.paths.length && !$ctrl.whiteboardOptions.board.undos.length}" ng-click="$ctrl.whiteboardOptions.board.clear()">
 					<i class="fa fa-eraser fa-lg"></i>
+				</span>
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.paths.length}" ng-click="$ctrl.whiteboardOptions.board.undo()">
+					<i class="fa fa-undo fa-lg"></i>
+				</span>
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.undos.length}" ng-click="$ctrl.whiteboardOptions.board.redo()">
+					<i class="fa fa-repeat fa-lg"></i>
 				</span>
 			</span>
 			<span class="w-100 text-right">

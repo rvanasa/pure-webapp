@@ -12,13 +12,21 @@ module.exports = function(SessionService, PeerService)
 				add: board.paths,
 			});
 		}
+		
+		peer.on('close', () =>
+		{
+			if(board)
+			{
+				board.clear(peer._id);
+			}
+		});
 	});
 	
-	PeerService.events.on('receive', (packet, respond) =>
+	PeerService.events.on('receive', (packet, peer) =>
 	{
 		if(board)
 		{
-			board.packet(packet);
+			board.packet(packet, peer._id);
 		}
 	});
 	
@@ -31,26 +39,14 @@ module.exports = function(SessionService, PeerService)
 			options.board = board;
 			board = whiteboard($elem[0], options);
 			
+			if(newBoard)
+			{
+				board.on('packet', send);
+			}
+			
 			function send(packet)
 			{
 				PeerService.events.emit('send', packet);
-			}
-			
-			if(newBoard)
-			{
-				board.on('add', path => send({add: [path]}));
-				board.on('remove', path => send({remove: [path.id]}));
-				board.on('clear', () => send({clear: true}));
-			}
-			
-			if(SessionService.current)
-			{
-				
-				
-				$scope.$on('$destroy', () =>
-				{
-					
-				});
 			}
 		}
 	};

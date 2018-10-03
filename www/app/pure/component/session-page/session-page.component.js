@@ -13,6 +13,8 @@ module.exports = {
 		};
 		
 		$ctrl.whiteboardOptions = {
+			remoteAlpha: .5,
+			storage: sessionStorage,
 			cursor: {
 				color: $ctrl.colors[1],
 			},

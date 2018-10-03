@@ -13,12 +13,16 @@
 	border-radius: 50%;
 	opacity: .6;
 	cursor: pointer;
-}
-
-.whiteboard-button:not(.selected):hover {
-	transform: scale(1.1);
-}
-
-.whiteboard-button.selected {
-	transform: scale(.5);
+	
+	&:not(.selected):hover {
+		transform: scale(1.1);
+	}
+	
+	&.selected {
+		transform: scale(.5);
+	}
+	
+	&.disabled {
+		opacity: .2;
+	}
 }
