@@ -1,5 +1,10 @@
-module.exports = function(Auth)
+module.exports = function(Auth, Config)
 {
+	if(!Config.provider.google.id)
+	{
+		throw new Error('`provider.google.id` required for one-tap authentication');
+	}
+	
 	return (req, res, next) =>
 	{
 		if(req.isAuthenticated())
@@ -13,7 +18,9 @@ module.exports = function(Auth)
 		else
 		{
 			req.session.redirectURL = req.originalUrl;
-			res.render('login');
+			res.render('login', {
+				googleId: Config.provider.google.id,
+			});
 		}
 	}
 }

@@ -2,7 +2,7 @@ module.exports = {
 	template: `
 		<b class="badge badge-pill my-1"
 			style="font-size:1em"
-			ng-class="'badge-'+($ctrl.interests.has($ctrl.interest) ? 'primary' : 'light')"
+			ng-class="'badge-'+($ctrl.interests.has($ctrl.interest) ? 'brand' : 'light')"
 			ng-bind="$ctrl.interest"
 			ng-click="$ctrl.toggle()">
 		</b>

@@ -1,4 +1,6 @@
-@import "common.scss";
+@import "_bootstrap";
+@import "~bootstrap/scss/bootstrap";
+@import "_common";
 
 @keyframes pulse {
 	0% {transform: scale(1)}
@@ -36,7 +38,7 @@
 .emphasize-left {
 	border-radius: 3em !important;
 	border: .1em solid transparent;
-	border-left: .5em solid $brand-color;
+	border-left: .5em solid $primary;
 }
 
 .tease-right:hover {

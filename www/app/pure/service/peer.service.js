@@ -4,7 +4,7 @@ var Peer = require('simple-peer');
 module.exports = function PeerService($window, Socket)
 {
 	Peer.config.iceServers.push({
-		url: 'turn:pure-rvanasa.c9users.io:8081', // TODO pass from server
+		urls: 'turn:pure-rvanasa.c9users.io:8081', // TODO pass from server
 		username: 'pure',
 		credential: 'pass',
 	});
@@ -19,18 +19,6 @@ module.exports = function PeerService($window, Socket)
 	function debug(...args)
 	{
 		console.log(...args);
-	}
-	
-	var audioStream;
-	function getAudioStream()
-	{
-		if(audioStream)
-		{
-			return Promise.resolve(audioStream);
-		}
-		
-		return $window.navigator.mediaDevices.getUserMedia({audio: true})
-			.then(stream => audioStream = stream);
 	}
 	
 	Socket.on('signal.peer', ({id}) =>
@@ -49,6 +37,11 @@ module.exports = function PeerService($window, Socket)
 	
 	$window.addEventListener('beforeunload', () => this.disconnect());
 	
+	this.getPeers = function()
+	{
+		return [...Object.values(this.inbound), ...Object.values(this.outbound)];
+	}
+	
 	this.connect = function()
 	{
 		debug('ID', Socket.id);
@@ -60,7 +53,7 @@ module.exports = function PeerService($window, Socket)
 	{
 		if(!arguments.length)
 		{
-			for(peer of [...Object.values(this.inbound), ...Object.values(this.outbound)])
+			for(peer of this.getPeers())
 			{
 				this.disconnect(peer);
 			}
@@ -70,12 +63,12 @@ module.exports = function PeerService($window, Socket)
 			try
 			{
 				peer.send(JSON.stringify({_close: true}));
+				peer.destroy();
 			}
 			catch(e)
 			{
 				console.error(e);
 			}
-			peer.destroy();
 		}
 	}
 	
@@ -85,7 +78,7 @@ module.exports = function PeerService($window, Socket)
 		
 		var peer = new Peer({
 			initiator,
-			// stream: /*initiator && */audioStream,
+			stream: audioStream,
 			// reconnectTimer: 5000,
 		});
 		
@@ -117,6 +110,8 @@ module.exports = function PeerService($window, Socket)
 			var audio = new Audio();
 			audio.autoplay = true;
 			audio.srcObject = stream;
+			
+			// doSend({_stream: id});
 		});
 		
 		peer.on('data', data =>
@@ -155,13 +150,60 @@ module.exports = function PeerService($window, Socket)
 			}
 		}
 		
-		// getAudioStream()
-		// 	.then(stream =>
-		// 	{
-		// 		console.log('add',stream);
-		// 		peer.addStream(stream);
-		// 	});
-		
 		return peer;
+	}
+	
+	var audioStream = null;
+	
+	this.enableAudio = function()
+	{
+		if(audioStream)
+		{
+			for(var track of audioStream.getTracks())
+			{
+				track.enabled = true;
+			}
+			
+			return Promise.resolve();
+		}
+		
+		return $window.navigator.mediaDevices.getUserMedia({audio: true})
+			.then(stream =>
+			{
+				audioStream = stream;
+				
+				console.log('add',audioStream);
+				for(var peer of this.getPeers())
+				{
+					if(!peer.streams.includes(audioStream))
+					{
+						peer.addStream(audioStream);
+					}
+				}
+			});
+	}
+	
+	this.disableAudio = function()
+	{
+		if(!audioStream)
+		{
+			return Promise.resolve();
+		}
+		
+		for(var track of audioStream.getTracks())
+		{
+			// track.stop();
+			track.enabled = false;
+		}
+		// for(var peer of this.getPeers())
+		// {
+		// 	if(peer.streams.includes(audioStream))
+		// 	{
+		// 		peer.removeStream(audioStream);
+		// 	}
+		// }
+		// audioStream = null;
+		
+		return Promise.resolve();
 	}
 }

@@ -126,7 +126,7 @@ module.exports = function SessionService($location, API, Socket, TopicService, U
 						this.current = session;
 						$location.path('/session');
 						
-						PeerService.connect();/////
+						PeerService.connect();
 					}
 				}
 			});

@@ -1,6 +1,6 @@
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var {callbackify} = require('util');
 
-var async = require('async');
+var GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 module.exports = function(UserModel, GoogleAccountModel)
 {
@@ -11,39 +11,37 @@ module.exports = function(UserModel, GoogleAccountModel)
 			clientSecret: config.secret,
 			callbackURL: config.callback,
 			scope: ['profile', 'email'],
-		}, (accessToken, refreshToken, profile, done) => 
+		}, callbackify(async (accessToken, refreshToken, profile) => 
 		{
 			profile = profile._json;
 			
-			GoogleAccountModel
+			var account = await GoogleAccountModel
 				.findOne({profileID: profile.id})
-				.populate('user')
-				.exec((err, account) =>
-				{
-					if(err) return done(err);
-					
-					if(!account) account = new GoogleAccountModel();
-					if(!account.user) account.user = new UserModel();
-					
-					var user = account.user;
-					
-					Object.assign(account, {
-						profileID: profile.id,
-						access: accessToken,
-						refresh: refreshToken,
-						email: profile.emails[0].value,
-					});
-					
-					Object.assign(user, {
-						email: user.email || account.email,
-						displayName: profile.displayName,
-						firstName: profile.name.givenName,
-						lastName: profile.name.familyName,
-						// iconURL: profile.image ? profile.image.url.replace(/\?sz=[0-9]+$/, '?sz=256') : null,
-					});
-					
-					async.parallel([user.save.bind(user), account.save.bind(account)], (err) => done(err, user));
-				});
-		});
+				.populate('user');
+			
+			if(!account) account = new GoogleAccountModel();
+			if(!account.user) account.user = new UserModel();
+			
+			var user = account.user;
+			
+			Object.assign(account, {
+				profileID: profile.id,
+				access: accessToken,
+				refresh: refreshToken,
+				email: profile.emails[0].value,
+			});
+			
+			Object.assign(user, {
+				email: user.email || account.email,
+				displayName: profile.displayName,
+				firstName: profile.name.givenName,
+				lastName: profile.name.familyName,
+				// iconURL: profile.image ? profile.image.url.replace(/\?sz=[0-9]+$/, '?sz=256') : null,
+			});
+			
+			[await user.save(), await account.save()];
+			
+			return user;
+		}));
 	}
 }

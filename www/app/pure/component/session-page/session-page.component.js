@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function(Binder, SessionService)
+	controller: function($window, Binder, SessionService, PeerService)
 	{
 		var $ctrl = this;
 		
@@ -33,6 +33,29 @@ module.exports = {
 				type: 'screenshot',
 				src: $ctrl.whiteboardOptions.board.screenshot(),
 			});
+		}
+		
+		$ctrl.microphone = false;
+		
+		$ctrl.toggleMicrophone = function()
+		{
+			var state = !$ctrl.microphone;
+			var promise;
+			if(state)
+			{
+				promise = PeerService.enableAudio();
+			}
+			else
+			{
+				promise = PeerService.disableAudio();
+			}
+			$window.localStorage['microphone'] = state;
+			promise.then(() => $ctrl.microphone = state);
+		}
+		
+		if($window.localStorage['microphone'] === 'true')
+		{
+			$ctrl.toggleMicrophone();
 		}
 		
 		function updateTime()

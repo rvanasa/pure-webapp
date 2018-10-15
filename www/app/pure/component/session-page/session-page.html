@@ -49,6 +49,10 @@
 						</div>
 					</div>
 				</div>
+				<hr>
+				<span class="btn" ng-class="'btn-'+($ctrl.microphone ? 'primary' : 'outline-info')" ng-click="$ctrl.toggleMicrophone()">
+					<i class="fa" ng-class="'fa-'+($ctrl.microphone ? 'microphone' : 'microphone-slash')"></i>
+				</span>
 			</div>
 		</div>
 		<div class="scroll-region" style="max-height:80vh">

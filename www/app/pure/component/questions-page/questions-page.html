@@ -23,7 +23,7 @@
 						<input type="text" class="form-control" ng-model="question.prompt">
 					</div>
 					<!--<hr>-->
-					<label class="text-label mt-2">Choices:</label>
+					<label class="text-label mt-2">Answer Choices:</label>
 					<div class="btn-group d-flex" ng-if="!question.options">
 						<span class="btn btn-secondary w-100" ng-click="question.options = ['Yes', 'No']">Yes / No</span>
 						<span class="btn btn-success w-100" ng-click="question.options = ['', '']">Custom...</span>
@@ -31,7 +31,7 @@
 					<div class="input-group d-flex" ng-if="question.options">
 						<input type="text" class="form-control" ng-repeat="option in question.options track by $index" ng-model="question.options[$index]">
 						<div class="form-control-append">
-							<span class="btn btn-outline-success" ng-click="question.options.push('')"><b>+</b></span>
+							<span class="btn btn-outline-secondary" ng-click="question.options.push('')"><b>+</b></span>
 						</div>
 					</div>
 				</form>
@@ -40,7 +40,7 @@
 					<delete-button class="float-left mt-1" ng-if="question._id" on-confirm="$ctrl.deleteQuestion(question)"></delete-button>
 					<span class="btn-group">
 						<span class="btn btn-primary" ng-click="$ctrl.updateQuestion(question); $event.stopPropagation()" ng-bind="question._id ? 'Update' : 'Submit'"></span>
-						<span class="btn btn-outline-secondary" ng-click="$ctrl.closeQuestion(question); $event.stopPropagation()">Cancel</span>
+						<span class="btn btn-secondary" ng-click="$ctrl.closeQuestion(question); $event.stopPropagation()">Cancel</span>
 					</span>
 				</div>
 			</div>

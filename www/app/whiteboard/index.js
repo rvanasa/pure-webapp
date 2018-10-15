@@ -265,6 +265,7 @@ class Whiteboard extends EventEmitter
 		if(!user)
 		{
 			this.paths.length = 0;
+			this.undos.length = 0;
 			this.emit('clear');
 		}
 		else

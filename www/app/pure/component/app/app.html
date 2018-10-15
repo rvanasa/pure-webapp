@@ -6,7 +6,7 @@
 	<div class="bg-light d-flex">
 		<!--<h2 line-clamp="1" class="w-100 m-2" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h2>-->
 		<a class="text-center w-100" ng-click="$ctrl.setPage(id)" ng-repeat="id in $ctrl.sessions.current ? $ctrl.sessionPages : $ctrl.menuPages">
-			<i class="fa fa-{{$ctrl.getPage(id).icon}} fa-2x fa-fw p-3 w-100 text-muted" ng-class="{'text-primary':$ctrl.isPage(id)}"></i>
+			<i class="fa fa-{{$ctrl.getPage(id).icon}} fa-2x fa-fw p-3 w-100" ng-class="$ctrl.isPage(id) ? 'text-brand' : 'text-muted'"></i>
 		</a>
 	</div>
 </div>

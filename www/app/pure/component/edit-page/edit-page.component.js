@@ -17,7 +17,9 @@ module.exports = {
 		else
 		{
 			$ctrl.topic = {
+				category: CategoryService.categories[0].id,
 				hourly: true,
+				rate: 0,
 			};
 		}
 		

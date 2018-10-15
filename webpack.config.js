@@ -27,7 +27,14 @@ var config = {
 	module: {
 		rules: [{
 			test: /\.scss$/,
-			use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+			use: [MiniCssExtractPlugin.loader, 'css-loader', {
+				loader: 'postcss-loader',
+				options: {
+					plugins: () => [
+						require('autoprefixer'),
+					],
+				},
+			}, 'sass-loader'],
 		}, {
 			test: /\.html$/,
 			use: 'html-loader',

@@ -1,20 +1,16 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
 
-@import "util/scrolling.scss";
+@import "util/_scrolling";
 
-$brand-color: #5DB4E8; ///temp
+$brand-color: #5DB4E8;
 
 :not(.no-transition) {
 	transition: .2s ease-out;
 	transition-property: background, color, opacity, border, box-shadow, transform, max-width, max-height, border-radius;
 }
 
-.no-transition, .no-transition * {
+.no-transition, .no-transition *, .fa {
 	transition: none;
-}
-
-:root {
-	
 }
 
 html, body {
@@ -25,6 +21,15 @@ html, body {
 
 textarea {
 	resize: none;
+}
+
+.text-brand {
+	color: $brand-color !important;
+}
+
+.bg-brand, .badge-brand {
+	color: white;
+	background: $brand-color !important;
 }
 
 .clickable, .btn, a {
@@ -44,15 +49,13 @@ textarea {
 	// opacity: 1;
 }
 
+.card {
+	box-shadow: 0 2px 3px rgba(0,0,0, .2);
+}
+
 :disabled {
 	cursor: default;
 }
-
-// .text-white {
-// 	hr {
-// 		border-color: white;
-// 	}
-// }
 
 .text-thin {
 	text-transform: lowercase;
@@ -64,14 +67,6 @@ textarea {
 	text-transform: uppercase;
 	font-weight: bold;
 	opacity: .6;
-}
-
-.text-primary {
-	color: $brand-color !important;
-}
-
-.badge-primary {
-	background: $brand-color !important;
 }
 
 ::selection {

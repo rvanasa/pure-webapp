@@ -1,4 +1,6 @@
-@import "common.scss";
+@import "_bootstrap";
+@import "~bootstrap/scss/bootstrap";
+@import "_common";
 
 @keyframes logo-animated-start {
 	0% {transform: scaleY(0) rotate(-20deg)}

@@ -12,9 +12,8 @@
 	height: 1.5em;
 	border-radius: 50%;
 	opacity: .6;
-	cursor: pointer;
 	
-	&:not(.selected):hover {
+	&:not(.selected):not(.disabled):hover {
 		transform: scale(1.1);
 	}
 	
@@ -24,5 +23,6 @@
 	
 	&.disabled {
 		opacity: .2;
+		cursor: default;
 	}
 }

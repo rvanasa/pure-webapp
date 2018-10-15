@@ -1,4 +1,4 @@
-<div class="bg-light pb-2">
+<div class="bg-light pb-1 mb-1">
 	<div class="container">
 		<div class="input-group input-group-lg">
 			<input type="text"
@@ -15,7 +15,7 @@
 		</h5>
 	</div>
 </div>
-<div class="container my-2">
+<div class="container mb-2">
 	<div ng-show="!$ctrl.results.length && !$ctrl.category">
 		<div class="row">
 			<div class="col-lg-4">
@@ -26,7 +26,7 @@
 			</div>
 			<div class="col-lg-8">
 				<hr class="d-lg-none">
-				<h4 class="text-muted mt-lg-2">Favorites:</h4>
+				<h4 class="text-muted mt-lg-3">Favorites:</h4>
 				<hr ng-if="$ctrl.favorites.length">
 				<search-result topic="topic" selected="$ctrl.selected" ng-repeat="topic in $ctrl.favorites | orderBy:'$index':true"></search-result>
 			</div>
