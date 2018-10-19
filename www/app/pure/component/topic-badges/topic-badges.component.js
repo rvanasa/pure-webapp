@@ -21,13 +21,13 @@ module.exports = {
 		{
 			if(n >= threshold)
 			{
-				return 'fa-star';
+				return 'fas fa-star';
 			}
 			else if(Math.round(n) >= threshold)
 			{
-				return 'fa-star-half-o';
+				return 'far fa-star-half';
 			}
-			return 'fa-star-o';
+			return 'far fa-star';
 		}
 		
 		$ctrl.percent = function(n)

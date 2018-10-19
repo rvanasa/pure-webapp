@@ -3,6 +3,7 @@ var $clamp = window.$clamp;
 module.exports = function($timeout)
 {
 	return {
+		restrict: 'A',
 		link($scope, $elem, $attrs)
 		{
 			var lines = +$attrs.lineClamp;

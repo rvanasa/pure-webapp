@@ -1,0 +1,77 @@
+<div class="bg-light" ng-init="$ctrl.option = 'instant'">
+	<div class="container pb-2 mb-3">
+		<div class="row text-center text-muted">
+			<div class="col-md-4" ng-class="{'d-none d-md-block': $ctrl.option == 'scholarship'}">
+				<!--<h4 class="my-4">Most convenient:</h4>-->
+				<span class="btn btn-lg w-100 my-2 py-3" ng-class="'btn-'+(!$ctrl.option || $ctrl.option == 'scholarship' ? 'info' : 'outline-info')" ng-click="$ctrl.option='scholarship'">
+					<i class="fa fa-university mr-2"></i>
+					Scholarship
+				</span>
+			</div>
+			<div class="col-md-4" ng-class="{'d-none d-md-block': $ctrl.option == 'instant'}">
+				<!--<h4 class="my-4">Simplest option:</h4>-->
+				<span class="btn btn-lg w-100 my-2 py-3" ng-class="'btn-'+(!$ctrl.option || $ctrl.option == 'instant' ? 'info' : 'outline-info')" ng-click="$ctrl.option='instant'">
+					<i class="fa fa-credit-card mr-2"></i>
+					Instant Payment
+				</span>
+			</div>
+			<div class="col-md-4" ng-class="{'d-none d-md-block': $ctrl.option == 'crypto'}">
+				<!--<h4 class="my-4">No service fee:</h4>-->
+				<span class="btn btn-lg w-100 my-2 py-3" ng-class="'btn-'+(!$ctrl.option || $ctrl.option == 'crypto' ? 'info' : 'outline-info')" ng-click="$ctrl.option='crypto'">
+					<i class="fa fa-rocket mr-2"></i>
+					Cryptocurrency
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+	<ng-switch on="$ctrl.option">
+		<div ng-switch-when="scholarship">
+			<h5 class="text-center text-muted m-2">No scholarships are available at the moment.</h5>
+		</div>
+		<div ng-switch-when="instant" class="text-center">
+			<h4 class="text-muted mt-md-4">Choose an amount:</h4>
+			<span class="btn-group d-flex">
+				<span class="btn w-100 mx-1 mt-3 py-2 px-0"
+					ng-repeat="amount in $ctrl.amounts"
+					ng-class="'btn-'+($ctrl.amount.total == amount ? 'success' : $ctrl.pickedAmount ? 'outline-secondary' : 'outline-success')"
+					ng-click="$ctrl.amount.total = amount; $ctrl.pickedAmount = true">
+					<i class="fa fa-dollar-sign"></i>
+					<span ng-bind="amount"></span>
+					<span ng-bind="$ctrl.amount.currency"></span>
+				</span>
+			</span>
+			<hr class="my-3">
+			<h4 class="text-muted mt-4">Choose a payment method:</h4>
+			<div class="pt-3 mx-auto" style="max-width:80vh">
+				<div paypal amount="$ctrl.amount"></div>
+			</div>
+			<hr class="mt-0">
+			<h5 class="container text-muted mb-3">Your payment information is protected by PayPal.</h5>
+		</div>
+		<div ng-switch-when="crypto">
+			<h5 class="text-center">Pure Learning Platform uses the Stellar blockchain to secure your <xp-label></xp-label> tokens.</h5>
+			<p class="text-danger text-center">Please only deposit XP or XLM tokens. XLM will be converted to XP at the current market rate.</p>
+			<hr>
+			<div class="row">
+				<div class="col-lg-8">
+					<label class="text-label">Deposit Address:</label>
+					<div class="input-group">
+						<input type="text" readonly class="form-control-plaintext bg-light" ng-value="$ctrl.wallet.address">
+					</div>
+				</div>
+				<div class="col-md-4 col-lg-4">
+					<label class="text-label my-3">QR Code:</label>
+					<br>
+					<img ng-src="https://chart.googleapis.com/chart?chs=170x170&chld=M|0&cht=qr&chl={{$ctrl.wallet.address}}">
+				</div>
+				<!--<div class="col-md-8 col-lg-12">-->
+				<!--	<div class="my-3">-->
+				<!--		<h5 class="text-success">If you're confused right now, it may help to choose another payment option.</h5>-->
+				<!--	</div>-->
+				<!--</div>-->
+			</div>
+		</div>
+	</div>
+</div>

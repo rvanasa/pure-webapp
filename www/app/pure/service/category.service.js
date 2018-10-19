@@ -3,11 +3,11 @@ module.exports = function CategoryService()
 	this.categories = [{
 		id: 'study',
 		name: 'Study',
-		icon: 'map-o',
+		icon: 'map',
 	}, {
 		id: 'tutor',
 		name: 'Tutor',
-		icon: 'university',
+		icon: 'pencil-alt',
 	}, {
 		id: 'professional',
 		name: 'Professional',
@@ -15,14 +15,14 @@ module.exports = function CategoryService()
 	}, {
 		id: 'hangout',
 		name: 'Hangout',
-		icon: 'sitemap',
+		icon: 'dice-d6',
 	}, {
 		id: 'creative',
 		name: 'Creative',
-		icon: 'picture-o',
+		icon: 'solar-panel',
 	}, {
 		id: 'other',
 		name: 'Other',
-		icon: 'space-shuttle',
+		icon: 'rocket',
 	}];
 }

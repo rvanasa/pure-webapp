@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./customize-page.html'),
-	controller: function($location, API, InterestService, UserService)
+	controller: function($location, API, InterestService, UserService, WalletService)
 	{
 		var $ctrl = this;
 		
@@ -9,6 +9,8 @@ module.exports = {
 		$ctrl.interests = InterestService;
 		
 		$ctrl.user = UserService.user;
+		WalletService.getWallet()
+			.then(wallet => $ctrl.wallet = wallet);
 		
 		$ctrl.index = 0;
 		
@@ -74,6 +76,11 @@ module.exports = {
 		$ctrl.createQuestion = function()
 		{
 			return $location.path('/questions');
+		}
+		
+		$ctrl.addFunds = function()
+		{
+			return $location.path('/fund');
 		}
 	}
 };

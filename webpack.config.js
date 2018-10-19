@@ -53,7 +53,6 @@ var config = {
 		}),
 	],
 	externals: {
-		'jquery': 'jQuery',
 		'angular': 'angular',
 		'socket.io-client': 'io',
 		'push.js': 'Push',

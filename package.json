@@ -30,6 +30,9 @@
     "socket.io": "^2.1.1",
     "sorc": "^0.3.14",
     "spdy": "^3.4.7",
+    "stellar-sdk": "^0.11.0",
+    "webpack": "^4.20.2",
+    "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.2",
     "yargs": "^11.1.0"
   },
@@ -42,14 +45,14 @@
     "css-loader": "^0.28.11",
     "file-loader": "^1.1.11",
     "html-loader": "^0.5.5",
+    "jquery": "^3.3.1",
     "mini-css-extract-plugin": "^0.4.4",
-    "node-sass": "^4.9.3",
+    "node-sass": "^4.9.4",
+    "paypal-checkout": "^4.0.228",
     "popper.js": "^1.14.4",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
-    "simple-peer": "^9.1.2",
     "style-loader": "^0.21.0",
-    "webpack": "^4.20.2",
-    "webpack-dev-middleware": "^3.4.0"
+    "sweetalert2": "^7.28.5"
   }
 }

@@ -72,4 +72,49 @@
 			</div>
 		</div>
 	</div>
+	<hr>
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="card my-2">
+				<div class="card-body">
+					<loading status="$ctrl.wallet">
+						<h5>
+							Wallet status:
+							<small>
+								<i class="fa fa-fw" ng-class="'fa-'+(+$ctrl.wallet.balance ? 'check text-success' : 'times text-danger')"></i>
+								<span class="text-muted" ng-if="!+$ctrl.wallet.balance">No funds</span>
+								<span class="text-muted" ng-if="+$ctrl.wallet.balance">Funded</span>
+							</small>
+						</h5>
+						<hr>
+						<div ng-if="!+$ctrl.wallet.balance">
+							<span class="btn btn-danger d-block mt-2" ng-click="$ctrl.addFunds()">
+								<i class="fa fa-rocket mr-2"></i>
+								Add Funds
+							</span>
+						</div>
+						<div ng-if="+$ctrl.wallet.balance">
+							<div ng-if="!$ctrl.showingBalance">
+								<span class="btn btn-info d-block mt-2" ng-click="$ctrl.showingBalance=true">
+									<i class="fa fa-caret-down mr-2"></i>
+									Show Balance
+								</span>
+							</div>
+							<div ng-if="$ctrl.showingBalance">
+								<span class="btn btn-outline-info d-block mt-2" ng-click="$ctrl.showingBalance=false">
+									<i class="fa fa-caret-right mr-2"></i>
+									Hide Balance
+								</span>
+								<div class="text-center my-2">
+									<xp-label amount="$ctrl.wallet.balance"></xp-label>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<span class="btn btn-outline-secondary d-block mt-2">Payment Settings</span>
+					</loading>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

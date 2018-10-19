@@ -9,7 +9,7 @@ $brand-color: #5DB4E8;
 	transition-property: background, color, opacity, border, box-shadow, transform, max-width, max-height, border-radius;
 }
 
-.no-transition, .no-transition *, .fa {
+.no-transition, .no-transition *, .btn * {
 	transition: none;
 }
 

@@ -1,6 +1,6 @@
 var Push = require('push.js');
 
-module.exports = function PushService($window)
+module.exports = function PushService($window, Alert)
 {
 	// Push.config({
 	// 	serviceWorker: 'https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.7/serviceWorker.min.js',
@@ -22,7 +22,8 @@ module.exports = function PushService($window)
 	{
 		if($window.document.hasFocus())
 		{
-			return Promise.resolve();
+			return Alert(title, 'info');
+			// return Promise.resolve();
 		}
 		
 		options = Object.assign({}, options);

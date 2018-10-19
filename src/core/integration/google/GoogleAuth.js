@@ -26,9 +26,9 @@ module.exports = function(UserModel, GoogleAccountModel)
 			
 			Object.assign(account, {
 				profileID: profile.id,
-				access: accessToken,
-				refresh: refreshToken,
 				email: profile.emails[0].value,
+				// access: accessToken,
+				// refresh: refreshToken,
 			});
 			
 			Object.assign(user, {
@@ -36,7 +36,6 @@ module.exports = function(UserModel, GoogleAccountModel)
 				displayName: profile.displayName,
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
-				// iconURL: profile.image ? profile.image.url.replace(/\?sz=[0-9]+$/, '?sz=256') : null,
 			});
 			
 			[await user.save(), await account.save()];

@@ -1,4 +1,4 @@
-module.exports = function SessionService($location, API, Socket, TopicService, UserService, PushService, PeerService)
+module.exports = function SessionService($location, API, Socket, TopicService, PushService, UserService, PeerService)
 {
 	var SessionAPI = API.service('sessions');
 	

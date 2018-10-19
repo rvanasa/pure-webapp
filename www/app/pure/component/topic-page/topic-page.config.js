@@ -3,7 +3,7 @@ module.exports = function(PageListProvider)
 	PageListProvider.addPage({
 		id: 'topic',
 		name: 'Topic',
-		icon: 'folder-o',
+		icon: 'folder',
 		params: [':id'],
 	});
 }

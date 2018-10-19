@@ -1,13 +1,12 @@
 module.exports = {
 	template: require('./app.html'),
-	controller: function($route, $location, PageList, UserService, BannerService, SessionService)
+	controller: function($route, $location, PageList, UserService, SessionService)
 	{
 		var $ctrl = this;
 		
 		$ctrl.user = UserService.user;
 		
 		$ctrl.pages = PageList;
-		$ctrl.banners = BannerService;
 		$ctrl.sessions = SessionService;
 		
 		$ctrl.sessionPages = ['topic', 'session'];

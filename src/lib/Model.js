@@ -72,10 +72,33 @@ module.exports = function()
 			return this;
 		}
 		
-		validate(...args)
+		validate(validator, message)
 		{
-			this.current.validate = args.length === 1 ? args[0] : args;
+			if(!this.current.validate)
+			{
+				this.current.validate = [];
+			}
+			this.current.validate.push(arguments.length == 1 ? validator : {
+				validator,
+				message,
+			});
 			return this;
+		}
+		
+		integer()
+		{
+			this.current.type = Number;
+			return this.validate(Number.isInteger, `{VALUE} must be an integer`);
+		}
+		
+		min(n)
+		{
+			return this.validate(val => val >= n, `{VALUE} must be >= ${n}`);
+		}
+		
+		max(n)
+		{
+			return this.validate(val => val <= n, `{VALUE} must be <= ${n}`);
 		}
 		
 		method(name, handler)

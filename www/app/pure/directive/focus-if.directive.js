@@ -16,7 +16,7 @@ module.exports = function($timeout)
 			{
 				if(condition)
 				{
-					$timeout(() => $elem.focus(), $scope.$eval($attrs.focusDelay));
+					$timeout(() => $elem[0].focus(), $scope.$eval($attrs.focusDelay));
 				}
 			}
 		}

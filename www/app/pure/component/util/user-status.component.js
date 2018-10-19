@@ -2,8 +2,8 @@ module.exports = {
 	template: `
 		<span ng-switch="$ctrl.status($ctrl.user)">
 			<i ng-switch-when="available" class="fa fa-podcast text-success animate-pulse"></i>
-			<i ng-switch-when="busy" class="fa fa-pencil-square-o text-muted"></i>
-			<i ng-switch-default class="fa fa-user-o text-muted"></i>
+			<i ng-switch-when="busy" class="fa far-pencil-square text-muted"></i>
+			<i ng-switch-default class="far fa-user text-muted"></i>
 		</span>
 	`,
 	bindings: {
