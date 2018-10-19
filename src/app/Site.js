@@ -1,7 +1,7 @@
 var express = require('express');
 var morgan = require('morgan');
 
-module.exports = function(App, Auth, API, Config, AuthMiddleware)
+module.exports = function(App, Auth, API, Config, ClientConfig, AuthMiddleware)
 {
 	App.set('views', 'view');
 	App.set('view engine', 'ejs');
@@ -34,7 +34,7 @@ module.exports = function(App, Auth, API, Config, AuthMiddleware)
 	App.use('/assets', express.static(this.config.basePath + '/www/assets'), (req, res, next) => res.status(404).send('Unknown asset'));
 	App.use('/api', API);
 	
-	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {user: req.user.toJSON()}));
+	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {user: req.user.toJSON(), config: ClientConfig}));
 	
 	App.use((err, req, res, next) =>
 	{

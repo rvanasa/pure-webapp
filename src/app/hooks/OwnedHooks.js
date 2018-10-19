@@ -1,10 +1,10 @@
 module.exports = function(Hooks)
 {
-	return Hooks('owned', (id, {public} = {}) => ({
+	return Hooks('owned', (id, config = {}) => ({
 		before: {
 			all({method, params, data})
 			{
-				if(public)
+				if(config.public)
 				{
 					if(method === 'get' || (method === 'find' && !params.user))
 					{
@@ -12,7 +12,7 @@ module.exports = function(Hooks)
 					}
 				}
 				
-				var userID = (public && method === 'find' && params.query.user) || params.user._id;
+				var userID = (config.public && method === 'find' && params.query.user) || params.user._id;
 				
 				params.filter[id] = userID;
 				if(data)

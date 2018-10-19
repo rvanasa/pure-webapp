@@ -1,3 +1,7 @@
+'use strict'
+
+require('use-strict');
+
 var argv = require('yargs').argv;
 
 global.Promise = require('bluebird').Promise;

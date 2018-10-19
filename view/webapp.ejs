@@ -17,12 +17,13 @@
 
 <script src="/socket.io/socket.io.js"></script>
 
-<link rel="stylesheet" href="/bundle/webapp.css">
-<script src="/bundle/webapp.js"></script>
-
 <script>
 var UserData = <%- JSON.stringify(user) %>
+var ClientConfig = <%- JSON.stringify(config) %>
 </script>
+
+<link rel="stylesheet" href="/bundle/webapp.css">
+<script src="/bundle/webapp.js"></script>
 
 </head>
 <body>

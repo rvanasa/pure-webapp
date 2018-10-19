@@ -1,7 +1,9 @@
 var paypal = require('paypal-checkout');
 
-module.exports = function($timeout, $parse, Alert)
+module.exports = function($timeout, $parse, Alert, Config)
 {
+	var config = Config.provider.paypal;
+	
 	return {
 		restrict: 'A',
 		link($scope, $elem, $attrs)
@@ -17,17 +19,21 @@ module.exports = function($timeout, $parse, Alert)
 				}
 			});
 			
+			var env = config.env;
+			var client = {};
+			client[env] = config.key;
+			
 			paypal.Button.render({
-				env: 'sandbox',
-				client: {
-					sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
-					// production: '',
-				},
+				env,
+				client,
 				style: {
 					layout: 'vertical',
 					size:   'responsive',
 					shape:  'pill',
 					color:  'gold',
+				},
+				funding: {
+					allowed: [paypal.FUNDING.CARD, paypal.FUNDING.CREDIT],
 				},
 				commit: true,
 				payment(data, actions)
