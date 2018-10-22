@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./search-page.html'),
-	controller: function($location, Binder, API, CategoryService, TopicService, FavoriteService)
+	controller: function($location, $routeParams, Binder, API, CategoryService, TopicService, FavoriteService)
 	{
 		var $ctrl = this;
 		
@@ -45,19 +45,22 @@ module.exports = {
 		
 		$ctrl.setCategory = function(category)
 		{
-			$ctrl.category = category;
-			$ctrl.updateResults();
+			$location.path(category ? '/search/' + encodeURIComponent(category.id) : '/search');
+		}
+		
+		var id = $routeParams['category'];
+		if(id)
+		{
+			$ctrl.category = $ctrl.categories.find(cat => cat.id === id);
 		}
 		
 		var params = $location.search();
 		$ctrl.query = params['q'];
-		$ctrl.category = params['c'];
 		$ctrl.updateResults();
 		
 		Binder($ctrl).onDestroy(() =>
 		{
 			$location.search('q', null);
-			$location.search('c', null);
 		});
 	}
 };

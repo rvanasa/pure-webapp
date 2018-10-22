@@ -33,7 +33,8 @@ module.exports = function($timeout, $parse, Alert, Config)
 					color:  'gold',
 				},
 				funding: {
-					allowed: [paypal.FUNDING.CARD, paypal.FUNDING.CREDIT],
+					// allowed: [paypal.FUNDING.CARD],
+					disallowed: [paypal.FUNDING.CREDIT],
 				},
 				commit: true,
 				payment(data, actions)

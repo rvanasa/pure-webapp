@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./app.html'),
-	controller: function($route, $location, PageList, UserService, SessionService)
+	controller: function($route, $location, API, PageList, UserService, SessionService, Alert)
 	{
 		var $ctrl = this;
+		
+		var RatingAPI = API.service('ratings');
 		
 		$ctrl.user = UserService.user;
 		
@@ -11,6 +13,14 @@ module.exports = {
 		
 		$ctrl.sessionPages = ['topic', 'session'];
 		$ctrl.menuPages = ['search', 'user', 'customize'];
+		
+		SessionService.events.on('leave', session =>
+		{
+			if(session.students.some(user => user._id === UserService.user._id))
+			{
+				$ctrl.prevSession = session;
+			}
+		});
 		
 		$ctrl.isPage = function(id)
 		{
@@ -48,6 +58,17 @@ module.exports = {
 			next = Math.min(Math.max(next, 0), $ctrl.menuPages.length);
 			
 			$ctrl.setPage($ctrl.menuPages[next]);
+		}
+		
+		$ctrl.submitRating = function()
+		{
+			var rating = $ctrl.rating;
+			var id = $ctrl.prevSession._id;
+			
+			$ctrl.rating = null;
+			$ctrl.prevSession = null;
+			return RatingAPI.create(Object.assign(rating, {session: id}))
+				.then(() => Alert.toast('Thanks for the feedback!', null, 'success'));
 		}
 	}
 };

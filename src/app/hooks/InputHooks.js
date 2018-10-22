@@ -2,11 +2,11 @@ module.exports = function(Hooks)
 {
 	return Hooks('input', (modify) => ({
 		after: {
-			all(context)
+			async all(context)
 			{
 				if(context.data)
 				{
-					modify(context.data, context);
+					await modify(context.data, context);
 				}
 			},
 		},

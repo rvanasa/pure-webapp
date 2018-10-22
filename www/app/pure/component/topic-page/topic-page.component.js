@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./topic-page.html'),
-	controller: function($location, $routeParams, TopicService, SessionService, StatusService)
+	controller: function($window, $location, $routeParams, TopicService, SessionService, StatusService)
 	{
 		var $ctrl = this;
 		
@@ -37,6 +37,15 @@ module.exports = {
 		{
 			TopicService.delete($ctrl.topic)
 				.then(() => $location.path('/user'));
+		}
+		
+		$ctrl.getShareIntent = function()
+		{
+			return {
+				title: `Pure Learning Platform`,
+				message: `Check out my topic "${$ctrl.topic.name}" on Pure Learning Platform:`,
+				url: true,
+			};
 		}
 	}
 };

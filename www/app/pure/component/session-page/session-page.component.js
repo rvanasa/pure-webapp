@@ -1,24 +1,17 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($window, Binder, SessionService, PeerService)
+	controller: function($window, $scope, Binder, SessionService, PeerService, WhiteboardService)
 	{
 		var $ctrl = this;
 		
 		$ctrl.sessions = SessionService;
 		
-		$ctrl.colors = ['#000', '#FFF', '#59F', '#7F7', '#F68'];
+		$ctrl.options = WhiteboardService.options;
 		
-		$ctrl.options = {
-			background: '#343A40',
-		};
+		$ctrl.colors = $ctrl.options.colors;
+		$ctrl.board = $ctrl.options.board;
 		
-		$ctrl.whiteboardOptions = {
-			remoteAlpha: .5,
-			storage: sessionStorage,
-			cursor: {
-				color: $ctrl.colors[1],
-			},
-		};
+		// TODO clear whiteboard on new session
 		
 		$ctrl.history = [];
 		
@@ -58,18 +51,23 @@ module.exports = {
 			$ctrl.toggleMicrophone();
 		}
 		
-		function updateTime()
+		function updateTime(apply)
 		{
 			if(SessionService.current)
 			{
 				var seconds = Math.round((Date.now() - new Date(SessionService.current.begin)) / 1000);
 				var minutes = Math.floor(seconds / 60);
 				var hours = Math.floor(minutes / 60);
+				var prevTime = $ctrl.time;
 				$ctrl.time = [hours, minutes % 60, seconds % 60].map(t => String(t).padStart(2, '0')).join(' : ');
+				if(apply && $ctrl.time !== prevTime)
+				{
+					$scope.$apply();
+				}
 			}
 		}
 		
 		updateTime();
-		Binder($ctrl).interval(updateTime, 500);
+		Binder($ctrl).interval(() => updateTime(true), 500, null, false);
 	}
 };

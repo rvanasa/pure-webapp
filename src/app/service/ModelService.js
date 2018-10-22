@@ -27,13 +27,14 @@ module.exports = function()
 		{
 			return ensureResult(await Model.findOne(getFilter(filter, id), select, options).lean());
 		},
-		async create(data, {options})
+		async create(data)
 		{
-			var result = ensureResult(await Model.create(data, options));
+			var result = ensureResult(await Model.create(data));
 			return result._id;
 		},
 		async update(id, data, {filter, options})
 		{
+			delete data[id];
 			ensureResult(await Model.updateOne(getFilter(filter, id), data, options));
 			return 'Updated';
 		},

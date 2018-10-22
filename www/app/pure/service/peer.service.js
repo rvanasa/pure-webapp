@@ -1,7 +1,7 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
 
-module.exports = function PeerService($window, Socket)
+module.exports = function PeerService($window, Socket, SessionService)
 {
 	Peer.config.iceServers.push({
 		urls: 'turn:pure-rvanasa.c9users.io:8081', // TODO pass from server
@@ -15,6 +15,9 @@ module.exports = function PeerService($window, Socket)
 	this.inbound = {};
 	
 	// setInterval(() => console.log(this.outbound, this.inbound), 2000)///
+	
+	SessionService.events.on('join', session => this.connect());
+	SessionService.events.on('leave', session => this.disconnect());
 	
 	function debug(...args)
 	{

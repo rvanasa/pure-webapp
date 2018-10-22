@@ -3,6 +3,6 @@ module.exports = function(Model, Database)
 	return Model('Domain')
 		.prop('admins', 'User').array()
 		.prop('name', String)
-		.prop('domains', String).array()
+		.prop('domainNames', String).array()
 		.build(Database);
 }

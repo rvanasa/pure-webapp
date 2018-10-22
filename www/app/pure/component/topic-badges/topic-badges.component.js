@@ -1,7 +1,7 @@
 module.exports = {
 	template: require('./topic-badges.html'),
 	bindings: {
-		topic: '<',
+		badges: '<',
 		include: '<',
 	},
 	controller: function()
@@ -14,18 +14,18 @@ module.exports = {
 			{
 				return true;
 			}
-			return $ctrl.topic && $ctrl.topic[key];
+			return $ctrl.badges && $ctrl.badges[key];
 		}
 		
 		$ctrl.starIcon = function(threshold, n)
 		{
 			if(n >= threshold)
 			{
-				return 'fas fa-star';
+				return 'fa fa-star';
 			}
 			else if(Math.round(n) >= threshold)
 			{
-				return 'far fa-star-half';
+				return 'fa fa-star-half-alt';
 			}
 			return 'far fa-star';
 		}

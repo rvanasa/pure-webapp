@@ -9,7 +9,10 @@
 							<hr>
 							<span class="text-muted">Find people who match your style by contributing to our question database.</span>
 							<hr>
-							<span class="btn btn-success d-block" ng-click="$ctrl.createQuestion()">Submit a Question</span>
+							<span class="btn btn-success d-block" ng-click="$ctrl.createQuestion()">
+								<i class="fa fa-share-square mr-1"></i>
+								Submit a Question
+							</span>
 						</div>
 						<div ng-if="$ctrl.question">
 							<h4 ng-bind="$ctrl.question.prompt"></h4>
@@ -46,7 +49,7 @@
 								</span>
 							</div>
 							<hr>
-							<span class="text-muted">Answer questions to learn your student style compared to others on the platform.</span>
+							<span class="text-muted">Answer questions to learn your style and discover compatible peers.</span>
 						</div>
 					</loading>
 				</div>
@@ -88,20 +91,20 @@
 						</h5>
 						<hr>
 						<div ng-if="!+$ctrl.wallet.balance">
-							<span class="btn btn-danger d-block mt-2" ng-click="$ctrl.addFunds()">
+							<span class="btn btn-lg btn-danger d-block mt-2" ng-click="$ctrl.addFunds()">
 								<i class="fa fa-rocket mr-2"></i>
 								Add Funds
 							</span>
 						</div>
 						<div ng-if="+$ctrl.wallet.balance">
 							<div ng-if="!$ctrl.showingBalance">
-								<span class="btn btn-info d-block mt-2" ng-click="$ctrl.showingBalance=true">
+								<span class="btn btn-lg btn-info d-block mt-2" ng-click="$ctrl.showingBalance=true">
 									<i class="fa fa-caret-down mr-2"></i>
 									Show Balance
 								</span>
 							</div>
 							<div ng-if="$ctrl.showingBalance">
-								<span class="btn btn-outline-info d-block mt-2" ng-click="$ctrl.showingBalance=false">
+								<span class="btn btn-lg btn-outline-info d-block mt-2" ng-click="$ctrl.showingBalance=false">
 									<i class="fa fa-caret-right mr-2"></i>
 									Hide Balance
 								</span>
@@ -110,9 +113,25 @@
 								</div>
 							</div>
 						</div>
-						<hr>
-						<span class="btn btn-outline-secondary d-block mt-2">Payment Settings</span>
+						<!--<hr>-->
+						<!--<span class="btn btn-outline-secondary d-block mt-2">Payment Options</span>-->
 					</loading>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card my-2">
+				<div class="card-body">
+					<span class="btn-group d-flex">
+						<a class="btn btn-info w-100 mx-1" href="/settings">
+							<i class="fa fa-cog mr-1"></i>
+							Settings
+						</a>
+						<span class="btn btn-outline-secondary w-100 mx-1" onclick="location.assign('/logout')">
+							<i class="fa fa-sign-out-alt mr-1"></i>
+							Sign Out
+						</span>
+					</span>
 				</div>
 			</div>
 		</div>

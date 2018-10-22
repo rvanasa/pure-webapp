@@ -2,16 +2,13 @@ module.exports = function(Hooks)
 {
 	return Hooks('output', (modify) => ({
 		after: {
-			get(context)
+			async get(context)
 			{
-				modify(context.result, context);
+				await modify(context.result, context);
 			},
-			find(context)
+			async find(context)
 			{
-				for(var i = 0; i < context.result.length; i++)
-				{
-					modify(context.result[i], context, i);
-				}
+				await Promise.all(context.result.map((elem, i) => modify(elem, context, i)));
 			},
 		},
 	}));

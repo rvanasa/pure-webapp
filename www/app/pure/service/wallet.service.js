@@ -11,7 +11,16 @@ module.exports = function WalletService(API)
 			return Promise.resolve(this.wallet);
 		}
 		
-		return WalletAPI.get('primary')
+		return WalletAPI.get('stellar')
 			.then(result => this.wallet = result);
+	}
+	
+	this.checkFundsForTopic = function(topic)
+	{
+		return this.getWallet()
+			.then(wallet =>
+			{
+				return wallet.balance >= topic.rate;
+			});
 	}
 }

@@ -74,11 +74,7 @@ module.exports = function()
 		
 		validate(validator, message)
 		{
-			if(!this.current.validate)
-			{
-				this.current.validate = [];
-			}
-			this.current.validate.push(arguments.length == 1 ? validator : {
+			this.current.validate = [].concat(this.current.validate || [], arguments.length == 1 ? validator : {
 				validator,
 				message,
 			});

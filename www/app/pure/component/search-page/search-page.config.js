@@ -4,5 +4,6 @@ module.exports = function(PageListProvider)
 		id: 'search',
 		name: 'Search',
 		icon: 'search',
+		params: [':category'],
 	});
 }

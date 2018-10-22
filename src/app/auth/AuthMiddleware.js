@@ -1,10 +1,5 @@
 module.exports = function(Auth, Config)
 {
-	if(!Config.provider.google.id)
-	{
-		throw new Error('`provider.google.id` required for one-tap authentication');
-	}
-	
 	return (req, res, next) =>
 	{
 		if(req.isAuthenticated())

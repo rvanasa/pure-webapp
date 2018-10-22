@@ -3,7 +3,7 @@ module.exports = function(API, Service, ModelService, Hooks, StellarIntegration)
 	return Service('wallets')
 		.add('get', async (id, {user}) =>
 		{
-			if(id === 'primary')
+			if(id === 'stellar')
 			{
 				var wallets = await StellarIntegration.getWallets(user);
 				if(!wallets.length)

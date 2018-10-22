@@ -1,8 +1,8 @@
 module.exports = {
 	template: `
-		<span ng-class="'btn btn-'+($ctrl.favorites.has($ctrl.topic) ? 'success' : 'secondary')"
+		<span ng-class="'btn btn-'+($ctrl.favorites.has($ctrl.topic) ? 'secondary' : 'outline-secondary')"
 			ng-click="$ctrl.favorites.toggle($ctrl.topic)">
-			<i class="fa" ng-class="'fa-'+($ctrl.favorites.has($ctrl.topic) ? 'bookmark text-warning' : 'bookmark-o')"></i>
+			<i class="fa-bookmark text-warning" ng-class="$ctrl.favorites.has($ctrl.topic) ? 'fa' : 'far'"></i>
 		</span>`,
 	bindings: {
 		topic: '<',

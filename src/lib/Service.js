@@ -12,7 +12,7 @@ module.exports = function()
 		
 		add(id, fn)
 		{
-			if(typeof id === 'object')
+			if(arguments.length == 1)
 			{
 				Object.assign(this.methods, id);
 			}

@@ -1,7 +1,7 @@
 var axios = require('axios');
 var StellarSdk = require('stellar-sdk');
 
-module.exports = function(Config, WalletModel)
+module.exports = function(Config, StellarWalletModel)
 {
 	var retryRate = 3 * 1000;
 	
@@ -57,7 +57,7 @@ module.exports = function(Config, WalletModel)
 	return {
 		async findKeypairs(user)
 		{
-			var wallets = await WalletModel.find({user}).lean();
+			var wallets = await StellarWalletModel.find({user}).lean();
 			return wallets.map(wallet => StellarSdk.Keypair.fromSecret(wallet.data));
 		},
 		async createWallet(user)
@@ -74,7 +74,7 @@ module.exports = function(Config, WalletModel)
 				.build();
 			await sendTx(tx, keypair);
 			
-			await WalletModel.create({
+			await StellarWalletModel.create({
 				user,
 				data: keypair.secret(),
 			});

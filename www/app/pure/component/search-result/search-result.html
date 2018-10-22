@@ -3,7 +3,7 @@
 	ng-click="$ctrl.selected = $ctrl.topic"
 	ng-dblclick="$ctrl.viewDetails()"
 	on-long-press="$ctrl.viewDetails()">
-	<div class="row">
+	<div class="row no-gutters">
 		<div class="col-8 col-sm-9 col-md-10">
 			<user-status class="float-left mr-2" user="$ctrl.topic.user"></user-status>
 			<h5 class="mb-1" line-clamp="1" ng-bind="$ctrl.topic.user.name"></h5>
@@ -11,7 +11,7 @@
 			<topic-rate topic="$ctrl.topic"></topic-rate>
 		</div>
 		<div class="col-4 col-sm-3 col-md-2">
-			<topic-badges topic="$ctrl.topic" include="['reputation', 'lessons', 'style']"></topic-badges>
+			<topic-badges badges="$ctrl.topic.badges" include="['reputation', 'lessons', 'style']"></topic-badges>
 		</div>
 	</div>
 	<div class="mx-2" ng-if="$ctrl.selected == $ctrl.topic">
@@ -28,7 +28,10 @@
 					<if-owned user="$ctrl.topic.user" invert="true">
 						<span class="d-flex">
 							<span class="btn btn-outline-primary w-100" ng-click="$ctrl.viewDetails()">More Details</span>
-							<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">Start Session</span>
+							<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">
+								<i class="fa fa-chalkboard mr-1"></i>
+								Start Session
+							</span>
 							<favorite-button topic="$ctrl.topic" ng-if="$ctrl.status($ctrl.topic.user) != 'available'"></favorite-button>
 						</span>
 					</if-owned>

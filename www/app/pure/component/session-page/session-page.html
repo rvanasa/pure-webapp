@@ -1,30 +1,30 @@
 <div class="row no-gutters">
 	<div class="col-md-7 col-lg-8">
 		<div ng-style="{background:$ctrl.options.background}">
-			<canvas whiteboard class="whiteboard w-100" options="$ctrl.whiteboardOptions"></canvas>
+			<canvas whiteboard class="whiteboard w-100" ng-mouseup=""></canvas>
 		</div>
 		<div class="whiteboard-toolbar noselect d-flex bg-secondary text-white p-1 pt-2">
 			<span class="w-100">
 				<span class="whiteboard-button mx-2" ng-click="$ctrl.takeScreenshot()">
-					<i class="fa fa-camera fa-lg"></i>
+					<i class="fa fa-camera fa-fw fa-lg"></i>
 				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.paths.length && !$ctrl.whiteboardOptions.board.undos.length}" ng-click="$ctrl.whiteboardOptions.board.clear()">
-					<i class="fa fa-eraser fa-lg"></i>
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length && !$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.clear()">
+					<i class="fa fa-eraser fa-fw fa-lg"></i>
 				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.paths.length}" ng-click="$ctrl.whiteboardOptions.board.undo()">
-					<i class="fa fa-undo fa-lg"></i>
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length}" ng-click="$ctrl.board.handle.undo()">
+					<i class="fa fa-undo fa-fw fa-lg"></i>
 				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.whiteboardOptions.board.undos.length}" ng-click="$ctrl.whiteboardOptions.board.redo()">
-					<i class="fa fa-repeat fa-lg"></i>
+				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.redo()">
+					<i class="fa fa-redo fa-fw fa-lg"></i>
 				</span>
 			</span>
 			<span class="w-100 text-right">
 				<span class="whiteboard-button mx-1"
 					ng-repeat="color in $ctrl.colors"
 					ng-if="color != $ctrl.options.background"
-					ng-class="{selected:$ctrl.whiteboardOptions.board.cursor.color == color}"
+					ng-class="{selected:$ctrl.board.handle.cursor.color == color}"
 					ng-style="{background:color}"
-					ng-click="$ctrl.whiteboardOptions.board.cursor.color = color">
+					ng-click="$ctrl.board.handle.cursor.color = color">
 				</span>
 			</span>
 		</div>
@@ -50,12 +50,16 @@
 					</div>
 				</div>
 				<hr>
-				<span class="btn" ng-class="'btn-'+($ctrl.microphone ? 'primary' : 'outline-info')" ng-click="$ctrl.toggleMicrophone()">
+				<span class="btn mr-2" ng-class="'btn-'+($ctrl.microphone ? 'primary' : 'outline-info')" ng-click="$ctrl.toggleMicrophone()">
 					<i class="fa" ng-class="'fa-'+($ctrl.microphone ? 'microphone' : 'microphone-slash')"></i>
 				</span>
+				<h6 class="text-muted d-inline">
+					<span ng-if="$ctrl.microphone">Microphone is enabled</span>
+					<span ng-if="!$ctrl.microphone">Microphone is disabled</span>
+				</h6>
 			</div>
 		</div>
-		<div class="scroll-region" style="max-height:80vh">
+		<div class="scroll-region" style="min-height:10vh; max-height:80vh">
 			<div class="mb-2" ng-repeat="item in $ctrl.history | orderBy:'$index':true">
 				<div ng-switch="item.type">
 					<img ng-switch-when="screenshot" class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{item.src}}">

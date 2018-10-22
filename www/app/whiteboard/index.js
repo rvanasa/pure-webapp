@@ -331,12 +331,12 @@ function throttle(callback, delay)
 
 module.exports = function(canvas, options = {})
 {
-	var {board} = options;
+	var board = options.handle;
 	var context = canvas.getContext('2d');
 	if(!board)
 	{
 		board = new Whiteboard(context, options);
-		options.board = board;
+		options.handle = board;
 	}
 	else
 	{

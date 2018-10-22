@@ -18,6 +18,11 @@ module.exports = {
 		
 		$ctrl.startQuestion = function()
 		{
+			if(!$ctrl.questions)
+			{
+				return;
+			}
+			
 			var question = {selected: true};
 			$ctrl.selected = question;
 			$ctrl.questions.push(question);

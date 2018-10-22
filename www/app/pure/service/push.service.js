@@ -22,8 +22,7 @@ module.exports = function PushService($window, Alert)
 	{
 		if($window.document.hasFocus())
 		{
-			return Alert(title, 'info');
-			// return Promise.resolve();
+			return Alert.toast(title, options && options.body, 'info');
 		}
 		
 		options = Object.assign({}, options);

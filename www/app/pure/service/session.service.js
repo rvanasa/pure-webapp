@@ -1,6 +1,10 @@
-module.exports = function SessionService($location, API, Socket, TopicService, PushService, UserService, PeerService)
+var EventEmitter = require('events');
+
+module.exports = function SessionService($location, API, Socket, TopicService, PushService, UserService, WalletService)
 {
 	var SessionAPI = API.service('sessions');
+	
+	this.events = new EventEmitter();
 	
 	this.pending = null;
 	this.current = null;
@@ -47,18 +51,26 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 			$location.path('/session');
 			PushService.createIfAway(`The session has begun!`);
 			
-			PeerService.connect();
+			this.events.emit('join', session);
 		});
 	});
 	
 	Socket.on('session.end', id =>
 	{
+		var session = this.current;
 		var prevPending = this.pending;
 		this.pending = null;
 		this.current = null;
 		PushService.createIfAway(prevPending ? `${prevPending.teacher.name} isn\'t ready at the moment.` : `The session has ended.`);
 		
-		PeerService.disconnect();
+		if(session)
+		{
+			this.events.emit('leave', session);
+		}
+		else
+		{
+			console.warn('No session currently in progress');
+		}
 	});
 	
 	this.request = function(topic)
@@ -73,17 +85,27 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 			return Promise.resolve();
 		}
 		
-		this.pending = {
-			topic,
-			teacher: topic.user,
-		};
-		return SessionAPI.create({topic: topic._id, request})
-			.then(session => populate(session))
-			.then(session => this.pending = session)
-			.catch(err =>
+		WalletService.checkFundsForTopic(topic)
+			.then(sufficient =>
 			{
-				this.pending = null;
-				throw err;
+				if(!sufficient)
+				{
+					$location.path('/fund/' + topic._id);
+					return;
+				}
+				
+				this.pending = {
+					topic,
+					teacher: topic.user,
+				};
+				return SessionAPI.create({topic: topic._id, request})
+					.then(session => populate(session))
+					.then(session => this.pending = session)
+					.catch(err =>
+					{
+						this.pending = null;
+						throw err;
+					});
 			});
 	}
 	
@@ -126,7 +148,7 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 						this.current = session;
 						$location.path('/session');
 						
-						PeerService.connect();
+						this.events.emit('join', session);
 					}
 				}
 			});

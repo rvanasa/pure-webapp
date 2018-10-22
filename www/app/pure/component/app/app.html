@@ -11,15 +11,8 @@
 	</div>
 </div>
 <ng-view></ng-view>
-<div class="pending-backdrop" ng-class="{visible:$ctrl.sessions.pending}"></div>
+<div class="pending-backdrop" ng-class="{visible:$ctrl.sessions.pending || $ctrl.prevSession}"></div>
 <div class="pending-panel bg-secondary text-white text-center pt-3" ng-if="$ctrl.sessions.pending">
-	<if-owned user="$ctrl.sessions.pending.teacher" invert="true">
-		<h2 class="noselect mb-3">Waiting...</h2>
-		<!--<hr>-->
-		<div class="container my-3">
-			<span class="btn btn-outline-light btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Cancel</span>
-		</div>
-	</if-owned>
 	<if-owned user="$ctrl.sessions.pending.teacher">
 		<h2 class="noselect pb-2">Are you ready?</h2>
 		<!--<hr class="mb-0">-->
@@ -52,4 +45,42 @@
 			</div>
 		</div>
 	</if-owned>
+	<if-owned user="$ctrl.sessions.pending.teacher" invert="true">
+		<h2 class="noselect mb-3">Waiting...</h2>
+		<!--<hr>-->
+		<div class="container my-3">
+			<span class="btn btn-outline-light btn-lg d-block my-2" style="opacity:.8" ng-click="$ctrl.sessions.close()">Cancel</span>
+		</div>
+	</if-owned>
+</div>
+<div class="rating-panel bg-white pt-3" ng-if="$ctrl.prevSession">
+	<h3 class="noselect text-center mb-3">How did it go?</h3>
+	<hr>
+	<div class="container">
+		<span class="btn-group btn-group-lg d-flex">
+			<div class="w-100"
+				ng-repeat="rating in [1,2,3,4,5]"
+				ng-mouseover="$ctrl.mouseRating = rating"
+				ng-click="$ctrl.rating.rating = rating">
+				<i class="fa-star fa-3x" ng-class="[($ctrl.rating.rating || $ctrl.mouseRating) >= rating ? 'fa' : 'far', 'text-'+($ctrl.rating.rating ? 'warning' : 'muted')]"></i>
+			</div>
+		</span>
+		<div uib-collapse="!($ctrl.rating.rating <= 2)">
+			<hr>
+			<div class="container">
+				<h5>Any comments about <span ng-bind="$ctrl.prevSession.teacher.name"></span>?</h5>
+				<span class="text">Your feedback is private, and will only be visible to platform moderators.</span>
+			</div>
+			<div class="input-group mt-2">
+				<textarea class="form-control" placeholder="Type here..." ng-bind="$ctrl.rating.comment"></textarea>
+			</div>
+		</div>
+		<div uib-collapse="!$ctrl.rating.rating">
+			<hr>
+			<span class="btn btn-primary btn-lg py-3 my-3 w-100" ng-click="$ctrl.submitRating()">
+				<i class="fa fa-paper-plane mr-1"></i>
+				Submit
+			</span>
+		</div>
+	</div>
 </div>

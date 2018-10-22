@@ -31,17 +31,34 @@
 			<h5 class="text-center text-muted m-2">No scholarships are available at the moment.</h5>
 		</div>
 		<div ng-switch-when="instant" class="text-center">
-			<h4 class="text-muted mt-md-4">Choose an amount:</h4>
-			<span class="btn-group d-flex">
-				<span class="btn w-100 mx-1 mt-3 py-2 px-0"
-					ng-repeat="amount in $ctrl.amounts"
-					ng-class="'btn-'+($ctrl.amount.total == amount ? 'success' : $ctrl.pickedAmount ? 'outline-secondary' : 'outline-success')"
-					ng-click="$ctrl.amount.total = amount; $ctrl.pickedAmount = true">
-					<i class="fa fa-dollar-sign"></i>
-					<span ng-bind="amount"></span>
-					<span ng-bind="$ctrl.amount.currency"></span>
+			<div ng-if="$ctrl.topic">
+				<div class="card">
+					<div class="card-body">
+						<h4 line-clamp="1" class="mb-0" ng-bind="$ctrl.topic.name"></h4>
+						<topic-rate topic="$ctrl.topic"></topic-rate>
+						<hr>
+						<h5 class="text-muted d-inline mr-2">Minimum payment:</h5>
+						<h5 class="text-success d-inline">
+							<i class="fa fa-dollar-sign"></i>
+							<span ng-bind="$ctrl.amount.total | number:00"></span>
+							<span ng-bind="$ctrl.amount.currency"></span>
+						</h5>
+					</div>
+				</div>
+			</div>
+			<div ng-if="!$ctrl.topic">
+				<h4 class="text-muted mt-md-4">Choose an amount:</h4>
+				<span class="btn-group d-flex">
+					<span class="btn w-100 mx-1 mt-3 py-2 px-0"
+						ng-repeat="amount in $ctrl.amounts"
+						ng-class="'btn-'+($ctrl.amount.total == amount ? 'success' : $ctrl.pickedAmount ? 'outline-secondary' : 'outline-success')"
+						ng-click="$ctrl.amount.total = amount; $ctrl.pickedAmount = true">
+						<i class="fa fa-dollar-sign"></i>
+						<span ng-bind="amount | number:00"></span>
+						<span ng-bind="$ctrl.amount.currency"></span>
+					</span>
 				</span>
-			</span>
+			</div>
 			<hr class="my-3">
 			<h4 class="text-muted mt-4">Choose a payment method:</h4>
 			<div class="pt-3 mx-auto" style="max-width:80vh">

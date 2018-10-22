@@ -1,10 +1,8 @@
 module.exports = {
 	template: require('./user-page.html'),
-	controller: function($routeParams, $location, API, UserService)
+	controller: function($routeParams, $location, UserService, TopicService)
 	{
 		var $ctrl = this;
-		
-		var TopicAPI = API.service('topics');
 		
 		var id = $routeParams.id;
 		if(id)
@@ -16,7 +14,7 @@ module.exports = {
 			$ctrl.user = UserService.user;
 		}
 		
-		TopicAPI.find(id ? {query: {user: id}} : null)
+		TopicService.findByUser(id)
 			.then(results =>
 			{
 				$ctrl.topics = results;
