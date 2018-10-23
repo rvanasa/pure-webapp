@@ -1,16 +1,41 @@
-module.exports = function(API, Service, ModelService, Hooks, StellarIntegration)
+module.exports = function(API, Service, ModelService, Hooks, StellarIntegration, TransactionModel)
 {
+	async function loadActive(user)
+	{
+		var balance = 0;
+		for(var tx of await TransactionModel.find({$or: [{from: user}, {to: user}]}))
+		{
+			console.log(user._id, '::',tx.from, tx.to)
+			if(user._id.equals(tx.from))
+			{
+				balance -= tx.amount;
+			}
+			if(user._id.equals(tx.to))
+			{
+				balance += tx.amount;
+			}
+		}
+		return {balance};
+	}
+	
+	async function loadCrypto(user)
+	{
+		var wallets = await StellarIntegration.findWallets(user);
+		if(!wallets.length)
+		{
+			return await StellarIntegration.createWallet(user);
+		}
+		return wallets[0];
+	}
+	
 	return Service('wallets')
 		.add('get', async (id, {user}) =>
 		{
-			if(id === 'stellar')
+			if(id === 'primary')
 			{
-				var wallets = await StellarIntegration.getWallets(user);
-				if(!wallets.length)
-				{
-					return await StellarIntegration.createWallet(user);
-				}
-				return wallets[0];
+				var [active, crypto] = [await loadActive(user), await loadCrypto(user)];
+				active.crypto = crypto;
+				return active;
 			}
 			else
 			{

@@ -1,4 +1,4 @@
-module.exports = function(Auth, Config)
+module.exports = function(Auth, Config, ClientConfig)
 {
 	return (req, res, next) =>
 	{
@@ -14,7 +14,7 @@ module.exports = function(Auth, Config)
 		{
 			req.session.redirectURL = req.originalUrl;
 			res.render('login', {
-				googleId: Config.provider.google.id,
+				config: ClientConfig,
 			});
 		}
 	}

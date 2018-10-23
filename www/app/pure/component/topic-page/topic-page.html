@@ -11,7 +11,7 @@
 			<favorite-button topic="$ctrl.topic"></favorite-button>
 		</if-owned>
 		<user-status class="mr-2" user="$ctrl.topic.user"></user-status>
-		<span ng-bind="$ctrl.topic.user.name"></span>
+		<span ng-bind="$ctrl.topic.user.name" ng-click="$ctrl.visitUser()"></span>
 	</h3>
 	<h4 ng-bind="$ctrl.topic.name"></h4>
 	<hr>

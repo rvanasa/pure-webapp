@@ -5,6 +5,11 @@
 		</div>
 	</div>
 </if-owned>
+<if-owned user="$ctrl.user" invert="true">
+	<div class="container">
+		<h2 class="mt-2" ng-bind="$ctrl.user.name"></h2>
+	</div>
+</if-owned>
 <div class="container">
 	<loading status="$ctrl.topics">
 		<hr>

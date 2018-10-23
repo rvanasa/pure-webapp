@@ -40,7 +40,7 @@
 						<h5 class="text-muted d-inline mr-2">Minimum payment:</h5>
 						<h5 class="text-success d-inline">
 							<i class="fa fa-dollar-sign"></i>
-							<span ng-bind="$ctrl.amount.total | number:00"></span>
+							<span ng-bind="$ctrl.amount.fiat | number:00"></span>
 							<span ng-bind="$ctrl.amount.currency"></span>
 						</h5>
 					</div>
@@ -51,18 +51,22 @@
 				<span class="btn-group d-flex">
 					<span class="btn w-100 mx-1 mt-3 py-2 px-0"
 						ng-repeat="amount in $ctrl.amounts"
-						ng-class="'btn-'+($ctrl.amount.total == amount ? 'success' : $ctrl.pickedAmount ? 'outline-secondary' : 'outline-success')"
-						ng-click="$ctrl.amount.total = amount; $ctrl.pickedAmount = true">
+						ng-class="'btn-'+($ctrl.amount.fiat == amount ? 'success' : $ctrl.pickedAmount ? 'outline-secondary' : 'outline-success')"
+						ng-click="$ctrl.amount.fiat = amount; $ctrl.pickedAmount = true">
 						<i class="fa fa-dollar-sign"></i>
 						<span ng-bind="amount | number:00"></span>
 						<span ng-bind="$ctrl.amount.currency"></span>
 					</span>
 				</span>
 			</div>
+			<h5 class="mt-3">
+				You will receive:
+				<xp-label amount="$ctrl.amount.token || $ctrl.amount.fiat * $ctrl.rate"></xp-label>
+			</h5>
 			<hr class="my-3">
 			<h4 class="text-muted mt-4">Choose a payment method:</h4>
 			<div class="pt-3 mx-auto" style="max-width:80vh">
-				<div paypal amount="$ctrl.amount"></div>
+				<div paypal amount="$ctrl.amount" callback="$ctrl.complete()"></div>
 			</div>
 			<hr class="mt-0">
 			<h5 class="container text-muted mb-3">Your payment information is protected by PayPal.</h5>
@@ -75,13 +79,13 @@
 				<div class="col-lg-8">
 					<label class="text-label">Deposit Address:</label>
 					<div class="input-group">
-						<input type="text" readonly class="form-control-plaintext bg-light" ng-value="$ctrl.wallet.address">
+						<input type="text" readonly class="form-control-plaintext bg-light" ng-value="$ctrl.wallet.crypto.address">
 					</div>
 				</div>
 				<div class="col-md-4 col-lg-4">
 					<label class="text-label my-3">QR Code:</label>
 					<br>
-					<img ng-src="https://chart.googleapis.com/chart?chs=170x170&chld=M|0&cht=qr&chl={{$ctrl.wallet.address}}">
+					<img class="mb-3" ng-src="https://chart.googleapis.com/chart?chs=170x170&chld=M|0&cht=qr&chl={{$ctrl.wallet.crypto.address}}">
 				</div>
 				<!--<div class="col-md-8 col-lg-12">-->
 				<!--	<div class="my-3">-->

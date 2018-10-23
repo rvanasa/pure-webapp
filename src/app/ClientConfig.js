@@ -6,7 +6,7 @@ module.exports = function(Config)
 		provider: {
 			paypal: {
 				env: Config.provider.paypal.env,
-				key: Config.provider.paypal.key,
+				// key: Config.provider.paypal.key,
 			},
 		},
 	};

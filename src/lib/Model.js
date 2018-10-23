@@ -72,6 +72,13 @@ module.exports = function()
 			return this;
 		}
 		
+		enum(...options)
+		{
+			this.current.type = String;
+			this.current.enum = options;
+			return this;
+		}
+		
 		validate(validator, message)
 		{
 			this.current.validate = [].concat(this.current.validate || [], arguments.length == 1 ? validator : {

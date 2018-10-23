@@ -60,6 +60,11 @@ module.exports = function(Config, StellarWalletModel)
 			var wallets = await StellarWalletModel.find({user}).lean();
 			return wallets.map(wallet => StellarSdk.Keypair.fromSecret(wallet.data));
 		},
+		async findWallets(user)
+		{
+			var keypairs = await this.findKeypairs(user);
+			return Promise.all(keypairs.map(async keypair => getWallet(keypair)));
+		},
 		async createWallet(user)
 		{
 			var keypair = StellarSdk.Keypair.random();
@@ -79,11 +84,6 @@ module.exports = function(Config, StellarWalletModel)
 				data: keypair.secret(),
 			});
 			return getWallet(keypair, account);
-		},
-		async getWallets(user)
-		{
-			var keypairs = await this.findKeypairs(user);
-			return Promise.all(keypairs.map(async keypair => getWallet(keypair)));
 		},
 	};
 }

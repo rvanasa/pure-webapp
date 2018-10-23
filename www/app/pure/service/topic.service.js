@@ -12,11 +12,11 @@ module.exports = function TopicService(API, Cache, UserService)
 		return TopicAPI.find(id ? {query: {user: id}} : null)
 			.then(results =>
 			{
-				console.log(results)//
-				for(var result of results)
-				{
-					this.register(result);
-				}
+				// TEMP -- user view breaking `name`
+				// for(var result of results)
+				// {
+				// 	this.register(result);
+				// }
 				return results;
 			});
 	}

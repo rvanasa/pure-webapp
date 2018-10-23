@@ -98,19 +98,19 @@
 						</div>
 						<div ng-if="+$ctrl.wallet.balance">
 							<div ng-if="!$ctrl.showingBalance">
-								<span class="btn btn-lg btn-info d-block mt-2" ng-click="$ctrl.showingBalance=true">
+								<span class="btn btn-light d-block mt-2" ng-click="$ctrl.showingBalance=true">
 									<i class="fa fa-caret-down mr-2"></i>
 									Show Balance
 								</span>
 							</div>
 							<div ng-if="$ctrl.showingBalance">
-								<span class="btn btn-lg btn-outline-info d-block mt-2" ng-click="$ctrl.showingBalance=false">
+								<span class="btn btn-outline-secondary d-block mt-2" ng-click="$ctrl.showingBalance=false">
 									<i class="fa fa-caret-right mr-2"></i>
 									Hide Balance
 								</span>
-								<div class="text-center my-2">
+								<h4 class="text-center my-2">
 									<xp-label amount="$ctrl.wallet.balance"></xp-label>
-								</div>
+								</h4>
 							</div>
 						</div>
 						<!--<hr>-->

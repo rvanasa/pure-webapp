@@ -7,7 +7,8 @@ module.exports = {
 		var id = $routeParams.id;
 		if(id)
 		{
-			//TODO
+			UserService.get(id)
+				.then(user => $ctrl.user = user);
 		}
 		else
 		{

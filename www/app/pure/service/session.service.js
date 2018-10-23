@@ -67,10 +67,6 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 		{
 			this.events.emit('leave', session);
 		}
-		else
-		{
-			console.warn('No session currently in progress');
-		}
 	});
 	
 	this.request = function(topic)

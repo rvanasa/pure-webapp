@@ -24,6 +24,7 @@
     "node-turn": "0.0.2",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.1.6",
+    "paypal-rest-sdk": "^1.8.1",
     "sha256": "^0.2.0",
     "simple-peer": "^9.1.2",
     "socket.io": "^2.1.1",

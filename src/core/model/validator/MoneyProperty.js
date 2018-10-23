@@ -1,6 +1,6 @@
 module.exports = function()
 {
-	var maxMoney = Math.pow(2, 127);
+	var maxMoney = Math.pow(2, 63);
 	
 	return {
 		type: Number,

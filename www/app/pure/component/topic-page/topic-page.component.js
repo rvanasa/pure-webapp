@@ -47,5 +47,10 @@ module.exports = {
 				url: true,
 			};
 		}
+		
+		$ctrl.visitUser = function()
+		{
+			$location.path('/user/' + $ctrl.topic.user._id);
+		}
 	}
 };

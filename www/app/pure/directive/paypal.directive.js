@@ -1,8 +1,10 @@
 var paypal = require('paypal-checkout');
 
-module.exports = function($timeout, $parse, Alert, Config)
+module.exports = function($timeout, $parse, API, Config)
 {
 	var config = Config.provider.paypal;
+	
+	var CheckoutAPI = API.service('/checkout');
 	
 	return {
 		restrict: 'A',
@@ -11,21 +13,13 @@ module.exports = function($timeout, $parse, Alert, Config)
 			var amount;
 			$attrs.$observe('amount', attr => amount = $scope.$eval(attr));
 			
-			$timeout(() =>
-			{
-				if(!amount || !amount.total)
-				{
-					Alert('Heads up:', 'Total must be immediately available!');
-				}
-			});
-			
 			var env = config.env;
-			var client = {};
-			client[env] = config.key;
+			// var client = {};
+			// client[env] = config.key;
 			
 			paypal.Button.render({
 				env,
-				client,
+				// client,
 				style: {
 					layout: 'vertical',
 					size:   'responsive',
@@ -39,26 +33,36 @@ module.exports = function($timeout, $parse, Alert, Config)
 				commit: true,
 				payment(data, actions)
 				{
-					return actions.payment.create({
-						payment: {
-							transactions: [{
-								amount,
-							}],
-						},
-						experience: {
-							input_fields: {
-								no_shipping: 1,
-							}
-						},
-					});
+					// return actions.payment.create({
+					// 	payment: {
+					// 		transactions: [{
+					// 			amount,
+					// 		}],
+					// 	},
+					// 	experience: {
+					// 		input_fields: {
+					// 			no_shipping: 1,
+					// 		}
+					// 	},
+					// });
+					
+					console.log(amount)
+					
+					return CheckoutAPI.create(amount);
 				},
 				onAuthorize(data, actions)
 				{
-					return actions.payment.execute()
+					return CheckoutAPI.update(data.paymentID, {payer: data.payerID})
 						.then(() =>
 						{
-							console.log('success!')
+							$scope.$eval($attrs.callback);
 						});
+					
+					// return actions.payment.execute()
+					// 	.then(payment =>
+					// 	{
+					// 		console.log(payment)////
+					// 	});
 				}
 			}, $elem[0]);
 		},
