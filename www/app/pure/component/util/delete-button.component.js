@@ -10,5 +10,5 @@ module.exports = {
 		</span>`,
 	bindings: {
 		onConfirm: '&',
-	}
+	},
 };

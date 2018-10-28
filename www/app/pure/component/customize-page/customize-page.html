@@ -1,7 +1,7 @@
 <div class="container">
-	<div class="row">
-		<div class="col-lg-6">
-			<div class="card my-2">
+	<div class="row row-eq-height">
+		<div class="col-lg-6 my-2">
+			<div class="card fill-space">
 				<div class="card-body">
 					<loading status="$ctrl.history">
 						<div ng-if="!$ctrl.question">
@@ -20,7 +20,7 @@
 							<div class="btn-group d-flex">
 								<span class="btn w-100"
 									ng-repeat="option in $ctrl.question.options"
-									ng-class="$ctrl.question.answer.selected == $index ? 'btn-primary' : 'btn-outline-primary'"
+									ng-class="$ctrl.question.answer.selected == $index ? 'btn-primary' : 'btn-outline-secondary'"
 									ng-click="$ctrl.question.answer.selected = $index"
 									ng-bind="option">
 								</span>
@@ -55,8 +55,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6">
-			<div class="card my-2">
+		<div class="col-lg-6 my-2">
+			<div class="card fill-space">
 				<div class="card-body">
 					<h5>Share your interests to find people you'll enjoy working with:</h5>
 					<hr>
@@ -76,9 +76,9 @@
 		</div>
 	</div>
 	<hr>
-	<div class="row">
-		<div class="col-lg-6">
-			<div class="card my-2">
+	<div class="row row-eq-height">
+		<div class="col-lg-6 my-2">
+			<div class="card fill-space">
 				<div class="card-body">
 					<loading status="$ctrl.wallet">
 						<h5>
@@ -111,6 +111,11 @@
 								<h4 class="text-center my-2">
 									<xp-label amount="$ctrl.wallet.balance"></xp-label>
 								</h4>
+								<hr>
+								<span class="btn btn-outline-danger d-block mt-2" ng-click="$ctrl.addFunds()">
+									<i class="fa fa-rocket mr-2"></i>
+									Add Funds
+								</span>
 							</div>
 						</div>
 						<!--<hr>-->
@@ -119,15 +124,20 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6">
-			<div class="card my-2">
+		<div class="col-lg-6 my-2">
+			<div class="card fill-space">
 				<div class="card-body">
+					<h5>
+						<i class="fa fa-user-circle text-muted mr-1"></i>
+						<span ng-bind="$ctrl.user.displayName"></span>
+					</h5>
+					<hr>
 					<span class="btn-group d-flex">
 						<a class="btn btn-info w-100 mx-1" href="/settings">
 							<i class="fa fa-cog mr-1"></i>
 							Settings
 						</a>
-						<span class="btn btn-outline-secondary w-100 mx-1" onclick="location.assign('/logout')">
+						<span class="btn btn-outline-secondary w-100 mx-1" onclick="location.href = '/logout'">
 							<i class="fa fa-sign-out-alt mr-1"></i>
 							Sign Out
 						</span>

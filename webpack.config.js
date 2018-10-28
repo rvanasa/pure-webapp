@@ -56,6 +56,7 @@ var config = {
 		'angular': 'angular',
 		'socket.io-client': 'io',
 		'push.js': 'Push',
+		'aos': 'AOS',
 	},
 };
 

@@ -1,10 +1,6 @@
 module.exports = function(API, Service, ModelService, Hooks, PayPalIntegration, TransactionModel, Config)
 {
-	// if(!Config.platform.issuer)
-	// {
-	// 	throw new Error(`Config.platform.issuer required for checkout transactions`);
-	// }
-	
+	// Rate must be an integer
 	var rate = 90;
 	var minFiat = 10;
 	

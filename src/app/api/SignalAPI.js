@@ -29,8 +29,6 @@ module.exports = function(API, Socket, Service, ModelService, Hooks, UserEvents,
 		
 		connection.on('signal', async ({id, signal, initiator}) =>
 		{
-			// console.log(id, initiator);
-			
 			// TODO ensure in same session
 			Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
 		});

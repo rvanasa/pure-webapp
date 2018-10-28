@@ -13,9 +13,16 @@ module.exports = function(Auth, Config, ClientConfig)
 		else
 		{
 			req.session.redirectURL = req.originalUrl;
-			res.render('login', {
-				config: ClientConfig,
-			});
+			if(req.originalUrl === '/')
+			{
+				res.render('login', {
+					config: ClientConfig,
+				});
+			}
+			else
+			{
+				res.redirect('/login');
+			}
 		}
 	}
 }

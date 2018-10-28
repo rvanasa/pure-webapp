@@ -41,8 +41,18 @@
 						</div>
 					</div>
 					<div class="col-7 text-right">
-						<div ng-if="$ctrl.sessions.current">
-							<span class="btn btn-outline-danger btn-sm mt-2" ng-click="$ctrl.sessions.close()">End Session</span>
+						<div class="mt-2" ng-if="$ctrl.sessions.current">
+							<span class="text-success" ng-if="$ctrl.sessions.current.paused && !$ctrl.isPausing()">
+								<i class="fa fa-lg fa-pause mr-1"></i>
+								<span>Waiting...</span>
+							</span>
+							<span class="btn btn-outline-secondary" ng-if="!$ctrl.sessions.current.paused" ng-click="$ctrl.togglePause()">
+								<i class="fa fa-pause"></i>
+							</span>
+							<span class="btn btn-outline-success animate-pulse" ng-if="$ctrl.sessions.current.paused && $ctrl.isPausing()" ng-click="$ctrl.togglePause()">
+								<i class="fa fa-play"></i>
+							</span>
+							<span class="btn btn-outline-danger btn-sm mx-2" ng-click="$ctrl.sessions.close()">End Session</span>
 						</div>
 						<div ng-if="$ctrl.time && !$ctrl.sessions.current">
 							<span class="text-muted mt-2">This session has ended.</span>
@@ -60,11 +70,27 @@
 			</div>
 		</div>
 		<div class="scroll-region" style="min-height:10vh; max-height:80vh">
-			<div class="mb-2" ng-repeat="item in $ctrl.history | orderBy:'$index':true">
-				<div ng-switch="item.type">
-					<img ng-switch-when="screenshot" class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{item.src}}">
-				</div>
-			</div>
+			<!--<div class="mb-2" ng-repeat="item in $ctrl.screenshots | orderBy:'$index':true">-->
+			<!--	<div ng-switch="item.type">-->
+			<!--		<img ng-switch-when="screenshot" class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{item.src}}">-->
+			<!--	</div>-->
+			<!--</div>-->
+			<small class="mb-2 d-block" ng-repeat="action in $ctrl.sessions.current.actions | orderBy:'$index':true">
+				<span class="text-muted d-inline-block" style="min-width:60px" ng-bind="action.time | date:'h:mm a'"></span>
+				<small class="mr-1"><b ng-bind="action.user.name"></b></small>
+				<span ng-switch="action.key">
+					<span ng-switch-when="join">
+						<span>joined the session.</span>
+					</span>
+					<span ng-switch-when="leave">
+						<span>left the session.</span>
+					</span>
+					<span ng-switch-when="screenshot">
+						<span>took a screenshot:</span>
+						<img class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{$ctrl.screenshotPrefix + action.data}}">
+					</span>
+				</span>
+			</small>
 		</div>
 	</div>
 </div>

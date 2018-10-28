@@ -30,6 +30,10 @@ module.exports = function(AuthMiddleware)
 			API.use((err, req, res, next) =>
 			{
 				console.error(err.stack || err);
+				if(typeof err === 'string')
+				{
+					return res.status(400).send(err);
+				}
 				res.status(500).send(err.message || err.stack || err);
 			});
 		}

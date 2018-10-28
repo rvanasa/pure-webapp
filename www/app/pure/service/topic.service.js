@@ -4,19 +4,20 @@ module.exports = function TopicService(API, Cache, UserService)
 	
 	Object.assign(this, Cache(
 		id => TopicAPI.get(id),
-		topic => UserService.register(topic.user),
+		topic => !topic.user.displayName /*TEMP*/ && UserService.register(topic.user),
 	));
+	
+	var userCache = Cache(id => TopicAPI.find(id ? {query: {user: id}} : null));
 	
 	this.findByUser = function(id)
 	{
-		return TopicAPI.find(id ? {query: {user: id}} : null)
+		return userCache.get(id)
 			.then(results =>
 			{
-				// TEMP -- user view breaking `name`
-				// for(var result of results)
-				// {
-				// 	this.register(result);
-				// }
+				for(var result of results)
+				{
+					this.register(result);
+				}
 				return results;
 			});
 	}

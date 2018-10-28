@@ -42,8 +42,8 @@ module.exports = {
 		$ctrl.getShareIntent = function()
 		{
 			return {
-				title: `Pure Learning Platform`,
-				message: `Check out my topic "${$ctrl.topic.name}" on Pure Learning Platform:`,
+				title: `Platform Pure`,
+				message: `Check out my topic "${$ctrl.topic.name}" on Platform Pure:`,
 				url: true,
 			};
 		}

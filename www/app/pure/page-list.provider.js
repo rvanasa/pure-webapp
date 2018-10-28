@@ -8,7 +8,7 @@ module.exports = function PageList($routeProvider)
 		if(!template)
 		{
 			var elem = page.elem || page.id + '-page';
-			template = '<' + elem + '></' + elem + '>';
+			template = `<page-container><${elem}></${elem}></page-container>`;
 		}
 		
 		var data = {

@@ -6,6 +6,7 @@ module.exports = function(API, Service, ModelService, Hooks, TopicModel, TopicVi
 	return Service('topics', ModelService(TopicModel))
 		.add('remove', async (id, {filter}) =>
 		{
+			filter._id = id;
 			await TopicModel.updateOne(filter, {deleted: true});
 			return 'Deleted';
 		})
@@ -15,7 +16,7 @@ module.exports = function(API, Service, ModelService, Hooks, TopicModel, TopicVi
 				{
 					params.filter.deleted = false;
 				},
-				all({params, data})
+				all({method, params, data})
 				{
 					if(data)
 					{
@@ -35,7 +36,7 @@ module.exports = function(API, Service, ModelService, Hooks, TopicModel, TopicVi
 			
 			topic.badges = {
 				lessons: sessions.length,
-				duration: sessions.reduce((n, s) => n + (new Date(s.end) - new Date(s.begin)), 0) / 60000, // TODO account for pausing
+				duration: sessions.reduce((n, s) => n + s.duration, 0),
 				reputation: ratings.reduce((n, r) => n + r.rating, 0) / ratings.length,
 			};
 		}))

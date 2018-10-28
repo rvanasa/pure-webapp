@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./edit-page.html'),
-	controller: function($routeParams, $location, API, CategoryService)
+	controller: function($routeParams, $location, API, TopicService, CategoryService)
 	{
 		var $ctrl = this;
 		
@@ -12,7 +12,8 @@ module.exports = {
 		if(id)
 		{
 			TopicAPI.get(id)
-				.then(topic => $ctrl.topic = topic);
+				.then(topic => $ctrl.topic = topic)
+				.then(topic => TopicService.register(topic));
 		}
 		else
 		{
@@ -20,22 +21,31 @@ module.exports = {
 				category: CategoryService.categories[0].id,
 				hourly: true,
 				rate: 0,
+				interval: 60,
 			};
 		}
 		
+		var savePromise;
 		$ctrl.saveTopic = function()
 		{
-			var promise;
+			if(savePromise)
+			{
+				return savePromise;
+			}
+			
+			// Temp?
+			$ctrl.topic.interval = $ctrl.topic.interval || 0;
+			
 			if(!id)
 			{
-				promise = TopicAPI.create($ctrl.topic)
+				savePromise = TopicAPI.create($ctrl.topic)
 					.then(_id => id = _id);
 			}
 			else
 			{
-				promise = TopicAPI.update($ctrl.topic._id, $ctrl.topic);
+				savePromise = TopicAPI.update($ctrl.topic._id, $ctrl.topic);
 			}
-			promise.then(() => $ctrl.closeTopic());
+			return savePromise = savePromise.then(() => $ctrl.closeTopic());
 		}
 		
 		$ctrl.closeTopic = function()

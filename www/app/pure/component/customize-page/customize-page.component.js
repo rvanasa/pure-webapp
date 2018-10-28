@@ -1,10 +1,8 @@
 module.exports = {
 	template: require('./customize-page.html'),
-	controller: function($location, API, InterestService, UserService, WalletService)
+	controller: function($location, API, QuestionService, InterestService, UserService, WalletService)
 	{
 		var $ctrl = this;
-		
-		var AnswerAPI = API.service('answers');
 		
 		$ctrl.interests = InterestService;
 		
@@ -14,11 +12,10 @@ module.exports = {
 		
 		$ctrl.index = 0;
 		
-		// TODO answer service
-		AnswerAPI.find({query: {history: true, next: 3}})
-			.then(results =>
+		QuestionService.find()
+			.then(questions =>
 			{
-				$ctrl.history = results.reverse();
+				$ctrl.history = questions;
 				$ctrl.index = 0;
 				while($ctrl.index + 1 < $ctrl.history.length && !$ctrl.history[$ctrl.index + 1].answer)
 				{
@@ -30,14 +27,14 @@ module.exports = {
 				}
 			});
 		
+		
 		$ctrl.nextQuestion = function()
 		{
 			$ctrl.question = $ctrl.history[--$ctrl.index];
 			
 			if(!$ctrl.index)
 			{
-				AnswerAPI.find({query: {next: 1}})
-					.then(results => $ctrl.history.unshift(...results));
+				QuestionService.addNext();
 			}
 		}
 		
@@ -53,7 +50,7 @@ module.exports = {
 		{
 			if($ctrl.question && $ctrl.question.answer)
 			{
-				AnswerAPI.create(Object.assign({}, $ctrl.question.answer, {question: $ctrl.question._id}))
+				QuestionService.setAnswer($ctrl.question, $ctrl.question.answer)
 					.catch(err =>
 					{
 						$ctrl.prevQuestion();

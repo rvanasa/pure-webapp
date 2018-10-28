@@ -1,10 +1,20 @@
 var EventEmitter = require('events');
 
-module.exports = function SessionService($location, API, Socket, TopicService, PushService, UserService, WalletService)
+module.exports = function SessionService($window, $location, API, Socket, TopicService, PushService, UserService, WalletService)
 {
 	var SessionAPI = API.service('sessions');
 	
 	this.events = new EventEmitter();
+	
+	// TODO join on WebRTC connection established
+	this.events.on('join', () => this.sendAction('join'));
+	$window.addEventListener('beforeunload', () =>
+	{
+		if(this.current)
+		{
+			this.sendAction('leave');
+		}
+	});
 	
 	this.pending = null;
 	this.current = null;
@@ -16,11 +26,22 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 				.then(topic => session.topic = topic),
 			...session.students.map((id, index) => UserService.get(id)
 				.then(user => session.students[index] = user)),
+			...session.actions.map(populateAction),
 		]).then(() =>
 		{
 			return UserService.get(session.teacher)
-				.then(user => session.teacher = user)
+				.then(user => session.teacher = user);
 		}).then(() => session);
+	}
+	
+	function populateAction(action)
+	{
+		return UserService.get(action.user)
+			.then(user =>
+			{
+				action.user = user;
+				return action;
+			});
 	}
 	
 	Socket.on('session.request', session =>
@@ -69,6 +90,77 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 		}
 	});
 	
+	Socket.on('session.time', ({duration}) =>
+	{
+		console.log('TIME', duration)//
+		
+		this.current.duration = duration;
+		this.current.durationReceived = new Date();
+	});
+	
+	Socket.on('session.action', action =>
+	{
+		var onAction = () =>
+		{
+			populateAction(action)
+				.then(() =>
+				{
+					this.current.actions.push(action);
+					this.events.emit('action', action.key, action.user);
+					this.events.emit('action.' + action.key, action.user);
+				});
+		}
+		
+		if(this.current)
+		{
+			onAction();
+		}
+		else
+		{
+			this.events.once('join', ({_id}) =>
+			{
+				if(_id === action.session)
+				{
+					onAction();
+				}
+			});
+		}
+	});
+	
+	this.events.on('action.join', user =>
+	{
+		console.log('JOIN',user._id)//
+		
+		var available = this.current.available;
+		if(!available.includes(user._id))
+		{
+			available.push(user._id);
+		}
+		if(available.length === this.current.students.length + 1)
+		{
+			this.current.paused = false;
+		}
+		
+		console.log(available)
+	});
+	
+	this.events.on('action.leave', user =>
+	{
+		console.log('LEAVE',user._id)//
+		
+		var available = this.current.available;
+		if(available.includes(user._id))
+		{
+			available.splice(available.indexOf(user._id), 1);
+		}
+		if(available.length !== this.current.students.length + 1)
+		{
+			this.current.paused = true;
+		}
+		
+		console.log(available)
+	});
+	
 	this.request = function(topic)
 	{
 		return this.create(topic, true);
@@ -113,6 +205,16 @@ module.exports = function SessionService($location, API, Socket, TopicService, P
 		}
 		
 		return SessionAPI.update(this.pending._id, {});
+	}
+	
+	this.sendAction = function(key, data)
+	{
+		if(!this.current)
+		{
+			return Promise.reject(new Error('No session available for action'));
+		}
+		
+		return SessionAPI.patch(this.current._id, {key, data});
 	}
 	
 	this.close = function()

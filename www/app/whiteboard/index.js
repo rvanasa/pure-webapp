@@ -280,6 +280,11 @@ class Whiteboard extends EventEmitter
 		return this.context.canvas.toDataURL(format);
 	}
 	
+	blob()
+	{
+		return new Promise((resolve, reject) => this.context.canvas.toBlob(resolve));
+	}
+	
 	change(packet)
 	{
 		this.emit('packet', packet);

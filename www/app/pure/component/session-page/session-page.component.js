@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($window, $scope, Binder, SessionService, PeerService, WhiteboardService)
+	controller: function($window, $scope, Binder, SessionService, PeerService, WhiteboardService, UserService)
 	{
 		var $ctrl = this;
 		
@@ -11,39 +11,33 @@ module.exports = {
 		$ctrl.colors = $ctrl.options.colors;
 		$ctrl.board = $ctrl.options.board;
 		
-		// TODO clear whiteboard on new session
-		
-		$ctrl.history = [];
-		
-		$ctrl.add = function(item)
-		{
-			$ctrl.history.push(item);
-		}
+		$ctrl.screenshotPrefix = 'data:image/png;base64,';
 		
 		$ctrl.takeScreenshot = function()
 		{
-			$ctrl.add({
-				type: 'screenshot',
-				src: $ctrl.whiteboardOptions.board.screenshot(),
-			});
+			// $ctrl.board.handle.blob().then(data => console.log(data))////
+			$ctrl.sessions.sendAction('screenshot', $ctrl.board.handle.screenshot().substring($ctrl.screenshotPrefix.length));
 		}
 		
 		$ctrl.microphone = false;
 		
-		$ctrl.toggleMicrophone = function()
+		$ctrl.toggleMicrophone = function(state)
 		{
-			var state = !$ctrl.microphone;
-			var promise;
-			if(state)
-			{
-				promise = PeerService.enableAudio();
-			}
-			else
-			{
-				promise = PeerService.disableAudio();
-			}
+			state = arguments.length > 0 ? !!state : !$ctrl.microphone;
 			$window.localStorage['microphone'] = state;
-			promise.then(() => $ctrl.microphone = state);
+			if(!$ctrl.isPausing())
+			{
+				var promise;
+				if(state)
+				{
+					promise = PeerService.enableAudio();
+				}
+				else
+				{
+					promise = PeerService.disableAudio();
+				}
+				promise.then(() => $ctrl.microphone = state);
+			}
 		}
 		
 		if($window.localStorage['microphone'] === 'true')
@@ -51,11 +45,37 @@ module.exports = {
 			$ctrl.toggleMicrophone();
 		}
 		
+		$ctrl.isPausing = function()
+		{
+			return !SessionService.current.available.includes(UserService.user._id);
+		}
+		
+		$ctrl.togglePause = function(state)
+		{
+			state = arguments.length > 0 ? !!state : !$ctrl.isPausing();
+			if(state)
+			{
+				SessionService.sendAction('leave');
+				PeerService.disableAudio();
+			}
+			else
+			{
+				SessionService.sendAction('join');
+				$ctrl.toggleMicrophone($ctrl.microphone);
+			}
+		}
+		
 		function updateTime(apply)
 		{
 			if(SessionService.current)
 			{
-				var seconds = Math.round((Date.now() - new Date(SessionService.current.begin)) / 1000);
+				var duration = SessionService.current.duration * 60;
+				var offset = (SessionService.current.paused ? 0 : Date.now() - new Date(SessionService.current.durationReceived)) / 1000;
+				var seconds = Math.round(duration + offset);
+				if(Number.isNaN(seconds))
+				{
+					return;
+				}
 				var minutes = Math.floor(seconds / 60);
 				var hours = Math.floor(minutes / 60);
 				var prevTime = $ctrl.time;

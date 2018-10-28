@@ -65,10 +65,15 @@ module.exports = {
 			var rating = $ctrl.rating;
 			var id = $ctrl.prevSession._id;
 			
-			$ctrl.rating = null;
-			$ctrl.prevSession = null;
+			$ctrl.closeRating();
 			return RatingAPI.create(Object.assign(rating, {session: id}))
 				.then(() => Alert.toast('Thanks for the feedback!', null, 'success'));
+		}
+		
+		$ctrl.closeRating = function()
+		{
+			$ctrl.rating = null;
+			$ctrl.prevSession = null;
 		}
 	}
 };

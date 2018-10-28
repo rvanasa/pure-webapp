@@ -2,18 +2,33 @@ var swal = require('sweetalert2');
 
 module.exports = function Alert()
 {
-	var Alert = swal.mixin({
+	var mainAlert = swal.mixin({
 		confirmButtonClass: 'btn btn-primary px-5',
 		cancelButtonClass: 'btn btn-secondary px-5',
 		buttonsStyling: false,
 	});
 	
-	Alert.toast = Alert.mixin({
+	var toastAlert = mainAlert.mixin({
 		toast: true,
 		position: 'top-end',
 		showConfirmButton: false,
 		timer: 3000,
 	});
+	
+	function showAlert(alert)
+	{
+		return function(title, text, type)
+		{
+			return alert(arguments.length <= 1 ? title : {
+				titleText: title,
+				text,
+				type,
+			});
+		}
+	}
+	
+	var Alert = showAlert(mainAlert);
+	Alert.toast = showAlert(toastAlert);
 	
 	return Alert;
 }

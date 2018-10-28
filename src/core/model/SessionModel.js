@@ -6,5 +6,6 @@ module.exports = function(Model, Database)
 		.prop('students', 'User').array()
 		.prop('begin', Date).opt()
 		.prop('end', Date).opt()
+		.prop('duration', Number).min(0).default(0)
 		.build(Database);
 }

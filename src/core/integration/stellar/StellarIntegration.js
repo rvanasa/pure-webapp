@@ -1,7 +1,7 @@
 var axios = require('axios');
 var StellarSdk = require('stellar-sdk');
 
-module.exports = function(Config, StellarWalletModel)
+module.exports = function(Log, Config, StellarWalletModel)
 {
 	var retryRate = 3 * 1000;
 	
@@ -69,6 +69,7 @@ module.exports = function(Config, StellarWalletModel)
 		{
 			var keypair = StellarSdk.Keypair.random();
 			
+			// TODO source from platform wallet
 			await axios.get(`https://friendbot.stellar.org?addr=${encodeURIComponent(keypair.publicKey())}`);
 			
 			var account = await server.loadAccount(keypair.publicKey());
@@ -83,6 +84,7 @@ module.exports = function(Config, StellarWalletModel)
 				user,
 				data: keypair.secret(),
 			});
+			Log('Stellar wallet created for user:', user._id);
 			return getWallet(keypair, account);
 		},
 	};
