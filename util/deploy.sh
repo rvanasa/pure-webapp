@@ -1,18 +1,11 @@
-cd ..
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+cd DIR/..
 
 rm -rf dist &&
 
-heroku git:remote --app fungi-lang &&
+heroku git:remote -a platformpure &&
 
-node_modules/webpack/bin/webpack.js --bail --progress --profile &&
-
-cd repo/fungi-lang.rust &&
-cargo test &&
-cd ../.. &&
-
-cp -r ./repo/fungi-lang.rust/target ./dist/examples
-rm -rf ./dist/examples/debug
-rm ./dist/examples/rustc_info.json
+node_modules/webpack-cli/bin/cli.js --bail --progress --profile &&
 
 git commit -m "(Deploy)" &&
 git push heroku master --force &&
