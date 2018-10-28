@@ -1,6 +1,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $DIR/..
 
+nvm use 8 &&
+
 rm -rf dist &&
 
 heroku git:remote -a platformpure &&

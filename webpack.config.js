@@ -65,7 +65,7 @@ var config = {
 if(isBuild)
 {
 	config.plugins.push(
-		new CopyPlugin([{from: srcPath}])
+		new CopyPlugin([{from: srcPath}]),
 	);
 }
 else
