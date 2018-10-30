@@ -10,7 +10,7 @@
 
 </head>
 <body>
-	<div class="row">
+	<div class="row no-gutters">
 		<div class="col-sm-3 sol-md-4 hidden-xs-down">
 		</div>
 		<div class="col-sm-6 sol-md-4 text-center">
@@ -23,9 +23,8 @@
 				</div>
 			</div>
 			<div class="mb-4 noselect">
-				<h1 class="display-4 text-thin text-muted">
-					Platform
-					<span class="text-primary">Pure</span>
+				<h1 class="display-4 text-lowercase text-muted">
+					Platform <span class="text-primary">Pure</span>
 				</h1>
 			</div>
 			<div class="text-center">
@@ -41,6 +40,148 @@
 			</div>
 		</div>
 		<div class="col-sm-3 sol-md-4 hidden-xs-down">
+		</div>
+	</div>
+	<!--<img class="w-100" src="/assets/img/parallax/sunset.jpg">-->
+	<div class="bg-white pb-5">
+		<div class="bg-dark py-3 text-center">
+			<span class="btn-group">
+				<% for(var icon of config.social.links) { %>
+					<a class="btn btn-light text-primary" href="<%= icon.url %>" target="_blank">
+						<i class="fab fa-fw fab-color fa-<%= icon.icon %>"></i>
+					</a>
+				<% } %>
+			</span>
+		</div>
+		<div class="container">
+			<h2 class="display-4 text-center my-4 my-sm-5" data-aos="fade-up">
+				Let's <span class="text-success">change</span> learning.
+			</h2>
+			<hr class="my-5">
+			<div class="row">
+				<div class="col-lg-4 text-center text-lg-left">
+					<h3 class="text-thin text-muted mb-5 mt-lg-5">Platform Pure is a new way to view education.</h3>
+				</div>
+				<div class="col-lg-8">
+					<div class="row row-eq-height text-center">
+						<div class="col-md-4 noselect my-2">
+							<div class="card fill-space" data-aos="flip-right">
+								<div class="card-body text-info">
+									<i class="fa fa-fw fa-user-circle fa-2x"></i>
+									<hr>
+									<h4>Personal</h4>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 noselect my-2" data-aos="flip-right">
+							<div class="card fill-space">
+								<div class="card-body text-primary">
+									<i class="fa fa-fw fa-people-carry fa-2x"></i>
+									<hr>
+									<h4>Practical</h4>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 noselect my-2" data-aos="flip-right">
+							<div class="card fill-space">
+								<div class="card-body text-success">
+									<i class="fa fa-fw fa-money-bill-wave fa-2x"></i>
+									<hr>
+									<h4>Affordable</h4>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr class="my-5">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class="card" data-aos="zoom-in">
+						<div class="card-body">
+							<div class="row no-gutters">
+								<div class="col-6 col-lg-3 my-2">
+									<a class="btn btn-lg btn-outline-danger px-0 w-100" href="/search/study">
+										<i class="fa fa-map mr-1"></i>
+										Study
+									</a>
+								</div>
+								<div class="col-6 col-lg-3 my-2">
+									<a class="btn btn-lg btn-outline-danger px-0 w-100" href="/search/tutor">
+										<i class="fa fa-pencil-alt mr-1"></i>
+										Tutor
+									</a>
+								</div>
+								<div class="col-6 col-lg-3 my-2">
+									<a class="btn btn-lg btn-outline-danger px-0 w-100" href="/search/professional">
+										<i class="fa fa-briefcase mr-1"></i>
+										Mentor
+									</a>
+								</div>
+								<div class="col-6 col-lg-3 my-2">
+									<a class="btn btn-lg btn-outline-danger px-0 w-100" href="/search">
+										<i class="fa fa-broadcast-tower mr-1"></i>
+										Explore
+									</a>
+								</div>
+							</div>
+							<hr>
+							<h4>Teach and learn for <b>free</b> or with <b>0%</b> service fees.</h4>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-5 text-center text-lg-left">
+					<h3 class="text-thin text-muted mt-5">
+						Learn at <span class="text-info">your pace</span>,<br class="d-md-none">
+						in <span class="text-primary">your style</span>,<br class="d-md-none">
+						with <span class="text-success">your people</span>.
+					</h3>
+				</div>
+			</div>
+		</div>
+		<hr class="mt-5 mb-0">
+	</div>
+	<div class="bg-light py-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 mb-5">
+					<h4 class="text-thin display-4 text-muted text-lowercase text-center">Student</h4>
+					<hr class="my-4">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<h4 class="text-thin my-2">Find teachers with your <b class="text-info">interests</b> and <b class="text-info">learning style</b></h4>
+						</li>
+						<li class="list-group-item">
+							<h4 class="text-thin my-2">Browse <b class="text-primary">free content</b> and create <b class="text-primary">study groups</b></h4>
+						</li>
+						<li class="list-group-item">
+							<h4 class="text-thin my-2">Earn <b class="text-success">badges</b> to find and impress <b class="text-success">employers</b></h4>
+						</li>
+						<!--<li class="list-group-item">-->
+						<!--	<h4 class="text-thin">Easily buy <span class="badge badge-light">XP</span> tokens via</h4>-->
+						<!--	<hr>-->
+						<!--	<div class="row no-gutters text-center my-3">-->
+						<!--		<div class="col-4">-->
+						<!--			<i class="fab fa-paypal fa-2x text-info"></i>-->
+						<!--			<h4 class="mb-0 mt-1">PayPal</h4>-->
+						<!--		</div>-->
+						<!--		<div class="col-4">-->
+						<!--			<i class="fa fa-credit-card fa-2x text-primary"></i>-->
+						<!--			<h4 class="mb-0 mt-1">Card</h4>-->
+						<!--		</div>-->
+						<!--		<div class="col-4">-->
+						<!--			<i class="fa fa-coins fa-2x text-success"></i>-->
+						<!--			<h4 class="mb-0 mt-1">Crypto</h4>-->
+						<!--		</div>-->
+						<!--	</div>-->
+						<!--</li>-->
+					</ul>
+				</div>
+				<div class="col-lg-6 mb-5">
+					<h4 class="text-thin display-4 text-muted text-center text-lowercase text-center">Teacher</h4>
+					<hr class="my-4">
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

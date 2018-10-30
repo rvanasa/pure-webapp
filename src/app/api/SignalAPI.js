@@ -1,4 +1,4 @@
-module.exports = function(API, Socket, Service, ModelService, Hooks, UserEvents, SessionAPI)
+module.exports = function(API, Socket, Endpoint, ModelEndpoint, Hooks, UserEvents, SessionAPI)
 {
 	async function findUsers(user)
 	{

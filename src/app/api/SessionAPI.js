@@ -1,4 +1,4 @@
-module.exports = function(API, Service, ModelService, Hooks, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
 {
 	async function getJSON(session)
 	{
@@ -37,7 +37,7 @@ module.exports = function(API, Service, ModelService, Hooks, SessionModel, Sessi
 		return session;
 	}
 	
-	return Service('sessions')
+	return Endpoint('sessions')
 		.add('find', async ({user}) =>
 		{
 			var sessions = await SessionModel.find({$or: [

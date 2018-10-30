@@ -1,10 +1,10 @@
-module.exports = function(API, Service, ModelService, Hooks, PayPalIntegration, TransactionModel, Config)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, PayPalIntegration, TransactionModel, Config)
 {
 	// Rate must be an integer
 	var rate = 90;
 	var minFiat = 10;
 	
-	return Service('checkout')
+	return Endpoint('checkout')
 		.add('create', async ({fiat, token, currency}, {user}) =>
 		{
 			if(!currency)

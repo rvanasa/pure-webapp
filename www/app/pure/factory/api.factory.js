@@ -16,7 +16,7 @@ module.exports = function API($window, Alert)
 		}
 		else if(response.status === 400)
 		{
-			Alert.toast(`Invalid input.`, response.data, 'info');
+			Alert.toast(`Invalid input.`, response.responseText, 'info');
 		}
 		else if(response.status === 500)
 		{

@@ -1,6 +1,6 @@
-module.exports = function(API, Service, ModelService, Hooks, RatingModel, SessionModel, SessionActionModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, RatingModel, SessionModel, SessionActionModel)
 {
-	return Service('ratings')
+	return Endpoint('ratings')
 		.add('create', async (data, {user}) =>
 		{
 			var [/*session, */participated, already] = [

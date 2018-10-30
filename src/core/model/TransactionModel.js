@@ -1,4 +1,4 @@
-module.exports = function(Model, Database, MoneyProperty)
+module.exports = function(Model, Database, MoneyProp)
 {
 	var reasons = {
 		paypal(data)
@@ -14,7 +14,7 @@ module.exports = function(Model, Database, MoneyProperty)
 	return Model('Transaction')
 		.prop('to', 'User')
 		.prop('from', 'User').opt()
-		.prop('amount', null, MoneyProperty).validate(val => val > 0, '{VALUE} cannot be zero')
+		.prop('amount', null, MoneyProp).validate(val => val > 0, '{VALUE} cannot be zero')
 		.prop('reason', String).enum(...Object.keys(reasons)).opt()
 		.prop('data', String).opt().validate(validateData, '{VALUE} does not match tx reason')
 		.build(Database);

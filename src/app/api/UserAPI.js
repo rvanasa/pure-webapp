@@ -1,6 +1,6 @@
-module.exports = function(API, Service, ModelService, Hooks, UserModel, UserView)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, UserView)
 {
-	return Service('users', ModelService(UserModel))
+	return Endpoint('users', ModelEndpoint(UserModel))
 		.only('get')
 		.hooks(Hooks.view(UserView))
 		.build(API);

@@ -1,9 +1,13 @@
-module.exports = function()
+module.exports = function(AwardModel)
 {
 	return {
-		displayName: 'name',
+		name: 'displayName',
 		interests: 1,
 		lastOnline: 1,
 		available: 1,
+		async badges()
+		{
+			return (await AwardModel.find({user: this._id}).populate('badge').lean()).map(award => award.badge);
+		},
 	};
 }

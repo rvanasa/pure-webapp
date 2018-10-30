@@ -1,6 +1,6 @@
-module.exports = function(API, Service, ModelService, Hooks)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks)
 {
-	return Service('interests')
+	return Endpoint('interests')
 		.add('find', async ({user}) =>
 		{
 			return user.interests;

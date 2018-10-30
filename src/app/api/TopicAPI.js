@@ -1,9 +1,9 @@
-module.exports = function(API, Service, ModelService, Hooks, TopicModel, TopicView, SessionModel, RatingModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, TopicModel, TopicView, SessionModel, RatingModel)
 {
 	// TODO prevent price change during session
 	
 	// TODO prevent users from being returned on each `find` result (without breaking SearchAPI)
-	return Service('topics', ModelService(TopicModel))
+	return Endpoint('topics', ModelEndpoint(TopicModel))
 		.add('remove', async (id, {filter}) =>
 		{
 			filter._id = id;
@@ -28,13 +28,13 @@ module.exports = function(API, Service, ModelService, Hooks, TopicModel, TopicVi
 		.hooks(Hooks.output(topic => delete topic.deleted))
 		.hooks(Hooks.owned('user', {public: true}))
 		.hooks(Hooks.view(TopicView))
-		.hooks(Hooks.input(topic => delete topic.badges))
+		.hooks(Hooks.input(topic => delete topic.stats))
 		.hooks(Hooks.output(async topic =>
 		{
 			var sessions = await SessionModel.find({topic}).lean();
 			var ratings = await RatingModel.find({session: {$in: sessions}}).lean();
 			
-			topic.badges = {
+			topic.stats = {
 				lessons: sessions.length,
 				duration: sessions.reduce((n, s) => n + s.duration, 0),
 				reputation: ratings.reduce((n, r) => n + r.rating, 0) / ratings.length,

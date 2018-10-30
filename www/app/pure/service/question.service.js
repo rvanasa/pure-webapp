@@ -1,10 +1,10 @@
 module.exports = function QuestionService(API)
 {
-	var QuestionAPI = API.service('questions');
+	var AnswerAPI = API.service('answers');
 	
 	this.questions = [];
 	
-	var loadPromise = QuestionAPI.find({query: {history: true, next: 3}})
+	var loadPromise = AnswerAPI.find({query: {history: true, next: 3}})
 		.then(results =>
 		{
 			this.questions.length = 0;
@@ -19,12 +19,12 @@ module.exports = function QuestionService(API)
 	
 	this.addNext = function()
 	{
-		return QuestionAPI.find({query: {next: 1}})
+		return AnswerAPI.find({query: {next: 1}})
 			.then(results => this.questions.unshift(...results));
 	}
 	
 	this.setAnswer = function(question, answer)
 	{
-		return QuestionAPI.create(Object.assign({}, answer, {question: question._id}));
+		return AnswerAPI.create(Object.assign({}, answer, {question: question._id}));
 	}
 }

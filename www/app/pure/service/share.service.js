@@ -1,4 +1,4 @@
-module.exports = function SocialService($window)
+module.exports = function ShareService($window)
 {
 	function open(url, query)
 	{
@@ -25,13 +25,25 @@ module.exports = function SocialService($window)
 				});
 			},
 		},
+		facebook: {
+			color: 'primary',
+			icon: 'fab fa-facebook',
+			handle({title, message, url})
+			{
+				open('https://www.facebook.com/sharer/sharer.php', {
+					caption: title,
+					quote: message,
+					u: url,
+				});
+			}
+		},
 		email: {
 			color: 'secondary',
 			icon: 'fa fa-envelope',
-			handle({subject, message, url})
+			handle({title, message, url})
 			{
 				open('mailto:', {
-					subject,
+					subject: title,
 					body: (message || '') + '\n' + (url || ''),
 				});
 			},

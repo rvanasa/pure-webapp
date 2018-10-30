@@ -1,0 +1,37 @@
+<content-list title="Badge" service="badges">
+	<content-item ng-init="badge = $parent.item">
+		<user-badge class="float-right" badge="badge"></user-badge>
+		<h5 ng-bind="badge.name"></h5>
+	</content-item>
+	<content-edit ng-init="badge = $parent.item">
+		<div class="pt-3" ng-if="badge._id">
+			<div class="input-group input-group-lg">
+				<input type="email" class="form-control" placeholder="Email address..." ng-model="$ctrl.email">
+			</div>
+			<div class="d-flex my-2">
+				<span class="btn btn-outline-primary w-100 mr-1" ng-click="$ctrl.award(badge)">
+					<i class="fa fa-award mr-1"></i> Award
+				</span>
+				<span class="btn btn-outline-secondary w-100 ml-1" ng-click="$ctrl.revoke(badge)">
+					<i class="fa fa-eraser mr-1"></i> Revoke
+				</span>
+			</div>
+			<hr>
+		</div>
+		<label class="text-label mt-2">Badge Title:</label>
+		<div class="input-group">
+			<input type="text" class="form-control" ng-model="badge.name">
+		</div>
+		<label class="text-label mt-2">Description:</label>
+		<div class="input-group">
+			<textarea class="form-control" ng-model="badge.blurb"></textarea>
+		</div>
+		<label class="text-label mt-2">Icon:</label>
+		<div class="d-flex">
+			<div class="input-group">
+				<input type="text" class="form-control" ng-model="badge.icon">
+			</div>
+			<user-badge badge="badge"></user-badge>
+		</div>
+	</content-edit>
+</content-list>

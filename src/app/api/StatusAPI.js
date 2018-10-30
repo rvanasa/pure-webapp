@@ -1,4 +1,4 @@
-module.exports = function(API, Service, ModelService, Hooks, UserEvents)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents)
 {
 	UserEvents.on('join', user =>
 	{
@@ -14,7 +14,7 @@ module.exports = function(API, Service, ModelService, Hooks, UserEvents)
 		user.save();
 	});
 	
-	return Service('status')
+	return Endpoint('status')
 		// .add('create', async ({available}, {user}) =>
 		// {
 		// 	user.lastOnline = Date.now();

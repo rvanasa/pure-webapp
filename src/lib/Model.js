@@ -99,12 +99,10 @@ module.exports = function()
 			if(this.current.type === Number)
 			{
 				this.current.min = n;
-				// return this.validate(val => val >= n, `{VALUE} must be >= ${n}`);
 			}
 			else
 			{
 				this.current.minlength = n;
-				// return this.validate(val => val.length >= n, `{VALUE} length must be >= ${n}`);
 			}
 			return this;
 		}
@@ -114,12 +112,10 @@ module.exports = function()
 			if(this.current.type === Number)
 			{
 				this.current.max = n;
-				// return this.validate(val => val <= n, `{VALUE} must be <= ${n}`);
 			}
 			else
 			{
 				this.current.maxlength = n;
-				// return this.validate(val => val.length <= n, `{VALUE} length must be <= ${n}`);
 			}
 			return this;
 		}

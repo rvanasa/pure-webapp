@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700);
 
-@import "util/_scrolling";
+// @import "util/_scrolling";
+@import "util/_fab-colors";
 
 $brand-color: #5DB4E8;
 
@@ -44,7 +45,7 @@ textarea {
 // 	border-radius: 0 !important;
 // }
 
-.btn, .form-control, .card {
+.btn, .form-control, .card, .rounded {
 	border-radius: 1.5em !important;
 }
 
@@ -64,7 +65,6 @@ textarea {
 }
 
 .text-thin {
-	text-transform: lowercase;
 	font-weight: 200;
 }
 

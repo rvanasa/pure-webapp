@@ -1,6 +1,6 @@
-module.exports = function(API, Service, ModelService, Hooks, TopicAPI)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, TopicAPI)
 {
-	return Service('search')
+	return Endpoint('search')
 		.add('find', async ({query}) =>
 		{
 			var input = query['q'];

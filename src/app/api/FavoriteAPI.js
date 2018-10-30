@@ -1,6 +1,6 @@
-module.exports = function(API, Service, ModelService, Hooks, TopicAPI)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, TopicAPI)
 {
-	return Service('favorites')
+	return Endpoint('favorites')
 		.add('find', async ({user, query}) =>
 		{
 			var params = {user, query, filter: {}, select: {}, options: {}};

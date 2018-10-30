@@ -1,7 +1,7 @@
 var axios = require('axios');
 var StellarSdk = require('stellar-sdk');
 
-module.exports = function(Log, Config, StellarWalletModel)
+module.exports = function(Logger, Config, StellarWalletModel)
 {
 	var retryRate = 3 * 1000;
 	
@@ -84,7 +84,7 @@ module.exports = function(Log, Config, StellarWalletModel)
 				user,
 				data: keypair.secret(),
 			});
-			Log('Stellar wallet created for user:', user._id);
+			Logger.info('stellar.wallet.created', {user: user._id, address: keypair.publicKey()});
 			return getWallet(keypair, account);
 		},
 	};

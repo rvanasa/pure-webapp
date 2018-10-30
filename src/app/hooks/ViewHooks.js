@@ -1,20 +1,43 @@
 module.exports = function(Hooks)
 {
-	function rename(result, view)
+	function getSelector(view)
 	{
-		for(var key in view)
+		var selector = {};
+		for(var key of Object.keys(view))
 		{
 			var value = view[key];
 			if(typeof value === 'string')
 			{
-				result[value] = result[key];
-				delete result[key];
+				selector[value] = 1;
 			}
-			else if(typeof value === 'object' && result[key])
+			else if(typeof value !== 'function')
 			{
-				rename(result[key], view[key]);
+				selector[key] = value;
 			}
 		}
+		return selector;
+	}
+	
+	async function rename(result, view)
+	{
+		return Promise.all(Object.keys(view)
+			.map(async key =>
+			{
+				var value = view[key];
+				if(typeof value === 'string')
+				{
+					result[key] = result[value];
+					delete result[value];
+				}
+				else if(typeof value === 'function')
+				{
+					result[key] = await value.call(result, result[key]);
+				}
+				else if(typeof value === 'object' && result[key])
+				{
+					await rename(result[key], view[key]);
+				}
+			}));
 	}
 	
 	function unname(data, view)
@@ -24,12 +47,16 @@ module.exports = function(Hooks)
 			var value = view[key];
 			if(typeof value === 'string')
 			{
-				data[key] = data[value];
-				delete data[value];
+				data[value] = data[key];
+				delete data[key];
+			}
+			else if(typeof value === 'function')
+			{
+				delete data[key];
 			}
 			else if(typeof value === 'object' && key in data)
 			{
-				rename(data[key], view[key]);
+				unname(data[key], view[key]);
 			}
 		}
 	}
@@ -40,7 +67,7 @@ module.exports = function(Hooks)
 			{
 				if(method === 'find' || method === 'get')
 				{
-					Object.assign(params.select, view);
+					Object.assign(params.select, getSelector(view));
 					for(var key in view)
 					{
 						if(typeof view[key] === 'object')
@@ -50,7 +77,7 @@ module.exports = function(Hooks)
 							{
 								params.options.populate = [];
 							}
-							params.options.populate.push({path: key, select: view[key]});
+							params.options.populate.push({path: key, select: getSelector(view[key])});
 						}
 					}
 				}
@@ -61,16 +88,16 @@ module.exports = function(Hooks)
 			},
 		},
 		after: {
-			find(context)
+			async find(context)
 			{
 				for(var r of context.result)
 				{
-					rename(r, view);
+					await rename(r, view);
 				}
 			},
-			get(context)
+			async get(context)
 			{
-				rename(context.result, view);
+				await rename(context.result, view);
 			},
 		},
 	}));

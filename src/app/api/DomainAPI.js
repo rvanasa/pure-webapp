@@ -1,8 +1,8 @@
-module.exports = function(API, Service, ModelService, Hooks, DomainModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, DomainModel)
 {
 	// TODO
 	
-	return Service('domains', ModelService(DomainModel))
+	return Endpoint('domains', ModelEndpoint(DomainModel))
 		.hooks(Hooks.owned('admins', {public: true}))
 		.build(API);
 }

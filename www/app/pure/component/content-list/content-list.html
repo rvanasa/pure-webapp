@@ -1,0 +1,34 @@
+<div class="bg-light">
+	<div class="container pb-2">
+		<span class="btn btn-outline-success bg-white text-success btn-lg d-block" ng-click="$ctrl.create()">
+			Create <span ng-bind="$ctrl.title"></span>
+		</span>
+	</div>
+</div>
+<div class="container">
+	<loading status="$ctrl.items">
+		<hr>
+		<div class="list-hover"
+			ng-repeat="item in $ctrl.items | orderBy:'$index':true"
+			ng-class="{selected:item._selected}"
+			ng-click="item._selected = true">
+			<div class="container" ng-if="!item._selected">
+				<div ng-transclude="item"></div>
+			</div>
+			<div class="container" ng-if="item._selected">
+				<form class="form-group" ng-submit="$ctrl.update(item)">
+					<div ng-transclude="edit"></div>
+				</form>
+				<hr>
+				<div class="text-right">
+					<delete-button class="float-left mt-1" ng-if="item._id" on-confirm="$ctrl.delete(item)"></delete-button>
+					<span class="btn-group">
+						<span class="btn btn-primary px-3 mr-1" ng-click="$ctrl.update(item); $event.stopPropagation()" ng-bind="item._id ? 'Update' : 'Submit'"></span>
+						<span class="btn btn-secondary px-3" ng-click="$ctrl.close(item); $event.stopPropagation()">Cancel</span>
+					</span>
+				</div>
+			</div>
+			<hr>
+		</div>
+	</loading>
+</div>

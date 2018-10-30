@@ -63,7 +63,17 @@
 			<div class="my-2" ng-bind="$ctrl.topic.blurb"></div>
 		</div>
 		<div class="col-4 col-sm-3 col-md-2">
-			<topic-badges badges="$ctrl.topic.badges"></topic-badges>
+			<topic-stats stats="$ctrl.topic.stats"></topic-stats>
+			<div class="bg-light text-center rounded py-2 mt-2" ng-if="$ctrl.topic.user.badges.length">
+				<h5 class="text-muted">Awards:</h5>
+				<hr class="mt-0">
+				<div class="my-2" ng-repeat="badge in $ctrl.topic.user.badges">
+					<user-badge badge="badge"></user-badge>
+					<div>
+						<small line-clamp="1" ng-bind="badge.name"></small>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

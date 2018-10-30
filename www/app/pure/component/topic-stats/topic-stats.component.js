@@ -1,7 +1,7 @@
 module.exports = {
-	template: require('./topic-badges.html'),
+	template: require('./topic-stats.html'),
 	bindings: {
-		badges: '<',
+		stats: '<',
 		include: '<',
 	},
 	controller: function()
@@ -14,7 +14,7 @@ module.exports = {
 			{
 				return true;
 			}
-			return $ctrl.badges && $ctrl.badges[key];
+			return $ctrl.stats && $ctrl.stats[key];
 		}
 		
 		$ctrl.starIcon = function(threshold, n)

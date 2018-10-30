@@ -1,21 +1,23 @@
 var express = require('express');
 var morgan = require('morgan');
 
-module.exports = function(App, Auth, API, Config, ClientConfig, AuthMiddleware)
+module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMiddleware)
 {
 	App.set('views', 'view');
 	App.set('view engine', 'ejs');
 	
-	if(Config.resourcePath)
+	var config = Config.server;
+	
+	if(config.resources)
 	{
-		App.use(express.static(Config.resourcePath));
+		App.use(express.static(config.resources));
 	}
 	else
 	{
 		var webpack = require('webpack');
 		var devMiddleware = require('webpack-dev-middleware');
 		
-		var compiler = webpack(require(this.config.basePath + '/webpack.config'));
+		var compiler = webpack(require(`${this.config.basePath}/webpack.config`));
 		// App.use(require('webpack-hot-middleware')(compiler, {
 		// 	log: console.log,
 		// }));
@@ -31,14 +33,17 @@ module.exports = function(App, Auth, API, Config, ClientConfig, AuthMiddleware)
 	
 	App.use(morgan('dev'));
 	
-	App.use('/assets', express.static(this.config.basePath + '/www/assets'), (req, res, next) => res.status(404).send('Unknown asset'));
+	App.use('/assets', express.static(`${this.config.basePath}/www/assets`), (req, res, next) => res.status(404).send('Unknown asset'));
 	App.use('/api', API);
 	
-	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {user: req.user.toJSON(), config: ClientConfig}));
+	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {
+		user: req.user.toJSON(),
+		config: ClientConfig
+	}));
 	
 	App.use((err, req, res, next) =>
 	{
-		if(err.stack) console.error(err.stack);
+		Logger.error(err.stack || err);
 		res.render('error', {
 			error: err,
 			status: res.statusCode,

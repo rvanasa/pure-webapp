@@ -1,4 +1,4 @@
-module.exports = function(API, Service, ModelService, Hooks, StellarIntegration, TransactionModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, StellarIntegration, TransactionModel)
 {
 	async function loadActive(user)
 	{
@@ -28,7 +28,7 @@ module.exports = function(API, Service, ModelService, Hooks, StellarIntegration,
 		return wallets[0];
 	}
 	
-	return Service('wallets')
+	return Endpoint('wallets')
 		.add('get', async (id, {user}) =>
 		{
 			if(id === 'primary')
