@@ -1,17 +1,10 @@
-module.exports = function BadgeService(API, Socket, Alert, UserService)
+module.exports = function BadgeService($timeout, $compile, $rootScope, QueueService, API, Socket, Alert, UserService)
 {
 	var AwardsAPI = API.service('awards');
 	
 	Socket.on('award.offer', notifyOffer);
 	
-	AwardsAPI.find()
-		.then(results =>
-		{
-			for(var badge of results)
-			{
-				notifyOffer(badge);
-			}
-		});
+	QueueService.events.on('award.offer', notifyOffer);
 	
 	function populateBadge(badge)
 	{
@@ -23,18 +16,50 @@ module.exports = function BadgeService(API, Socket, Alert, UserService)
 			});
 	}
 	
+	var bodyTemplate = `
+		<div>
+			<hr class="mt-0">
+			<h4><user-badge badge="badge"></user-badge></h4>
+			<h4>{{badge.name}}</h4>
+			<h5 class="text-muted">{{badge.blurb}}</h5>
+			<hr>
+			<span class="text-muted">Awarded by <b>{{badge.issuer.name}}</b></span>
+		</div>
+	`;
+	
 	function notifyOffer(badge)
 	{
 		return populateBadge(badge)
 			.then(() =>
 			{
-				Alert({
-					titleText: `${badge.issuer.name} has given you a badge!`,
-					text: `${badge.name} - ${badge.blurb}`,
-					type: 'success',
-				})
-				.then(() => AwardsAPI.patch(badge._id, {}))
-				.then(() => badge.issuer.badges.push(badge));
+				var scope = Object.assign($rootScope.$new(true), {
+					badge,
+				});
+				var elem = $compile(bodyTemplate)(scope);
+				
+				$timeout(() =>
+				{
+					Alert({
+						titleText: `You received a badge!`,
+						html: elem.html(),
+						// type: 'success',
+						showCancelButton: true,
+						confirmButtonText: `Add to Profile`,
+						cancelButtonText: `Done`,
+					})
+					.then(result =>
+					{
+						var enabled = result.dismiss === 'confirm';
+						return AwardsAPI.patch(badge._id, {enabled: result.dismiss === 'confirm'})
+							.then(() =>
+							{
+								if(enabled)
+								{
+									badge.issuer.badges.push(badge);
+								}
+							});
+					});
+				});
 			});
 	}
 }

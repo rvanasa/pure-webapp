@@ -9,10 +9,10 @@
 				<input type="email" class="form-control" placeholder="Email address..." ng-model="$ctrl.email">
 			</div>
 			<div class="d-flex my-2">
-				<span class="btn btn-outline-primary w-100 mr-1" ng-click="$ctrl.award(badge)">
+				<span class="btn btn-outline-primary w-100 mr-1" ng-class="{disabled:!$ctrl.email}" ng-click="$ctrl.email && $ctrl.award(badge)">
 					<i class="fa fa-award mr-1"></i> Award
 				</span>
-				<span class="btn btn-outline-secondary w-100 ml-1" ng-click="$ctrl.revoke(badge)">
+				<span class="btn btn-outline-secondary w-100 ml-1" ng-class="{disabled:!$ctrl.email}" ng-click="$ctrl.email && $ctrl.revoke(badge)">
 					<i class="fa fa-eraser mr-1"></i> Revoke
 				</span>
 			</div>

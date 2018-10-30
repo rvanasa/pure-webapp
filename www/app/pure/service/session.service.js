@@ -1,6 +1,6 @@
 var EventEmitter = require('events');
 
-module.exports = function SessionService($window, $location, API, Socket, TopicService, PushService, UserService, WalletService)
+module.exports = function SessionService($window, $location, API, Socket, QueueService, TopicService, PushService, UserService, WalletService)
 {
 	var SessionAPI = API.service('sessions');
 	
@@ -127,6 +127,24 @@ module.exports = function SessionService($window, $location, API, Socket, TopicS
 		}
 	});
 	
+	QueueService.events.on('session', session =>
+	{
+		populate(session).then(() =>
+		{
+			if(!session.begin)
+			{
+				this.pending = session;
+			}
+			else
+			{
+				this.current = session;
+				$location.path('/session');
+				
+				this.events.emit('join', session);
+			}
+		});
+	});
+	
 	this.events.on('action.join', user =>
 	{
 		console.log('JOIN',user._id)//
@@ -229,26 +247,4 @@ module.exports = function SessionService($window, $location, API, Socket, TopicS
 				// .then(() => BannerService.addInfo('The session has ended.'));
 		}
 	}
-	
-	SessionAPI.find()
-		.then(results =>
-		{
-			Promise.all(results.map(populate)).then(() =>
-			{
-				for(var session of results)
-				{
-					if(!session.begin)
-					{
-						this.pending = session;
-					}
-					else
-					{
-						this.current = session;
-						$location.path('/session');
-						
-						this.events.emit('join', session);
-					}
-				}
-			});
-		});
 }

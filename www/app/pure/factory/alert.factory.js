@@ -3,8 +3,8 @@ var swal = require('sweetalert2');
 module.exports = function Alert()
 {
 	var mainAlert = swal.mixin({
-		confirmButtonClass: 'btn btn-primary px-5',
-		cancelButtonClass: 'btn btn-secondary px-5',
+		confirmButtonClass: 'btn btn-primary px-5 my-1',
+		cancelButtonClass: 'btn btn-secondary px-5 my-1',
 		buttonsStyling: false,
 	});
 	

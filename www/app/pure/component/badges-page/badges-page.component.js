@@ -8,15 +8,9 @@ module.exports = {
 		
 		$ctrl.award = function(badge)
 		{
-			var email = $ctrl.email;
-			if(!email)
-			{
-				return;
-			}
-			
 			return AwardAPI.create({
 				badge: badge._id,
-				email,
+				email: $ctrl.email,
 			}).then(() =>
 			{
 				Alert.toast('Awarded successfully.', null, 'success');
@@ -26,14 +20,8 @@ module.exports = {
 		
 		$ctrl.revoke = function(badge)
 		{
-			var email = $ctrl.email;
-			if(!email)
-			{
-				return;
-			}
-			
 			return AwardAPI.update(badge._id, {
-				email,
+				email: $ctrl.email,
 				revoke: true,
 			}).then(() =>
 			{

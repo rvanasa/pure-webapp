@@ -1,15 +1,23 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents, AwardModel, AwardOfferModel, BadgeModel, UserModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, UserEvents, AwardModel, AwardOfferModel, BadgeModel, UserModel)
 {
 	async function findUserId(email)
 	{
 		return (await UserModel.findOne({email}, '_id').lean())._id;
 	}
 	
+	QueueService.register(async ({user}) =>
+	{
+		return (await AwardOfferModel.find({email: user.email}).lean().populate('badge'))
+			.map(offer => ['award.offer', offer.badge]);
+	});
+	
 	return Endpoint('awards')
-		.add('find', async ({user}) =>
-		{
-			return (await AwardOfferModel.find({email: user.email}).lean().populate('badge')).map(offer => offer.badge);
-		})
+		// .add('find', async ({user}) =>
+		// {
+		// 	// TODO migrate to queue
+		// 	return (await AwardOfferModel.find({email: user.email}).lean().populate('badge'))
+		// 		.map(offer => offer.badge);
+		// })
 		.add('create', async (data, {user}) =>
 		{
 			var badge = await BadgeModel.findById(data.badge);
@@ -51,7 +59,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents, Award
 			
 			throw 'Invalid operation';
 		})
-		.add('patch', async (id, data, {user}) =>
+		.add('patch', async (id, {enabled}, {user}) =>
 		{
 			var offer = await AwardOfferModel.findOne({email: user.email, badge: id});
 			if(!offer)
@@ -59,7 +67,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents, Award
 				throw 'Not offered';
 			}
 			
-			[await offer.remove(), await AwardModel.create({user, badge: id})];
+			[await offer.remove(), await AwardModel.create({user, badge: id, enabled})];
 			return 'Accepted';
 		})
 		.build(API);

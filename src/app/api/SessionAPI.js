@@ -1,4 +1,4 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
 {
 	async function getJSON(session)
 	{
@@ -37,16 +37,29 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, SessionModel, Ses
 		return session;
 	}
 	
-	return Endpoint('sessions')
-		.add('find', async ({user}) =>
-		{
-			var sessions = await SessionModel.find({$or: [
+	QueueService.register(async ({user}) =>
+	{
+		var sessions = await SessionModel.find({$or: [
 				{teacher: user._id},
 				{students: user._id},
 			], end: {$exists: false}}).lean();
+		
+		return (await Promise.all(sessions.map(getJSON)))
+			.map(session => ['session', session]);
+	});
+	
+	return Endpoint('sessions')
+		// .add('find', async ({user}) =>
+		// {
+		// 	// TODO migrate to queue
 			
-			return Promise.all(sessions.map(getJSON));
-		})
+		// 	var sessions = await SessionModel.find({$or: [
+		// 		{teacher: user._id},
+		// 		{students: user._id},
+		// 	], end: {$exists: false}}).lean();
+			
+		// 	return Promise.all(sessions.map(getJSON));
+		// })
 		.add('create', async ({topic: id, request}, {user, connection}) =>
 		{
 			var [topic] = await Promise.all([(async () =>

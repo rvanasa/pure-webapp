@@ -2,9 +2,9 @@ module.exports = {
 	template: `
 		<span class="btn-group d-block">
 			<span class="btn text-muted"
-				ng-repeat="(id, site) in $ctrl.shares.sites"
+				ng-repeat="site in $ctrl.shares.sites"
 				ng-class="'btn-light'"
-				ng-click="$ctrl.shares.startIntent(id, $ctrl.intent())">
+				ng-click="$ctrl.shares.startIntent(site.id, $ctrl.intent())">
 				<i class="fa-fw fab-color" ng-class="site.icon"></i>
 			</span>
 		</span>

@@ -1,4 +1,4 @@
-module.exports = function(StatusService, SessionService, PeerService, WhiteboardService, WalletService, BadgeService)
+module.exports = function(QueueService, StatusService, SessionService, PeerService, WhiteboardService, WalletService, BadgeService)
 {
 	// Eager evaluation
 }

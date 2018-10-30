@@ -13,58 +13,59 @@ module.exports = function ShareService($window)
 		return $window.open(url);
 	}
 	
-	this.sites = {
-		twitter: {
-			color: 'primary',
-			icon: 'fab fa-twitter',
-			handle({message, url})
-			{
-				open('https://twitter.com/intent/tweet', {
-					text: message,
-					url,
-				});
-			},
+	this.sites = [{
+		id: 'twitter',
+		color: 'primary',
+		icon: 'fab fa-twitter',
+		handle({message, url})
+		{
+			open('https://twitter.com/intent/tweet', {
+				text: message,
+				url,
+			});
 		},
-		facebook: {
-			color: 'primary',
-			icon: 'fab fa-facebook',
-			handle({title, message, url})
-			{
-				open('https://www.facebook.com/sharer/sharer.php', {
-					caption: title,
-					quote: message,
-					u: url,
-				});
-			}
+	}, {
+		id: 'facebook',
+		color: 'primary',
+		icon: 'fab fa-facebook',
+		handle({title, message, url})
+		{
+			open('https://www.facebook.com/sharer/sharer.php', {
+				caption: title,
+				quote: message,
+				u: url,
+			});
+		}
+	}, {
+		id: 'email',
+		color: 'secondary',
+		icon: 'fa fa-envelope',
+		handle({title, message, url})
+		{
+			open('mailto:', {
+				subject: title,
+				body: (message || '') + '\n' + (url || ''),
+			});
 		},
-		email: {
-			color: 'secondary',
-			icon: 'fa fa-envelope',
-			handle({title, message, url})
-			{
-				open('mailto:', {
-					subject: title,
-					body: (message || '') + '\n' + (url || ''),
-				});
-			},
-		},
-	};
+	}];
 	
-	this.startIntent = function(site, intent)
+	this.startIntent = function(id, intent)
 	{
 		if(!intent)
 		{
 			throw new Error('No intent was provided');
 		}
-		else if(!this.sites[site])
+		
+		var site = this.sites.find(site => site.id === id);
+		if(!site)
 		{
-			throw new Error(`Unknown site: ${site}`);
+			throw new Error(`Unknown site: ${id}`);
 		}
 		
 		if(intent.url === true)
 		{
 			intent.url = $window.location.href;
 		}
-		this.sites[site].handle(intent);
+		site.handle(intent);
 	}
 }

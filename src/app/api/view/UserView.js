@@ -7,7 +7,7 @@ module.exports = function(AwardModel)
 		available: 1,
 		async badges()
 		{
-			return (await AwardModel.find({user: this._id}).populate('badge').lean()).map(award => award.badge);
+			return (await AwardModel.find({user: this._id, enabled: true}).populate('badge').lean()).map(award => award.badge);
 		},
 	};
 }

@@ -11,6 +11,8 @@ module.exports = function PeerService($window, Socket, SessionService)
 	
 	this.events = new EventEmitter();
 	
+	// TODO use socket event acknowledgements to simplify signaling
+	
 	this.outbound = {};
 	this.inbound = {};
 	
