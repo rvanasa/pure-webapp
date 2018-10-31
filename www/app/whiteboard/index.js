@@ -249,7 +249,15 @@ class Whiteboard extends EventEmitter
 	
 	forceRedraw()
 	{
-		this.context.clearRect(0, 0, this.width, this.height);
+		if(this.options.background)
+		{
+			this.context.fillStyle = this.options.background;
+			this.context.fillRect(0, 0, this.width, this.height);
+		}
+		else
+		{
+			this.context.clearRect(0, 0, this.width, this.height);
+		}
 		for(var user in this.remotes)
 		{
 			if(this.remotes.hasOwnProperty(user))
@@ -340,6 +348,7 @@ module.exports = function(canvas, options = {})
 	var context = canvas.getContext('2d');
 	if(!board)
 	{
+		var isFirst = true;
 		board = new Whiteboard(context, options);
 		options.handle = board;
 	}
@@ -370,13 +379,13 @@ module.exports = function(canvas, options = {})
 			{
 				board.undo();
 			}
-			if(event.key === 'y')
+			else if(event.key === 'y' || event.key === 'Z')
 			{
 				board.redo();
 			}
 		}
 	}
-	document.addEventListener('keydown', onKeyDown, false);//TODO leak
+	if(isFirst) document.addEventListener('keydown', onKeyDown, false);//TODO leak
 	
 	canvas.addEventListener('mousedown', onMouseDown, false);
 	canvas.addEventListener('mouseup', onMouseUp, false);
@@ -477,22 +486,3 @@ module.exports = function(canvas, options = {})
 	
 	return board;
 }
-
-	// socket.on('drawing', onDrawingEvent);
-	
-	//TODO events for mouse pointer?
-	
-		// socket.emit('drawing', {
-		// 	x0: x0 / w,
-		// 	y0: y0 / h,
-		// 	x1: x1 / w,
-		// 	y1: y1 / h,
-		// 	color: color,
-		// });
-	
-	// function onDrawingEvent(data)
-	// {
-	// 	var w = canvas.width;
-	// 	var h = canvas.height;
-	// 	drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
-	// }

@@ -37,29 +37,24 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 		return session;
 	}
 	
-	QueueService.register(async ({user}) =>
+	async function findSessions({user})
 	{
 		var sessions = await SessionModel.find({$or: [
-				{teacher: user._id},
-				{students: user._id},
-			], end: {$exists: false}}).lean();
+			{teacher: user._id},
+			{students: user._id},
+		], end: {$exists: false}}).lean();
 		
-		return (await Promise.all(sessions.map(getJSON)))
+		return Promise.all(sessions.map(getJSON));
+	}
+	
+	QueueService.register(async params =>
+	{
+		return (await findSessions(params))
 			.map(session => ['session', session]);
 	});
 	
 	return Endpoint('sessions')
-		// .add('find', async ({user}) =>
-		// {
-		// 	// TODO migrate to queue
-			
-		// 	var sessions = await SessionModel.find({$or: [
-		// 		{teacher: user._id},
-		// 		{students: user._id},
-		// 	], end: {$exists: false}}).lean();
-			
-		// 	return Promise.all(sessions.map(getJSON));
-		// })
+		.add('find', findSessions)
 		.add('create', async ({topic: id, request}, {user, connection}) =>
 		{
 			var [topic] = await Promise.all([(async () =>

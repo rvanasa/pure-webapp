@@ -1,10 +1,10 @@
-module.exports = function(WhiteboardService)
+module.exports = function(DrawTool)
 {
 	return {
 		restrict: 'A',
 		link($scope, $elem, $attrs)
 		{
-			WhiteboardService.setBoard($elem[0]);
+			DrawTool.setBoard($elem[0]);
 		}
 	};
 }

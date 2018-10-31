@@ -92,10 +92,13 @@ module.exports = function SessionService($window, $location, API, Socket, QueueS
 	
 	Socket.on('session.time', ({duration}) =>
 	{
-		console.log('TIME', duration)//
+		// console.log('TIME', duration)//
 		
-		this.current.duration = duration;
-		this.current.durationReceived = new Date();
+		if(this.current)
+		{
+			this.current.duration = duration;
+			this.current.durationReceived = new Date();
+		}
 	});
 	
 	Socket.on('session.action', action =>
@@ -158,8 +161,6 @@ module.exports = function SessionService($window, $location, API, Socket, QueueS
 		{
 			this.current.paused = false;
 		}
-		
-		console.log(available)
 	});
 	
 	this.events.on('action.leave', user =>
@@ -175,8 +176,6 @@ module.exports = function SessionService($window, $location, API, Socket, QueueS
 		{
 			this.current.paused = true;
 		}
-		
-		console.log(available)
 	});
 	
 	this.request = function(topic)

@@ -1,4 +1,4 @@
-module.exports = function(API, Socket, Endpoint, ModelEndpoint, Hooks, UserEvents, SessionAPI)
+module.exports = function(Logger, API, Socket, Endpoint, ModelEndpoint, Hooks, UserEvents, SessionAPI)
 {
 	async function findUsers(user)
 	{
@@ -16,21 +16,27 @@ module.exports = function(API, Socket, Endpoint, ModelEndpoint, Hooks, UserEvent
 	
 	UserEvents.on('join', (user, connection) =>
 	{
-		connection.on('signal.ready', async () =>
+		connection.on('signal.ready', () =>
 		{
-			for(var _id of await findUsers(user))
+			(async () =>
 			{
-				if(!user._id.equals(_id))
+				for(var _id of await findUsers(user))
 				{
-					UserEvents.emit(_id, 'signal.peer', {id: connection.id});
+					if(!user._id.equals(_id))
+					{
+						UserEvents.emit(_id, 'signal.peer', {id: connection.id});
+					}
 				}
-			}
+			})().catch(err => Logger.error(err.stack));
 		});
 		
-		connection.on('signal', async ({id, signal, initiator}) =>
+		connection.on('signal', ({id, signal, initiator}) =>
 		{
-			// TODO ensure in same session
-			Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
+			(async () =>
+			{
+				// TODO ensure in same session
+				Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
+			})().catch(err => Logger.error(err.stack));
 		});
 	});
 }

@@ -1,15 +1,12 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($window, $scope, Binder, SessionService, PeerService, WhiteboardService, UserService)
+	controller: function($window, $scope, Binder, SessionService, PeerService, ToolService, UserService)
 	{
 		var $ctrl = this;
 		
 		$ctrl.sessions = SessionService;
 		
-		$ctrl.options = WhiteboardService.options;
-		
-		$ctrl.colors = $ctrl.options.colors;
-		$ctrl.board = $ctrl.options.board;
+		$ctrl.board = ToolService.getOptions('draw');
 		
 		$ctrl.screenshotPrefix = 'data:image/png;base64,';
 		
@@ -64,6 +61,9 @@ module.exports = {
 				$ctrl.toggleMicrophone($ctrl.microphone);
 			}
 		}
+		
+		$ctrl.tools = ToolService.tools;
+		$ctrl.selectedTool = $ctrl.tools[0];
 		
 		function updateTime(apply)
 		{

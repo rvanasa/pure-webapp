@@ -1,10 +1,10 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
 
-module.exports = function PeerService($window, Socket, SessionService)
+module.exports = function PeerService($window, Config, Socket, SessionService)
 {
 	Peer.config.iceServers.push({
-		urls: 'turn:pure-rvanasa.c9users.io:8081', // TODO pass from server
+		urls: Config.turn.url,
 		username: 'pure',
 		credential: 'pass',
 	});
@@ -67,7 +67,7 @@ module.exports = function PeerService($window, Socket, SessionService)
 		{
 			try
 			{
-				peer.send(JSON.stringify({_close: true}));
+				peer.send('close');
 				peer.destroy();
 			}
 			catch(e)
@@ -123,12 +123,14 @@ module.exports = function PeerService($window, Socket, SessionService)
 		{
 			// debug('DATA', String(data));
 			
-			var packet = JSON.parse(data);
-			if(packet._close)
+			data = String(data);
+			if(data === 'close')
 			{
 				peer.destroy();
 				return;
 			}
+			
+			var packet = JSON.parse(data);
 			this.events.emit('receive', packet, peer, doSend);
 		});
 		
@@ -143,8 +145,13 @@ module.exports = function PeerService($window, Socket, SessionService)
 			this.events.removeListener('send', doSend);
 		});
 		
-		function doSend(packet)
+		function doSend(packet, receiver)
 		{
+			if(receiver && receiver !== peer)
+			{
+				return;
+			}
+			
 			try
 			{
 				peer.send(JSON.stringify(packet));

@@ -1,33 +1,47 @@
 <div class="row no-gutters">
 	<div class="col-md-7 col-lg-8">
-		<div ng-style="{background:$ctrl.options.background}">
-			<canvas whiteboard class="whiteboard w-100" ng-mouseup=""></canvas>
+		<div ng-if="$ctrl.selectedTool.id == 'draw'">
+			<canvas whiteboard class="whiteboard d-block w-100" ng-mouseup=""></canvas>
+			<div class="noselect d-flex bg-secondary text-white p-1 pt-2">
+				<span class="w-100">
+					<span class="whiteboard-button mx-2" ng-click="$ctrl.takeScreenshot()">
+						<i class="fa fa-camera fa-fw fa-lg"></i>
+					</span>
+					<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length && !$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.clear()">
+						<i class="fa fa-eraser fa-fw fa-lg"></i>
+					</span>
+					<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length}" ng-click="$ctrl.board.handle.undo()">
+						<i class="fa fa-undo fa-fw fa-lg"></i>
+					</span>
+					<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.redo()">
+						<i class="fa fa-redo fa-fw fa-lg"></i>
+					</span>
+				</span>
+				<span class="w-100 text-right">
+					<span class="whiteboard-button mx-1"
+						ng-repeat="color in $ctrl.board.colors"
+						ng-if="color != $ctrl.board.background"
+						ng-class="{selected:$ctrl.board.handle.cursor.color == color}"
+						ng-style="{background:color}"
+						ng-click="$ctrl.board.handle.cursor.color = color">
+					</span>
+				</span>
+			</div>
 		</div>
-		<div class="whiteboard-toolbar noselect d-flex bg-secondary text-white p-1 pt-2">
-			<span class="w-100">
-				<span class="whiteboard-button mx-2" ng-click="$ctrl.takeScreenshot()">
-					<i class="fa fa-camera fa-fw fa-lg"></i>
-				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length && !$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.clear()">
-					<i class="fa fa-eraser fa-fw fa-lg"></i>
-				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.paths.length}" ng-click="$ctrl.board.handle.undo()">
-					<i class="fa fa-undo fa-fw fa-lg"></i>
-				</span>
-				<span class="whiteboard-button mx-2" ng-class="{disabled:!$ctrl.board.handle.undos.length}" ng-click="$ctrl.board.handle.redo()">
-					<i class="fa fa-redo fa-fw fa-lg"></i>
-				</span>
-			</span>
-			<span class="w-100 text-right">
-				<span class="whiteboard-button mx-1"
-					ng-repeat="color in $ctrl.colors"
-					ng-if="color != $ctrl.options.background"
-					ng-class="{selected:$ctrl.board.handle.cursor.color == color}"
-					ng-style="{background:color}"
-					ng-click="$ctrl.board.handle.cursor.color = color">
-				</span>
-			</span>
+		<div ng-if="$ctrl.selectedTool.id == 'text'">
+			<div class="no-transition"
+				style="min-height:75vh"
+				ace-editor
+				ng-model="$ctrl.selectedTool.state"
+				ng-change="$ctrl.selectedTool.save()"
+				ng-keydown="$event.keyCode == 13 && $event.ctrlKey && $ctrl.selectedTool.evaluate()">
+			</div>
 		</div>
+		<span class="btn-group btn-group-lg float-right mt-2 mr-2">
+			<span class="btn mx-1" ng-repeat="tool in $ctrl.tools" ng-class="'btn-'+($ctrl.selectedTool == tool ? 'info' : 'outline-info')" ng-click="$ctrl.selectedTool = tool">
+				<i class="fa fa-fw" ng-class="'fa-'+tool.icon"></i>
+			</span>
+		</span>
 		<h3 class="text-muted m-3" line-clamp="1" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h3>
 	</div>
 	<div class="col-md-5 col-lg-4">
@@ -87,7 +101,7 @@
 					</span>
 					<span ng-switch-when="screenshot">
 						<span>took a screenshot:</span>
-						<img class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{$ctrl.screenshotPrefix + action.data}}">
+						<img class="w-100" ng-src="{{$ctrl.screenshotPrefix + action.data}}">
 					</span>
 				</span>
 			</small>
