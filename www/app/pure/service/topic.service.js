@@ -24,6 +24,8 @@ module.exports = function TopicService(API, Cache, UserService)
 	
 	this.create = function(topic)
 	{
+		topic.interval = topic.interval || 0;
+		
 		var listPromise = userCache.get(UserService.user._id);
 		
 		return TopicAPI.create(topic)

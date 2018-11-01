@@ -2,12 +2,14 @@
 
 var EventEmitter = require('events');
 
-function randomString()
+var MAX_ID = Math.pow(2, 32);
+
+function generateID()
 {
-	return Math.random().toString(36).substring(2, 15);
+	return Math.floor(Math.random() * MAX_ID);
 }
 
-var storageProps = ['paths', 'undos'/*, 'remotes'*/];
+var storageProps = ['paths', 'undos'];
 
 class Whiteboard extends EventEmitter
 {
@@ -146,7 +148,7 @@ class Whiteboard extends EventEmitter
 		}
 		
 		this.cursor.path = {
-			id: randomString(),
+			id: generateID(),
 			color: this.cursor.color,
 			points: [point],
 		};
@@ -239,9 +241,10 @@ class Whiteboard extends EventEmitter
 	{
 		if(!this.redrawing)
 		{
+			this.redrawing = true;
 			setTimeout(() =>
 			{
-				this.redrawing = null;
+				this.redrawing = false;
 				this.forceRedraw();
 			});
 		}
@@ -293,15 +296,18 @@ class Whiteboard extends EventEmitter
 		return new Promise((resolve, reject) => this.context.canvas.toBlob(resolve));
 	}
 	
-	change(packet)
+	change(data)
 	{
-		this.emit('packet', packet);
-		
+		this.emit('data', data);
 		this.save();
 	}
 	
-	packet({add, remove, clear}, user)
+	data({clear, add, remove}, user)
 	{
+		if(clear)
+		{
+			this.clear(user);
+		}
 		if(add)
 		{
 			for(var path of add)
@@ -315,10 +321,6 @@ class Whiteboard extends EventEmitter
 			{
 				this.remove(id, user);
 			}
-		}
-		if(clear)
-		{
-			this.clear(user);
 		}
 	}
 }

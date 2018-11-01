@@ -12,6 +12,8 @@ module.exports = function(Auth, Config, ClientConfig)
 		}
 		else
 		{
+			// TODO only add redirectURL if on webapp path/////
+			
 			req.session.redirectURL = req.originalUrl;
 			if(req.originalUrl === '/')
 			{

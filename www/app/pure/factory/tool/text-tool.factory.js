@@ -120,11 +120,6 @@ module.exports = function TextTool($timeout, UserService)
 				{
 					if(editor)
 					{
-						for(var delta in packet.deltas)
-						{
-							
-						}
-						
 						editor.getSession().getDocument().applyDeltas(packet.deltas);
 					}
 					else

@@ -1,6 +1,6 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
-var cbor = require('cbor');
+var msgpack = require('msgpack-lite');
 
 module.exports = function PeerService($window, Config, Socket, SessionService)
 {
@@ -124,7 +124,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 		{
 			// debug('DATA', String(data));
 			
-			var packet = cbor.decode(data);
+			var packet = msgpack.decode(data);
 			if(packet === 'close')
 			{
 				peer.destroy();
@@ -155,7 +155,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 			
 			try
 			{
-				peer.send(cbor.encode(packet));
+				peer.send(msgpack.encode(packet));
 			}
 			catch(e)
 			{

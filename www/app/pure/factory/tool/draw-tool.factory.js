@@ -21,7 +21,7 @@ module.exports = function DrawTool()
 			
 			if(isFirst)
 			{
-				board.on('packet', packet => this.sendPacket(packet));
+				board.on('data', packet => this.sendPacket(packet));
 			}
 		},
 		onRestart()
@@ -52,7 +52,7 @@ module.exports = function DrawTool()
 		{
 			if(board)
 			{
-				board.packet(packet, peer._id);
+				board.data(packet, peer._id);
 			}
 		},
 	};

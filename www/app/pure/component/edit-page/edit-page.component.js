@@ -33,9 +33,6 @@ module.exports = {
 				return savePromise;
 			}
 			
-			// Temp?
-			$ctrl.topic.interval = $ctrl.topic.interval || 0;
-			
 			if(!id)
 			{
 				savePromise = TopicService.create($ctrl.topic);
