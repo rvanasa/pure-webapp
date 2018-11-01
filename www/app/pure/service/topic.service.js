@@ -7,7 +7,7 @@ module.exports = function TopicService(API, Cache, UserService)
 		topic => !topic.user.displayName /*TEMP*/ && UserService.register(topic.user),
 	));
 	
-	var userCache = Cache(id => TopicAPI.find(id ? {query: {user: id}} : null));
+	var userCache = Cache(id => TopicAPI.find({query: {user: id}}));
 	
 	this.findByUser = function(id)
 	{
@@ -22,8 +22,42 @@ module.exports = function TopicService(API, Cache, UserService)
 			});
 	}
 	
+	this.create = function(topic)
+	{
+		var listPromise = userCache.get(UserService.user._id);
+		
+		return TopicAPI.create(topic)
+			.then(id =>
+			{
+				topic._id = id;
+				topic.user = UserService.user;
+				listPromise.then(results => results.push(topic));
+			});
+	}
+	
+	this.update = function(topic)
+	{
+		return TopicAPI.update(topic._id, Object.assign({}, topic, {
+			user: topic.user._id,
+		}));
+	}
+	
 	this.delete = function(topic)
 	{
-		return TopicAPI.remove(topic._id);
+		var listPromise = userCache.get(topic.user._id);
+		listPromise.then(results =>
+		{
+			if(results.includes(topic))
+			{
+				results.splice(results.indexOf(topic), 1);
+			}
+		});
+		
+		return TopicAPI.remove(topic._id)
+			.catch(err =>
+			{
+				listPromise.then(results => results.push(topic));
+				throw err;
+			});
 	}
 }

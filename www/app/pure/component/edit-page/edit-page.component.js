@@ -38,12 +38,12 @@ module.exports = {
 			
 			if(!id)
 			{
-				savePromise = TopicAPI.create($ctrl.topic)
-					.then(_id => id = _id);
+				savePromise = TopicService.create($ctrl.topic);
 			}
 			else
 			{
-				savePromise = TopicAPI.update($ctrl.topic._id, $ctrl.topic);
+				savePromise = TopicService.update($ctrl.topic)
+					.then(() => id = $ctrl.topic._id);
 			}
 			return savePromise = savePromise.then(() => $ctrl.closeTopic());
 		}

@@ -15,7 +15,7 @@ module.exports = {
 			$ctrl.user = UserService.user;
 		}
 		
-		TopicService.findByUser(id)
+		TopicService.findByUser(id || $ctrl.user._id)
 			.then(results =>
 			{
 				$ctrl.topics = results;
