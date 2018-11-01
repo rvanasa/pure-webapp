@@ -8,9 +8,9 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 	
 	var config = Config.server;
 	
-	if(config.resources)
+	if(config.resourcePath)
 	{
-		App.use(express.static(config.resources));
+		App.use(express.static(config.resourcePath));
 	}
 	else
 	{

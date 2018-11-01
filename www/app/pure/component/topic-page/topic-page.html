@@ -17,37 +17,49 @@
 	<hr>
 	<div class="row">
 		<div class="col-8 col-sm-5 col-md-4">
-			<if-owned user="$ctrl.topic.user">
-				<span class="btn btn-success d-block my-1" ng-click="$ctrl.editTopic()">Edit Details</span>
-			</if-owned>
-			<if-owned user="$ctrl.topic.user" invert="true">
-				<div ng-if="!$ctrl.sessions.pending && !$ctrl.sessions.current" ng-switch="$ctrl.status()">
-					<span ng-switch-when="available" class="btn btn-primary d-block my-1" ng-click="$ctrl.sessions.request($ctrl.topic)">
-						<i class="fa fa-chalkboard mr-1"></i>
-						Start Session
-					</span>
-					<span ng-switch-default class="btn btn-outline-primary d-block my-1" ng-click="$ctrl.showSchedule = true">
-						<i class="far fa-calendar mr-1"></i>
-						Schedule
-					</span>
+			<div uib-collapse="!$ctrl.showSchedule">
+				<div class="card">
+					<div class="card-body">
+						<span class="text-muted"><span ng-bind="$ctrl.topic.user.name"></span> has a full schedule at the moment.</span>
+						<hr>
+						<span>Consider bookmarking the topic for easy access when this user is available.</span>
+					</div>
 				</div>
-				<!--<span ng-if="$ctrl.sessions.current.topic._id == $ctrl.topic._id" class="btn btn-outline-muted d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>-->
-				<span ng-if="$ctrl.sessions.pending" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">Cancel</span>
-			</if-owned>
-			<topic-rate topic="$ctrl.topic"></topic-rate>
-			<if-owned user="$ctrl.topic.user">
 				<hr>
-				<label class="text-label">Share this topic:</label>
-				<social-intent intent="$ctrl.getShareIntent()"></social-intent>
-				<hr>
-			</if-owned>
-			<if-owned user="$ctrl.topic.user" invert="true">
-				<div ng-switch="$ctrl.status()">
-					<b ng-switch-when="available" class="text-success">Available now!</b>
-					<span ng-switch-when="busy" class="text-muted">Busy at the moment</span>
-					<span ng-switch-when="offline" class="text-muted">Offline</span>
-				</div>
-			</if-owned>
+			</div>
+			<div uib-collapse="$ctrl.showSchedule">
+				<if-owned user="$ctrl.topic.user">
+					<span class="btn btn-success d-block my-1" ng-click="$ctrl.editTopic()">Edit Details</span>
+				</if-owned>
+				<if-owned user="$ctrl.topic.user" invert="true">
+					<div ng-if="!$ctrl.sessions.pending && !$ctrl.sessions.current" ng-switch="$ctrl.status()">
+						<span ng-switch-when="available" class="btn btn-primary d-block my-1" ng-click="$ctrl.sessions.request($ctrl.topic)">
+							<i class="fa fa-chalkboard mr-1"></i>
+							Start Session
+						</span>
+						<span ng-switch-default class="btn btn-outline-primary d-block my-1" ng-click="$ctrl.showSchedule = true">
+							<i class="far fa-calendar mr-1"></i>
+							Schedule
+						</span>
+					</div>
+					<!--<span ng-if="$ctrl.sessions.current.topic._id == $ctrl.topic._id" class="btn btn-outline-muted d-block my-1" ng-click="$ctrl.sessions.close()">End Session</span>-->
+					<span ng-if="$ctrl.sessions.pending" class="btn btn-outline-secondary d-block my-1" ng-click="$ctrl.sessions.close()">Cancel</span>
+				</if-owned>
+				<topic-rate topic="$ctrl.topic"></topic-rate>
+				<if-owned user="$ctrl.topic.user">
+					<hr>
+					<label class="text-label">Share this topic:</label>
+					<social-intent intent="$ctrl.getShareIntent()"></social-intent>
+					<hr>
+				</if-owned>
+				<if-owned user="$ctrl.topic.user" invert="true">
+					<div ng-switch="$ctrl.status()">
+						<b ng-switch-when="available" class="text-success">Available now!</b>
+						<span ng-switch-when="busy" class="text-muted">Busy at the moment</span>
+						<span ng-switch-when="offline" class="text-muted">Offline</span>
+					</div>
+				</if-owned>
+			</div>
 			<span class="d-sm-none">
 				<div class="my-2" ng-bind="$ctrl.topic.blurb"></div>
 			</span>

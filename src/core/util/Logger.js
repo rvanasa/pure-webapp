@@ -1,5 +1,4 @@
 var winston = require('winston');
-// require('winston-daily-rotate-file');
 
 module.exports = function(Config)
 {
@@ -14,6 +13,8 @@ module.exports = function(Config)
 	
 	if(config.logPath)
 	{
+		require('winston-daily-rotate-file');
+		
 		transports.push(new winston.transports.DailyRotateFile({
 			filename: `${config.logPath}/server-%DATE%.log`,
 			datePattern: 'YYYY-MM-DD-HH',

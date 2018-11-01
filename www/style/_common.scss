@@ -41,6 +41,10 @@ textarea {
 	cursor: default;
 }
 
+.bg-dark hr {
+	border-color: $secondary;
+}
+
 // .btn:not(.rounded-circle), .badge:not(.badge-pill), input, select, textarea {
 // 	border-radius: 0 !important;
 // }

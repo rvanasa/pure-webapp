@@ -9,10 +9,14 @@ heroku git:remote -a platformpure &&
 
 node_modules/webpack-cli/bin/cli.js --bail --progress --profile &&
 
-git commit -a -m "(Deploy)" &&
+cp ../config/prod.config.json config.json &&
+
+git add . &&
+git commit -m "(Deploy)" &&
 git push heroku master --force &&
 git reset HEAD~1
 
+rm -f config.json
 rm -rf dist
 
 ##  Helpful for testing:  ##

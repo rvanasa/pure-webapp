@@ -1,6 +1,6 @@
 module.exports = {
 	template: `
-		<span ng-class="'btn btn-'+($ctrl.favorites.has($ctrl.topic) ? 'outline-secondary' : 'light')"
+		<span class="btn btn-outline-secondary bg-light"
 			ng-click="$ctrl.favorites.toggle($ctrl.topic)">
 			<i class="fa-bookmark text-warning" ng-class="$ctrl.favorites.has($ctrl.topic) ? 'fa' : 'far'"></i>
 		</span>`,
