@@ -2,7 +2,9 @@ var io = require('socket.io');
 
 module.exports = function(Server)
 {
-	var Socket = io(Server);
+	var Socket = io(Server, {
+		// parser,
+	});
 	
 	return Socket;
 }

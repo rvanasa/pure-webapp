@@ -2,7 +2,7 @@ module.exports = function ToolService(SessionService, PeerService, DrawTool, Tex
 {
 	this.storage = sessionStorage;
 	
-	var sessionKey = 'session.latest';
+	var latestKey = 'session.latest';
 	
 	this.tools = [DrawTool, TextTool];
 	
@@ -92,17 +92,17 @@ module.exports = function ToolService(SessionService, PeerService, DrawTool, Tex
 	
 	SessionService.events.on('join', session =>
 	{
-		if(this.storage[sessionKey] !== session._id)
+		if(this.storage[latestKey] !== session._id)
 		{
 			this.notifyAll('onRestart', session);
 		}
-		this.storage[sessionKey] = session._id;
-		// this.notifyAll('onJoin', session);
+		this.storage[latestKey] = session._id;
+		this.notifyAll('onConnect', session);
 	});
 	
 	SessionService.events.on('leave', session =>
 	{
-		delete this.storage[sessionKey];
+		delete this.storage[latestKey];
 	});
 	
 	this.sendPacket = function(tool, packet, peer)

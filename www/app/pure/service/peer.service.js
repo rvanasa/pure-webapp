@@ -1,5 +1,6 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
+var cbor = require('cbor');
 
 module.exports = function PeerService($window, Config, Socket, SessionService)
 {
@@ -67,7 +68,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 		{
 			try
 			{
-				peer.send('close');
+				peer.send(cbor.encode('close'));
 				peer.destroy();
 			}
 			catch(e)
@@ -123,15 +124,15 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 		{
 			// debug('DATA', String(data));
 			
-			data = String(data);
-			if(data === 'close')
+			var packet = cbor.decode(data);
+			if(packet === 'close')
 			{
 				peer.destroy();
-				return;
 			}
-			
-			var packet = JSON.parse(data);
-			this.events.emit('receive', packet, peer, doSend);
+			else
+			{
+				this.events.emit('receive', packet, peer, doSend);
+			}
 		});
 		
 		this.events.on('send', doSend);
@@ -154,7 +155,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 			
 			try
 			{
-				peer.send(JSON.stringify(packet));
+				peer.send(cbor.encode(packet));
 			}
 			catch(e)
 			{

@@ -1,6 +1,6 @@
 var $ = require('jquery');
 
-module.exports = function($window, $timeout)
+module.exports = function($window, $timeout, TextTool)
 {
 	function handleResize(editor, elem)
 	{
@@ -31,31 +31,36 @@ module.exports = function($window, $timeout)
 			editor.getSession().setMode('ace/mode/javascript');
 			editor.getSession().setUseWorker(false);
 			
-			ngModel.$render = () =>
+			if(ngModel)
 			{
-				var shouldDeselect = editor.getValue() == '';
-				
-				editor.setValue(ngModel.$viewValue || '');
-				handleResize(editor, elem);
-				
-				if(shouldDeselect)
+				ngModel.$render = () =>
 				{
-					editor.selection.clearSelection();
-				}
-			};
-			
-			editor.on('change', () =>
-			{
-				$timeout(() =>
-				{
-					scope.$apply(() =>
+					var shouldDeselect = editor.getValue() == '';
+					
+					editor.setValue(ngModel.$viewValue || '', 1);
+					handleResize(editor, elem);
+					
+					if(shouldDeselect)
 					{
-						var value = editor.getValue();
-						ngModel.$setViewValue(value);
+						editor.selection.clearSelection();
+					}
+				};
+				
+				editor.on('change', () =>
+				{
+					$timeout(() =>
+					{
+						scope.$apply(() =>
+						{
+							var value = editor.getValue();
+							ngModel.$setViewValue(value);
+						});
 					});
+					handleResize(editor, elem);
 				});
-				handleResize(editor, elem);
-			});
+			}
+			
+			TextTool.setEditor(editor);
 		}
 	};
 }

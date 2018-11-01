@@ -10,6 +10,7 @@ module.exports = function DrawTool()
 		onConfig(options)
 		{
 			options.storage = this.service.storage;
+			options.storageKey = 'session.draw';
 		},
 		setBoard(elem)
 		{
