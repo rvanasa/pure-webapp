@@ -1,3 +1,23 @@
-<div class="container">
-	
+<div class="container my-3">
+	<form class="form-group">
+		<label class="text-label">My name is displayed as...</label>
+		<div class="input-group">
+			<input type="text"
+				class="form-control"
+				ng-class="{'is-invalid': $ctrl.invalidFlags.displayName}"
+				ng-model="$ctrl.user.displayName"
+				ng-focus="$ctrl.focus()"
+				ng-blur="$ctrl.update('displayName')">
+		</div>
+		<hr class="my-3">
+		<label class="text-label">My birthday is...</label>
+		<div class="input-group">
+			<input type="date"
+				class="form-control"
+				ng-class="{'is-invalid': $ctrl.invalidFlags.birthdate}"
+				ng-model="$ctrl.user.birthdate"
+				ng-focus="$ctrl.focus()"
+				ng-blur="$ctrl.update('birthdate')">
+		</div>
+	</form>
 </div>

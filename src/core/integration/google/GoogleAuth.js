@@ -33,7 +33,7 @@ module.exports = function(UserModel, GoogleAccountModel)
 			
 			Object.assign(user, {
 				email: user.email || account.email,
-				displayName: profile.displayName,
+				displayName: user.displayName || profile.displayName,
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
 			});
