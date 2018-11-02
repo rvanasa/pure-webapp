@@ -7,7 +7,7 @@ module.exports = {
 			<span>Free session</span>
 			<span>- <span ng-bind="$ctrl.intervalNumber | number"></span> <span ng-bind="$ctrl.intervalWord"></span></span>
 		</span>
-		<span ng-if="$ctrl.topic.rate > 0">
+		<span ng-if="$ctrl.topic.rate > 0 || $ctrl.topic.interval > 0">
 			<span ng-if="$ctrl.intervalNumber == 1">per</span>
 			<span ng-if="$ctrl.intervalNumber != 1">for <span ng-bind="$ctrl.intervalNumber | number"></span></span>
 			<span ng-bind="$ctrl.intervalWord"></span>

@@ -14,7 +14,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents)
 		user.save();
 	});
 	
-	return Endpoint('status')
+	// return Endpoint('status')
 		// .add('create', async ({available}, {user}) =>
 		// {
 		// 	user.lastOnline = Date.now();
@@ -22,5 +22,5 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserEvents)
 		// 	await user.save();
 		// 	return 'Notified';
 		// })
-		.build(API);
+		// .build(API);
 }

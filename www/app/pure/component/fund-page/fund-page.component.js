@@ -46,7 +46,7 @@ module.exports = {
 			}
 			else
 			{
-				$location.path('/customize');
+				$location.path('/profile');
 			}
 		}
 	}

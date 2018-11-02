@@ -37,9 +37,12 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QuestionModel, An
 				for(var answer of answers)
 				{
 					var {question} = answer;
-					question.answer = answer;
-					delete answer.question;
-					results.push(question);
+					if(question)
+					{
+						question.answer = answer;
+						delete answer.question;
+						results.push(question);
+					}
 				}
 			}
 			results.push(...await nextQuestions(user, query, Math.min(next, 10)));

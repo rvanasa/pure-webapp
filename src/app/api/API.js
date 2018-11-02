@@ -3,7 +3,7 @@ var express = require('@feathersjs/express');
 
 var sanitize = require('mongo-sanitize');
 
-module.exports = function(Logger, AuthMiddleware)
+module.exports = function(Logger)
 {
 	function setupFeathers(req)
 	{
@@ -14,16 +14,18 @@ module.exports = function(Logger, AuthMiddleware)
 	API.configure(express.rest());
 	
 	API.use(express.json());
-	
-	API.use(AuthMiddleware);
 	API.use((req, res, next) =>
 	{
+		if(!req.isAuthenticated())
+		{
+			return res.status(403).send('Not authenticated');
+		}
 		req.body = sanitize(req.body);
 		setupFeathers(req);
 		next();
 	});
 	
-	setTimeout(() =>
+	this.queue(() =>
 	{
 		API.use((err, req, res, next) =>
 		{
@@ -37,14 +39,14 @@ module.exports = function(Logger, AuthMiddleware)
 		
 		if(this.env === 'dev')
 		{
-			API.use((err, req, res, next) => res.status(500).send(err.message || err.stack || err));
+			API.use((err, req, res, next) => res.status(500).send(err.message/* || err.stack*/ || err));
 		}
 		else
 		{
 			API.use((_, req, res, next) => res.status(500).end());
 		}
 		
-		API.use((req, res, next) => res.status(404).send(`Unknown endpoint: ${req.path}`));
+		API.use((req, res) => res.status(404).send(`Unknown endpoint: ${req.path}`));
 	});
 	
 	return API;

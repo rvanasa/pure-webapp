@@ -11,7 +11,7 @@ module.exports = {
 		FavoriteService.request()
 			.then(results => $ctrl.favorites = results);
 		
-		$ctrl.results = [];
+		$ctrl.results = null;
 		
 		$ctrl.updateResults = function(input)
 		{
@@ -22,7 +22,7 @@ module.exports = {
 			
 			if(!$ctrl.query && !$ctrl.category)
 			{
-				$ctrl.results.length = 0;
+				$ctrl.results = null;
 				return;
 			}
 			
@@ -34,8 +34,7 @@ module.exports = {
 			return SearchAPI.find({query: params})
 				.then(results =>
 				{
-					$ctrl.results.length = 0;
-					$ctrl.results.push(...results);
+					$ctrl.results = results;
 					for(var topic of results)
 					{
 						TopicService.register(topic);
@@ -46,6 +45,11 @@ module.exports = {
 		$ctrl.setCategory = function(category)
 		{
 			$location.path(category ? '/search/' + encodeURIComponent(category.id) : '/search');
+		}
+		
+		$ctrl.createTopic = function()
+		{
+			$location.path('/edit');
 		}
 		
 		var id = $routeParams['category'];

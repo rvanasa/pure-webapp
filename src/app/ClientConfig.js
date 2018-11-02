@@ -12,6 +12,9 @@ module.exports = function(Config)
 			paypal: {
 				env: Config.provider.paypal.env,
 			},
+			sentry: !!Config.provider.sentry && {
+				dsn: Config.provider.sentry.public,
+			},
 		},
 		social: {
 			links: [{

@@ -2,7 +2,7 @@ module.exports = function(PageListProvider)
 {
 	PageListProvider.addPage({
 		id: 'user',
-		name: 'User',
+		name: 'Teach',
 		icon: 'graduation-cap',
 		params: [':id'],
 	});

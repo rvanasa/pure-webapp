@@ -4,11 +4,16 @@ var msgpack = require('msgpack-lite');
 
 module.exports = function PeerService($window, Config, Socket, SessionService)
 {
-	Peer.config.iceServers.push({
+	// Peer.config.iceServers.push({
+	// 	urls: Config.turn.url,
+	// 	username: 'pure',
+	// 	credential: 'pass',
+	// });
+	Peer.config.iceServers = [{
 		urls: Config.turn.url,
 		username: 'pure',
 		credential: 'pass',
-	});
+	}];
 	
 	this.events = new EventEmitter();
 	
@@ -68,7 +73,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 		{
 			try
 			{
-				peer.send(cbor.encode('close'));
+				peer.send(msgpack.encode('close'));
 				peer.destroy();
 			}
 			catch(e)

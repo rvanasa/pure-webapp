@@ -3,21 +3,24 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#343A40">
 
 <meta property="og:title" content="Platform Pure">
-<meta property="og:description" content="The world's most diverse educational community">
+<meta property="og:description" content="The world's most diverse educational community.">
 <meta property="og:type" content="website">
 <meta property="og:tags" content="https://<%= config.server.domain %>">
 
-<meta property="og:image" content="https://<%= config.server.domain %>/assets/share.png">
+<meta property="og:image" content="https://<%= config.server.domain %>/assets/img/share.png">
 <!--<meta property="og:image:secure_url" content="https://<%= config.server.domain %>/assets/share.png">-->
-<meta property="og:image:alt" content="The world's most diverse educational community">
+<meta property="og:image:alt" content="The world's most diverse educational community.">
 
-<!--<link rel="apple-touch-icon-precomposed" href="http://.../assets/img/icon-touch.png">-->
-<!--<link rel="apple-touch-startup-image" href="http://.../assets/img/icon-startup.png">-->
+<link rel="apple-touch-icon-precomposed" href="http://<%= config.server.domain %>/assets/img/icon-512.png">
+<link rel="apple-touch-startup-image" href="http://<%= config.server.domain %>/assets/img/icon-512.png">
 
-<link rel="icon" href="/assets/img/favicon.png" type="img/x-icon">
+<link rel="icon" href="/assets/img/favicon.png">
+<% if(config.env !== 'dev') { %>
+	<link rel="manifest" href="/manifest.json">
+<% } %>
 
 <base href="/">
 

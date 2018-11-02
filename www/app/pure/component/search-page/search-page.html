@@ -16,7 +16,7 @@
 	</div>
 </div>
 <div class="container mb-2">
-	<div ng-show="!$ctrl.results.length && !$ctrl.category">
+	<div ng-show="!$ctrl.results && !$ctrl.category">
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="emphasize-left tease-right bg-light px-4 pt-2 pb-1 my-3" ng-repeat="category in $ctrl.categories" ng-click="$ctrl.setCategory(category)">
@@ -32,7 +32,13 @@
 			</div>
 		</div>
 	</div>
-	<div ng-show="$ctrl.results.length">
+	<div ng-show="$ctrl.results">
 		<search-result topic="result" selected="$ctrl.selected" ng-repeat="result in $ctrl.results"></search-result>
+		<div ng-show="!$ctrl.results.length">
+			<hr>
+			<h5 class="text-muted">No results.</h5>
+			<hr>
+			<span class="btn btn-lg btn-outline-success w-100" ng-click="$ctrl.createTopic()">Create a new topic</span>
+		</div>
 	</div>
 </div>

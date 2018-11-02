@@ -37,11 +37,6 @@ module.exports = {
 			}
 		}
 		
-		if($window.localStorage['microphone'] === 'true')
-		{
-			$ctrl.toggleMicrophone();
-		}
-		
 		$ctrl.isPausing = function()
 		{
 			return !SessionService.current.available.includes(UserService.user._id);
@@ -85,6 +80,11 @@ module.exports = {
 					$scope.$apply();
 				}
 			}
+		}
+		
+		if($window.localStorage['microphone'] === 'true')
+		{
+			$ctrl.toggleMicrophone();
 		}
 		
 		updateTime();

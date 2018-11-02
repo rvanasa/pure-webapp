@@ -12,7 +12,7 @@ module.exports = {
 		$ctrl.sessions = SessionService;
 		
 		$ctrl.sessionPages = ['topic', 'session'];
-		$ctrl.menuPages = ['search', 'user', 'customize'];
+		$ctrl.menuPages = ['search', 'user', 'profile'];
 		
 		SessionService.events.on('leave', session =>
 		{

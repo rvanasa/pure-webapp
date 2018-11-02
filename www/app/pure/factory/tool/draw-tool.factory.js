@@ -1,8 +1,12 @@
 var whiteboard = require('../../../whiteboard');
 
-module.exports = function DrawTool()
+module.exports = function DrawTool($timeout)
 {
-	var board;
+	var boardResolve;
+	var boardPromise = new Promise(resolve =>
+	{
+		boardResolve = resolve;
+	});
 	
 	return {
 		id: 'draw',
@@ -11,49 +15,55 @@ module.exports = function DrawTool()
 		{
 			options.storage = this.service.storage;
 			options.storageKey = 'session.draw';
+			
+			this.getBoard()
+				.then(board =>
+				{
+					board.on('data', packet => this.sendPacket(packet));
+				});
+		},
+		getBoard()
+		{
+			return boardPromise;
 		},
 		setBoard(elem)
 		{
-			var isFirst = !board;
-			board = whiteboard(elem, this.options);
+			var board = whiteboard(elem, this.options);
 			
 			this.service.getOptions(this.id).handle = board;
 			
-			if(isFirst)
+			if(boardResolve)
 			{
-				board.on('data', packet => this.sendPacket(packet));
+				boardResolve(board);
+				boardResolve = null;
 			}
+			boardPromise = Promise.resolve(board);
 		},
 		onRestart()
 		{
-			if(board)
-			{
-				board.clear();
-			}
+			this.getBoard()
+				.then(board => board.clear());
 		},
 		onPeer(peer)
 		{
-			if(board)
-			{
-				this.sendPacket({
-					add: board.paths,
-				}, peer);
-			}
+			this.getBoard()
+				.then(board =>
+				{
+					this.sendPacket({
+						add: board.paths,
+					}, peer);
+				});
 			
 			peer.on('close', () =>
 			{
-				if(board)
-				{
-					board.clear(peer._id);
-				}
+				this.getBoard()
+					.then(board => board.clear(peer._id));
 			});
 		},
 		onPacket(packet, peer)
 		{
-			if(board)
-			{
-				board.data(packet, peer._id);
-			}
+			this.getBoard()
+				.then(board => board.data(packet, peer._id));
 		},
 	};
 }

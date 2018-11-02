@@ -1,8 +1,8 @@
 module.exports = function(PageListProvider)
 {
 	PageListProvider.addPage({
-		id: 'customize',
-		name: 'Customize',
+		id: 'profile',
+		name: 'Profile',
 		icon: 'user-circle',
 		default: true,
 	});

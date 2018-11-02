@@ -58,6 +58,11 @@ module.exports = function()
 		
 		build(api)
 		{
+			if(!Object.keys(this.methods).length)
+			{
+				throw new Error('Endpoint requires at least one method');
+			}
+			
 			api.use(this.name, this.methods);
 			var service = api.service(this.name);
 			for(var hook of this.hooksArray)

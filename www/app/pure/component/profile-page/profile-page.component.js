@@ -1,5 +1,5 @@
 module.exports = {
-	template: require('./customize-page.html'),
+	template: require('./profile-page.html'),
 	controller: function($location, API, QuestionService, InterestService, UserService, WalletService)
 	{
 		var $ctrl = this;

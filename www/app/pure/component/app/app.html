@@ -6,7 +6,12 @@
 	<div class="bg-light d-flex">
 		<!--<h2 line-clamp="1" class="w-100 m-2" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h2>-->
 		<a class="text-center w-100" ng-click="$ctrl.setPage(id)" ng-repeat="id in $ctrl.sessions.current ? $ctrl.sessionPages : $ctrl.menuPages">
-			<i class="fa fa-{{$ctrl.getPage(id).icon}} fa-2x fa-fw p-3 w-100" ng-class="$ctrl.isPage(id) ? 'text-brand' : 'text-muted'"></i>
+			<span class="d-inline-block p-3 w-100" ng-class="$ctrl.isPage(id) ? 'text-brand' : 'text-muted'">
+				<i class="fa fa-{{$ctrl.getPage(id).icon}} fa-2x fa-fw no-transition"></i>
+				<div class="no-transition">
+					<b ng-bind="$ctrl.getPage(id).name"></b>
+				</div>
+			</span>
 		</a>
 	</div>
 </div>
@@ -62,12 +67,12 @@
 			</div>
 			<div class="col-md-6">
 				<div class="d-flex text-center">
-					<div class="w-100"
+					<span class="w-100"
 						ng-repeat="rating in [1,2,3,4,5]"
 						ng-mouseover="$ctrl.mouseRating = rating"
 						ng-click="$ctrl.rating.rating = rating">
 						<i class="fa-star fa-3x" ng-class="[($ctrl.rating.rating || $ctrl.mouseRating) >= rating ? 'fa' : 'far', 'text-'+($ctrl.rating.rating ? 'warning' : 'muted')]"></i>
-					</div>
+					</span>
 				</div>
 				<div uib-collapse="!($ctrl.rating.rating <= 2)">
 					<hr>
@@ -86,9 +91,9 @@
 						Submit
 					</span>
 				</div>
-				<!--<span class="btn btn-outline-secondary btn-lg my-3 w-100" ng-click="$ctrl.closeRating()">-->
-				<!--	Skip Rating-->
-				<!--</span>-->
+				<span class="btn btn-outline-secondary btn-lg my-3 w-100" ng-click="$ctrl.closeRating()">
+					Skip Rating
+				</span>
 			</div>
 			<div class="col-md-3">
 			</div>

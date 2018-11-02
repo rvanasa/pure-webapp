@@ -28,12 +28,14 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 		}));
 	}
 	
+	App.use('/assets', express.static(`${this.config.basePath}/www/assets`), (req, res) => res.status(404).send('Unknown asset'));
+	App.use(express.static(`${this.config.basePath}/www/meta`));
+	
 	Auth.setup(App);
 	Auth.routes(App);
 	
 	App.use(morgan('dev'));
 	
-	App.use('/assets', express.static(`${this.config.basePath}/www/assets`), (req, res, next) => res.status(404).send('Unknown asset'));
 	App.use('/api', API);
 	
 	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {

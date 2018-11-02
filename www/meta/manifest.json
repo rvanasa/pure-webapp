@@ -1,0 +1,18 @@
+{
+	"short_name": "Pure",
+	"name": "Platform Pure",
+	"icons": [{
+		"src": "/assets/img/icon-192.png",
+		"type": "image/png",
+		"sizes": "192x192"
+	}, {
+		"src": "/assets/img/icon-512.png",
+		"type": "image/png",
+		"sizes": "512x512"
+	}],
+	"display": "standalone",
+	"start_url": "/profile",
+	"scope": "/",
+	"background_color": "#343A40",
+	"theme_color": "#343A40"
+}
