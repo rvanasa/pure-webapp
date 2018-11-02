@@ -1,6 +1,6 @@
 var spdy = require('spdy');
 
-module.exports = function(App, Config)
+module.exports = function(App, Config, Turn)
 {
 	var Server = spdy.createServer({
 		spdy: {

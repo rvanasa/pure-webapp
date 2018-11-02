@@ -9,11 +9,6 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 	// 	username: 'pure',
 	// 	credential: 'pass',
 	// });
-	Peer.config.iceServers = [{
-		urls: Config.turn.url,
-		username: 'pure',
-		credential: 'pass',
-	}];
 	
 	this.events = new EventEmitter();
 	
