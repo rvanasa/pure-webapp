@@ -4,11 +4,19 @@ var msgpack = require('msgpack-lite');
 
 module.exports = function PeerService($window, Config, Socket, SessionService, Alert)
 {
-	// Peer.config.iceServers.push({
-	// 	urls: Config.turn.url,
+	var config = Config.turn;
+	
+	Peer.config.iceServers.push({
+		urls: config.url,
+		username: 'pure',
+		credential: 'pass',
+	});
+	
+	// Peer.config.iceServers = [{
+	// 	urls: config.url,
 	// 	username: 'pure',
 	// 	credential: 'pass',
-	// });
+	// }];
 	
 	this.events = new EventEmitter();
 	
@@ -85,7 +93,6 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 		var peer = new Peer({
 			initiator,
 			stream: audioStream,
-			// reconnectTimer: 5000,
 		});
 		
 		var peers = initiator ? this.outbound : this.inbound;
@@ -146,7 +153,11 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			require('@sentry/browser').captureException(err);
 		});
 		
-		this.events.on('send', doSend);
+		// Only send packets if initiated???
+		// if(initiator)
+		{
+			this.events.on('send', doSend);
+		}
 		
 		peer.on('close', data =>
 		{
