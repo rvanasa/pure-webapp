@@ -40,7 +40,7 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 	
 	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {
 		user: req.user.toJSON(),
-		config: ClientConfig
+		config: ClientConfig,
 	}));
 	
 	App.use((err, req, res, next) =>
@@ -49,6 +49,7 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 		res.render('error', {
 			error: err,
 			status: res.statusCode,
+			config: ClientConfig,
 		});
 	});
 }

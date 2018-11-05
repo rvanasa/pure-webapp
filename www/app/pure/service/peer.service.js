@@ -148,7 +148,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			Alert(`*Development intensifies*`, `
 				For highly complicated technical reasons, certain grumpy networks have trouble transmitting session data.
 				We can usually work around this for you, but our backup servers are currently at full capacity.
-				Sorry for the inconvenience!
+				Sorry for the inconvenience! Please try refreshing the page.
 			`, 'error');
 			require('@sentry/browser').captureException(err);
 		});

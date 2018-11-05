@@ -35,7 +35,6 @@ module.exports = function($timeout, $parse, API, Config, Alert)
 					if(config.env === 'sandbox')
 					{
 						Alert(`Heads up!`, `Because this is a sandbox environment, we will not actually charge your credit card. Please contact the Platform Pure team directly if you would like to buy XP tokens at a discounted price.`);
-						return;
 					}
 					
 					return CheckoutAPI.create(amount);

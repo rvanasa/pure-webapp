@@ -39,7 +39,7 @@ module.exports = {
 		
 		$ctrl.isPausing = function()
 		{
-			return !SessionService.current.available.includes(UserService.user._id);
+			return SessionService.current && !SessionService.current.available.includes(UserService.user._id);
 		}
 		
 		$ctrl.togglePause = function(state)

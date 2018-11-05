@@ -78,11 +78,16 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 				return topic;
 			})(), (async () =>
 			{
-				if(await SessionModel.findOne({topic: id/*, begin: {$exists: true}*/, end: {$exists: false}}).lean())
+				if(await SessionModel.count({topic: id, end: {$exists: false}}))
 				{
 					throw 'Session already in progress';
 				}
 			})()]);
+			
+			if(await SessionModel.count({teacher: topic.user, end: {$exists: false}}))
+			{
+				throw 'Teacher is currently unavailable';
+			}
 			
 			var session = await SessionModel.create({
 				topic: id,
