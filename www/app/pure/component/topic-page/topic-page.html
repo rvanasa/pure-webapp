@@ -50,7 +50,6 @@
 					<hr>
 					<label class="text-label">Share this topic:</label>
 					<social-intent intent="$ctrl.getShareIntent()"></social-intent>
-					<hr>
 				</if-owned>
 				<if-owned user="$ctrl.topic.user" invert="true">
 					<div ng-switch="$ctrl.status()">

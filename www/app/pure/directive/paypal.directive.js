@@ -1,6 +1,6 @@
 var paypal = require('paypal-checkout');
 
-module.exports = function($timeout, $parse, API, Config)
+module.exports = function($timeout, $parse, API, Config, Alert)
 {
 	var config = Config.provider.paypal;
 	
@@ -27,26 +27,16 @@ module.exports = function($timeout, $parse, API, Config)
 					color:  'gold',
 				},
 				funding: {
-					// allowed: [paypal.FUNDING.CARD],
 					disallowed: [paypal.FUNDING.CREDIT],
 				},
 				commit: true,
 				payment(data, actions)
 				{
-					// return actions.payment.create({
-					// 	payment: {
-					// 		transactions: [{
-					// 			amount,
-					// 		}],
-					// 	},
-					// 	experience: {
-					// 		input_fields: {
-					// 			no_shipping: 1,
-					// 		}
-					// 	},
-					// });
-					
-					console.log(amount)
+					if(config.env === 'sandbox')
+					{
+						Alert(`Heads up!`, `Because this is a sandbox environment, we will not actually charge your credit card. Please contact the Platform Pure team directly if you would like to buy XP tokens at a discounted price.`);
+						return;
+					}
 					
 					return CheckoutAPI.create(amount);
 				},

@@ -2,7 +2,7 @@ var EventEmitter = require('events');
 var Peer = require('simple-peer');
 var msgpack = require('msgpack-lite');
 
-module.exports = function PeerService($window, Config, Socket, SessionService)
+module.exports = function PeerService($window, Config, Socket, SessionService, Alert)
 {
 	// Peer.config.iceServers.push({
 	// 	urls: Config.turn.url,
@@ -133,6 +133,17 @@ module.exports = function PeerService($window, Config, Socket, SessionService)
 			{
 				this.events.emit('receive', packet, peer, doSend);
 			}
+		});
+		
+		peer.on('error', err =>
+		{
+			console.error(err);
+			Alert(`*Development intensifies*`, `
+				For highly complicated technical reasons, certain grumpy networks have trouble transmitting session data.
+				We can usually work around this for you, but our backup servers are currently at full capacity.
+				Sorry for the inconvenience!
+			`, 'error');
+			require('@sentry/browser').captureException(err);
 		});
 		
 		this.events.on('send', doSend);
