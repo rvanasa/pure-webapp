@@ -153,11 +153,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			require('@sentry/browser').captureException(err);
 		});
 		
-		// Only send packets if initiated???
-		// if(initiator)
-		{
-			this.events.on('send', doSend);
-		}
+		this.events.on('send', doSend);
 		
 		peer.on('close', data =>
 		{

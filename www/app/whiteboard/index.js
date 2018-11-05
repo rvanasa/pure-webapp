@@ -252,6 +252,8 @@ class Whiteboard extends EventEmitter
 	
 	forceRedraw()
 	{
+		this.drawSetup();
+		
 		if(this.options.background)
 		{
 			this.context.fillStyle = this.options.background;
