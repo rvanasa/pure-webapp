@@ -43,13 +43,16 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 		config: ClientConfig,
 	}));
 	
-	App.use((err, req, res, next) =>
+	this.queue(() =>
 	{
-		Logger.error(err.stack || err);
-		res.render('error', {
-			error: err,
-			status: res.statusCode,
-			config: ClientConfig,
+		App.use((err, req, res, next) =>
+		{
+			Logger.error(err.stack || err);
+			res.render('error', {
+				error: err,
+				status: res.statusCode,
+				config: ClientConfig,
+			});
 		});
 	});
 }

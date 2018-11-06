@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./edit-page.html'),
-	controller: function($routeParams, $location, API, TopicService, CategoryService)
+	controller: function($routeParams, $location, API, Alert, TopicService, CategoryService)
 	{
 		var $ctrl = this;
 		
@@ -33,6 +33,11 @@ module.exports = {
 				return savePromise;
 			}
 			
+			if(!$ctrl.topic.name || !$ctrl.topic.blurb)
+			{
+				return Alert.toast(`Please fill out all fields before submitting.`, null, 'info');
+			}
+			
 			if(!id)
 			{
 				savePromise = TopicService.create($ctrl.topic);
@@ -42,7 +47,13 @@ module.exports = {
 				savePromise = TopicService.update($ctrl.topic)
 					.then(() => id = $ctrl.topic._id);
 			}
-			return savePromise = savePromise.then(() => $ctrl.closeTopic());
+			return savePromise = savePromise
+				.then(() => $ctrl.closeTopic())
+				.catch(err =>
+				{
+					savePromise = null;
+					throw err;
+				});
 		}
 		
 		$ctrl.closeTopic = function()
