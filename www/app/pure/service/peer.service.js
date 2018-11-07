@@ -19,7 +19,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	this.outbound = {};
 	this.inbound = {};
 	
-	setInterval(() => console.log(this.outbound, this.inbound), 2000)///
+	// setInterval(() => console.log(this.outbound, this.inbound), 2000)///
 	
 	SessionService.events.on('join', session => this.connect());
 	SessionService.events.on('leave', session => this.disconnect());
@@ -207,6 +207,8 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 				// 		peer.addStream(audioStream);
 				// 	}
 				// }
+				
+				// this.connect();
 			});
 	}
 	

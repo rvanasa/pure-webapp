@@ -24,10 +24,10 @@
 					<hr>
 					<label class="text-label">I will charge...</label>
 					<div class="d-flex flex-row">
-						<div class="input-group">
+						<div class="input-group mx-1">
 							<input type="number" min="0" step="1" class="form-control" ng-model="$ctrl.topic.rate">
 						</div>
-						<h5 class="text-center mx-2 mt-1" style="white-space:nowrap"><xp-label></xp-label> for</h5>
+						<h5 class="text-center mr-2 mt-1" style="white-space:nowrap"><xp-label></xp-label> for</h5>
 						<div class="input-group">
 							<input type="number" min="0" step="1" class="form-control" ng-model="$ctrl.topic.interval">
 						</div>
@@ -35,6 +35,12 @@
 							<span ng-show="$ctrl.topic.interval">minute<span ng-show="$ctrl.topic.interval != 1">s</span></span>
 							<span ng-show="!$ctrl.topic.interval">the session</span></span>
 						</h5>
+					</div>
+					<div ng-if="!$ctrl.topic.rate">
+						<xp-label amount="100"></xp-label> <b>=</b> <span class="badge badge-light"><span class="text-success">$1.00</span> USD</span>
+					</div>
+					<div ng-if="$ctrl.topic.rate">
+						<b>=</b> <span class="badge badge-light"><span class="text-success" ng-bind="$ctrl.topic.rate / 100 | currency"></span> USD</span>
 					</div>
 				</div>
 			</div>

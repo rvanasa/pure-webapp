@@ -22,7 +22,6 @@
     "mongo-sanitize": "^1.0.0",
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
-    "node-turn": "^0.0.2",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.1.6",
     "paypal-rest-sdk": "^1.8.1",
