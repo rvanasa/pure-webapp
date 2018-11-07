@@ -14,29 +14,32 @@ module.exports = function(Logger, API, Socket, Endpoint, ModelEndpoint, Hooks, U
 		return users;
 	}
 	
+	function captureErrors(fn)
+	{
+		return function()
+		{
+			return Promise.resolve(fn.apply(this, arguments))
+				.catch(err => Logger.error(err.stack));
+		}
+	}
+	
 	UserEvents.on('join', (user, connection) =>
 	{
-		connection.on('signal.ready', () =>
+		connection.on('signal.ready', captureErrors(async () =>
 		{
-			(async () =>
+			for(var _id of await findUsers(user))
 			{
-				for(var _id of await findUsers(user))
+				if(!user._id.equals(_id))
 				{
-					if(!user._id.equals(_id))
-					{
-						UserEvents.emit(_id, 'signal.peer', {id: connection.id});
-					}
+					UserEvents.emit(_id, 'signal.peer', {id: connection.id});
 				}
-			})().catch(err => Logger.error(err.stack));
-		});
+			}
+		}));
 		
-		connection.on('signal', ({id, signal, initiator}) =>
+		connection.on('signal', captureErrors(async ({id, signal, initiator}) =>
 		{
-			(async () =>
-			{
-				// TODO ensure in same session
-				Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
-			})().catch(err => Logger.error(err.stack));
-		});
+			// TODO ensure in same session
+			Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
+		}));
 	});
 }

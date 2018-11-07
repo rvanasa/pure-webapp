@@ -12,12 +12,6 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 		credential: 'pass',
 	});
 	
-	// Peer.config.iceServers = [{
-	// 	urls: config.url,
-	// 	username: 'pure',
-	// 	credential: 'pass',
-	// }];
-	
 	this.events = new EventEmitter();
 	
 	// TODO use socket event acknowledgements to simplify signaling
@@ -25,7 +19,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	this.outbound = {};
 	this.inbound = {};
 	
-	// setInterval(() => console.log(this.outbound, this.inbound), 2000)///
+	setInterval(() => console.log(this.outbound, this.inbound), 2000)///
 	
 	SessionService.events.on('join', session => this.connect());
 	SessionService.events.on('leave', session => this.disconnect());
@@ -59,6 +53,8 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	this.connect = function()
 	{
 		debug('ID', Socket.id);
+		
+		this.disconnect();
 		
 		Socket.emit('signal.ready');
 	}
@@ -203,14 +199,14 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			{
 				audioStream = stream;
 				
-				console.log('add',audioStream);
-				for(var peer of this.getPeers())
-				{
-					if(!peer.streams.includes(audioStream))
-					{
-						peer.addStream(audioStream);
-					}
-				}
+				console.log('stream', audioStream);
+				// for(var peer of this.getPeers())
+				// {
+				// 	if(!peer.streams.includes(audioStream))
+				// 	{
+				// 		peer.addStream(audioStream);
+				// 	}
+				// }
 			});
 	}
 	
