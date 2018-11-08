@@ -23,7 +23,7 @@ module.exports = {
 				return;
 			}
 			
-			return SettingsAPI.update(key, {value: UserService.user[key]})
+			return SettingsAPI.update(key, {value: $ctrl.user[key]})
 				.then(result =>
 				{
 					invalidFlags[key] = false;
