@@ -7,7 +7,12 @@
 		<div class="col-8 col-sm-9 col-md-10">
 			<user-status class="float-left mr-2" user="$ctrl.topic.user"></user-status>
 			<h5 class="mb-1" line-clamp="1" ng-bind="$ctrl.topic.user.name"></h5>
-			<b class="d-block" line-clamp="1" ng-bind="$ctrl.topic.name"></b>
+			<div ng-if="$ctrl.selected != $ctrl.topic">
+				<b line-clamp="1" ng-bind="$ctrl.topic.name"></b>
+			</div>
+			<div ng-if="$ctrl.selected == $ctrl.topic">
+				<b ng-bind="$ctrl.topic.name"></b>
+			</div>
 			<topic-rate topic="$ctrl.topic"></topic-rate>
 		</div>
 		<div class="col-4 col-sm-3 col-md-2">
