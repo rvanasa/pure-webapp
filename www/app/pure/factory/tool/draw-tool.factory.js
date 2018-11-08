@@ -53,17 +53,16 @@ module.exports = function DrawTool($timeout)
 						add: board.paths,
 					}, peer);
 				});
-			
-			peer.on('close', () =>
-			{
-				this.getBoard()
-					.then(board => board.clear(peer._id));
-			});
+		},
+		onPeerLeave(peer)
+		{
+			this.getBoard()
+				.then(board => board.clear(peer));
 		},
 		onPacket(packet, peer)
 		{
 			this.getBoard()
-				.then(board => board.data(packet, peer._id));
+				.then(board => board.data(packet, peer));
 		},
 	};
 }

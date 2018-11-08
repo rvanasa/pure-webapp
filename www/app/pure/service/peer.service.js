@@ -1,6 +1,6 @@
 var EventEmitter = require('events');
 var Peer = require('simple-peer');
-var msgpack = require('msgpack-lite');
+var notepack = require('notepack.io');
 
 module.exports = function PeerService($window, Config, Socket, SessionService, Alert)
 {
@@ -14,33 +14,54 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	
 	this.events = new EventEmitter();
 	
-	// TODO use socket event acknowledgements to simplify signaling
-	
 	this.outbound = {};
 	this.inbound = {};
 	
 	// setInterval(() => console.log(this.outbound, this.inbound), 2000)///
-	
-	SessionService.events.on('join', session => this.connect());
-	SessionService.events.on('leave', session => this.disconnect());
 	
 	function debug(...args)
 	{
 		console.log(...args);
 	}
 	
-	Socket.on('signal.peer', ({id}) =>
+	var packetPeers = new Set();
+	Socket.on('packet', (packet, id) => this.events.emit('receive', packet, id));
+	Socket.on('packet.peer', (id, isNotify) =>
 	{
-		this.createPeer(id, true);
+		if(!packetPeers.has(id))
+		{
+			this.events.emit('peer', id);
+		}
+		packetPeers.add(id);
+		if(!isNotify)
+		{
+			Socket.emit('packet.notify', id);
+		}
+	});
+	Socket.on('packet.leave', id =>
+	{
+		this.events.emit('peer.leave', id);
+		packetPeers.delete(id);
+	});
+	
+	this.events.on('send', (packet, peer) => Socket.emit('packet', packet, peer));
+	SessionService.events.on('join', session => Socket.emit('packet.ready'));
+	
+	// SessionService.events.on('join', session => this.connect());
+	SessionService.events.on('leave', session => this.disconnect());
+	
+	Socket.on('signal.peer', ({id, initiator}) =>
+	{
+		this.createPeer(id, initiator);
 	});
 	
 	Socket.on('signal', ({id, signal, initiator}) =>
 	{
 		debug('SIG', id, initiator);
 		
-		var peers = initiator ? this.inbound : this.outbound;
-		var peer = peers[id] || this.createPeer(id, !initiator);
-		peer.signal(signal);
+		var peers = initiator ? this.outbound : this.inbound;
+		Promise.resolve(peers[id] || this.createPeer(id, initiator))
+			.then(peer => peer.signal(signal));
 	});
 	
 	$window.addEventListener('beforeunload', () => this.disconnect());
@@ -53,8 +74,6 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	this.connect = function()
 	{
 		debug('ID', Socket.id);
-		
-		this.disconnect();
 		
 		Socket.emit('signal.ready');
 	}
@@ -72,7 +91,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 		{
 			try
 			{
-				peer.send(msgpack.encode('close'));
+				peer.send(notepack.encode('close'));
 				peer.destroy();
 			}
 			catch(e)
@@ -84,103 +103,108 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 	
 	this.createPeer = function(id, initiator)
 	{
-		debug('CREATE', id, initiator);
-		
-		var peer = new Peer({
-			initiator,
-			stream: audioStream,
-		});
-		
-		var peers = initiator ? this.outbound : this.inbound;
-		if(peers[id])
+		return loadingPromise.then(() =>
 		{
-			console.warn('Replace:',peers[id])///
-			this.disconnect(peers[id]);
-		}
-		peers[id] = peer;
-		
-		peer.on('signal', signal =>
-		{
-			Socket.emit('signal', {id, signal, initiator});
-		});
-		
-		peer.on('connect', () =>
-		{
-			debug('CONNECT');
+			debug('CREATE', id, initiator);
 			
-			this.events.emit('peer', peer, doSend);
-		});
-		
-		peer.on('stream', stream =>
-		{
-			debug('STREAM', stream);
-			stream.oninactive = () => debug('INACTIVE');
-			
-			var audio = new Audio();
-			audio.autoplay = true;
-			audio.srcObject = stream;
-			
-			// doSend({_stream: id});
-		});
-		
-		peer.on('data', data =>
-		{
-			// debug('DATA', String(data));
-			
-			var packet = msgpack.decode(data);
-			if(packet === 'close')
-			{
-				peer.destroy();
-			}
-			else
-			{
-				this.events.emit('receive', packet, peer, doSend);
-			}
-		});
-		
-		peer.on('error', err =>
-		{
-			console.error(err);
-			Alert(`*Development intensifies*`, `
-				For highly complicated technical reasons, certain grumpy networks have trouble transmitting session data.
-				We can usually work around this for you, but our backup servers are currently at full capacity.
-				Sorry for the inconvenience! Please try refreshing the page.
-			`, 'error');
-			require('@sentry/browser').captureException(err);
-		});
-		
-		this.events.on('send', doSend);
-		
-		peer.on('close', data =>
-		{
-			debug('CLOSE');
+			var peer = new Peer({
+				initiator,
+				stream: /*!initiator && */audioStream,
+			});
 			
 			var peers = initiator ? this.outbound : this.inbound;
-			delete peers[id];
-			this.events.removeListener('send', doSend);
-		});
-		
-		function doSend(packet, receiver)
-		{
-			if(receiver && receiver !== peer)
+			if(peers[id])
 			{
-				return;
+				console.warn('Replace:', peers[id])///
+				this.disconnect(peers[id]);
 			}
+			peers[id] = peer;
 			
-			try
+			peer.on('signal', signal =>
 			{
-				peer.send(msgpack.encode(packet));
-			}
-			catch(e)
+				Socket.emit('signal', {id, signal, initiator});
+			});
+			
+			peer.on('connect', () =>
 			{
-				console.error(e);
-			}
-		}
-		
-		return peer;
+				debug('CONNECT');
+				
+				// this.events.emit('peer', peer._id);
+				// peer.on('close', () => this.events.emit('peer.leave', peer._id));
+			});
+			
+			peer.on('stream', stream =>
+			{
+				debug('STREAM', stream);
+				stream.oninactive = () => debug('INACTIVE');
+				
+				var audio = new Audio();
+				audio.autoplay = true;
+				audio.srcObject = stream;
+				
+				// doSend({_stream: id});
+			});
+			
+			peer.on('data', data =>
+			{
+				// debug('DATA', String(data));
+				
+				var packet = notepack.decode(data);
+				if(packet === 'close')
+				{
+					peer.destroy();
+				}
+				else
+				{
+					// this.events.emit('receive', packet, peer._id);
+				}
+			});
+			
+			peer.on('error', err =>
+			{
+				console.error(err);
+				Alert(`*Development intensifies*`, `
+					For highly complicated technical reasons, certain grumpy networks have trouble transmitting session data.
+					We can usually work around this for you, but our backup servers are currently at full capacity.
+					Sorry for the inconvenience! Please try refreshing the page.
+				`, 'error');
+				require('@sentry/browser').captureException(err);
+			});
+			
+			// this.events.on('send', doSend);
+			
+			peer.on('close', data =>
+			{
+				debug('CLOSE');
+				
+				var peers = initiator ? this.outbound : this.inbound;
+				delete peers[id];
+				// this.events.removeListener('send', doSend);
+			});
+			
+			// function doSend(packet, receiver)
+			// {
+			// 	if(receiver && receiver !== peer._id)
+			// 	{
+			// 		return;
+			// 	}
+				
+			// 	try
+			// 	{
+			// 		peer.send(notepack.encode(packet));
+			// 	}
+			// 	catch(e)
+			// 	{
+			// 		console.error(e);
+			// 	}
+			// }
+			
+			return peer;
+		});
 	}
 	
 	var audioStream = null;
+	var loadingPromise = Promise.resolve();
 	
 	this.enableAudio = function()
 	{
@@ -194,7 +218,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			return Promise.resolve();
 		}
 		
-		return $window.navigator.mediaDevices.getUserMedia({audio: true})
+		return loadingPromise = $window.navigator.mediaDevices.getUserMedia({audio: true})
 			.then(stream =>
 			{
 				audioStream = stream;
@@ -208,7 +232,11 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 				// 	}
 				// }
 				
-				// this.connect();
+				this.connect();
+			})
+			.catch(() =>
+			{
+				console.warn('Failed to load audio');
 			});
 	}
 	

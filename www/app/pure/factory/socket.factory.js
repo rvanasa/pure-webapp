@@ -1,8 +1,11 @@
 var io = require('socket.io-client');
+var parser = require('socket.io-msgpack-parser');
 
 module.exports = function Socket($rootScope)
 {
-	var connection = io();
+	var connection = io({
+		parser,
+	});
 	
 	var _on = connection.on;
 	var _emit = connection.emit;

@@ -81,6 +81,11 @@ module.exports = function ToolService(SessionService, PeerService, DrawTool, Tex
 		this.notifyAll('onPeer', peer);
 	});
 	
+	PeerService.events.on('peer.leave', peer =>
+	{
+		this.notifyAll('onPeerLeave', peer);
+	});
+	
 	PeerService.events.on('receive', (packet, peer) =>
 	{
 		if(Array.isArray(packet))

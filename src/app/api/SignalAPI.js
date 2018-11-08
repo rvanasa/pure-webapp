@@ -31,7 +31,9 @@ module.exports = function(Logger, API, Socket, Endpoint, ModelEndpoint, Hooks, U
 			{
 				if(!user._id.equals(_id))
 				{
-					UserEvents.emit(_id, 'signal.peer', {id: connection.id});
+					// var initiator = String(user._id) > String(_id);
+					var initiator = true;
+					UserEvents.emit(_id, 'signal.peer', {id: connection.id, initiator});
 				}
 			}
 		}));
@@ -39,7 +41,54 @@ module.exports = function(Logger, API, Socket, Endpoint, ModelEndpoint, Hooks, U
 		connection.on('signal', captureErrors(async ({id, signal, initiator}) =>
 		{
 			// TODO ensure in same session
-			Socket.to(id).emit('signal', {id: connection.id, signal, initiator});
+			Socket.to(id).emit('signal', {id: connection.id, signal, initiator: !initiator});
+		}));
+		
+		connection.on('packet.ready', captureErrors(async () =>
+		{
+			for(var _id of await findUsers(user))
+			{
+				if(!user._id.equals(_id))
+				{
+					UserEvents.emit(_id, 'packet.peer', connection.id);
+				}
+			}
+		}));
+		
+		connection.on('packet.notify', captureErrors(async id =>
+		{
+			// TODO ensure in same session
+			Socket.to(id).emit('packet.peer', connection.id, true);
+		}));
+		
+		connection.on('packet', captureErrors(async (data, id) =>
+		{
+			if(id)
+			{
+				// TODO ensure in same session
+				Socket.to(id).emit('packet', data, connection.id);
+			}
+			else
+			{
+				for(var _id of await findUsers(user))
+				{
+					if(!user._id.equals(_id))
+					{
+						UserEvents.emit(_id, 'packet', data, connection.id);
+					}
+				}
+			}
+		}));
+		
+		connection.on('disconnect', captureErrors(async () =>
+		{
+			for(var _id of await findUsers(user))
+			{
+				if(!user._id.equals(_id))
+				{
+					UserEvents.emit(_id, 'packet.leave', connection.id);
+				}
+			}
 		}));
 	});
 }
