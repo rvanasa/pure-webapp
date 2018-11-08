@@ -1,14 +1,15 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, TopicAPI)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicAPI)
 {
 	return Endpoint('search')
-		.add('find', async ({query}) =>
+		.add('find', async ({user, query}) =>
 		{
 			var input = query['q'];
 			var category = query['c'];
+			var flags = query['f'] || '';
 			
-			if(!input && !category)
+			if(!input && !category && !flags)
 			{
-				throw 'Invalid query string';
+				throw 'Invalid query';
 			}
 			
 			var filter = {};
@@ -20,6 +21,14 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, TopicAPI)
 			if(category)
 			{
 				filter.category = category;
+			}
+			if(flags.includes('a'))
+			{
+				var online = await UserModel.find({available: true}, '_id').lean();
+				// var online = [];
+				// (await UserModel.find({available: true}, '_id').lean())
+				// 	.forEach(u => !user._id.equals(u._id) && online.push(u._id));
+				filter.user = {$in: online};
 			}
 			return TopicAPI.find({query, filter, select: {}, options: {}});
 		})

@@ -8,6 +8,9 @@ module.exports = {
 		
 		$ctrl.categories = CategoryService.categories;
 		
+		SearchAPI.find({query: {f: 'a'}})
+			.then(results => $ctrl.availableTopics = results);
+		
 		FavoriteService.request()
 			.then(results => $ctrl.favorites = results);
 		

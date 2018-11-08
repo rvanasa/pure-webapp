@@ -25,10 +25,18 @@
 				</div>
 			</div>
 			<div class="col-lg-8">
-				<hr class="d-lg-none">
-				<h4 class="text-muted mt-lg-3">Favorites:</h4>
-				<hr ng-if="$ctrl.favorites.length">
-				<search-result topic="topic" selected="$ctrl.selected" ng-repeat="topic in $ctrl.favorites | orderBy:'$index':true"></search-result>
+				<div ng-if="$ctrl.favorites.length">
+					<hr class="d-lg-none">
+					<h4 class="text-muted mt-lg-3">Favorites:</h4>
+					<hr ng-if="$ctrl.favorites.length">
+					<search-result topic="topic" selected="$ctrl.selected" ng-repeat="topic in $ctrl.favorites | orderBy:'$index':true"></search-result>
+				</div>
+				<div ng-if="$ctrl.availableTopics.length">
+					<hr class="d-lg-none" ng-if="!$ctrl.favorites.length">
+					<h4 class="text-muted mt-lg-3">Online right now:</h4>
+					<hr ng-if="$ctrl.availableTopics.length">
+					<search-result topic="topic" selected="$ctrl.selected" ng-repeat="topic in $ctrl.availableTopics"></search-result>
+				</div>
 			</div>
 		</div>
 	</div>

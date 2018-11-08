@@ -1,13 +1,13 @@
-module.exports = function StatusService($window, $interval, API)
+module.exports = function StatusService($window, $interval, API, UserService)
 {
 	var spacing = 60;
 	
 	var StatusAPI = API.service('status');
 	
-	function notify(available)
-	{
-		StatusAPI.create({available});
-	}
+	// function notify(available)
+	// {
+	// 	StatusAPI.create({available});
+	// }
 	
 	// notify(true);
 	// $interval(() => notify(true), 1000 * spacing, 0, false);
@@ -15,11 +15,10 @@ module.exports = function StatusService($window, $interval, API)
 	
 	this.status = function(user)
 	{
-		// if(!user || +new Date(user.lastOnline) + 1000 * (spacing + 10) < Date.now())
-		// {
-		// 	return 'offline';
-		// }
-		// return user.available ? 'available' : 'busy';
+		if(user._id === UserService.user._id)
+		{
+			return 'self';
+		}
 		
 		return user && user.available ? 'available' : 'offline';
 	}

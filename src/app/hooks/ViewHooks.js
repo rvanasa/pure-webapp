@@ -20,6 +20,7 @@ module.exports = function(Hooks)
 	
 	async function rename(result, view)
 	{
+		result = Object.assign({}, result);
 		return Promise.all(Object.keys(view)
 			.map(async key =>
 			{
@@ -35,20 +36,20 @@ module.exports = function(Hooks)
 				}
 				else if(typeof value === 'object' && result[key])
 				{
-					await rename(result[key], view[key]);
+					result[key] = await rename(result[key], value);
 				}
-			}));
+			})).then(() => result);
 	}
 	
 	function unname(data, view)
 	{
+		data = Object.assign({}, data);
 		for(var key in view)
 		{
 			var value = view[key];
 			if(typeof value === 'string')
 			{
 				data[value] = data[key];
-				delete data[key];
 			}
 			else if(typeof value === 'function')
 			{
@@ -56,15 +57,17 @@ module.exports = function(Hooks)
 			}
 			else if(typeof value === 'object' && key in data)
 			{
-				unname(data[key], view[key]);
+				data[key] = unname(data[key], value);
 			}
 		}
+		return data;
 	}
 	
 	return Hooks('view', (view) => ({
 		before: {
-			all({method, data, params})
+			all(context)
 			{
+				var {method, data, params} = context;
 				if(method === 'find' || method === 'get')
 				{
 					Object.assign(params.select, getSelector(view));
@@ -83,21 +86,18 @@ module.exports = function(Hooks)
 				}
 				else if(data)
 				{
-					unname(data, view);
+					context.data = unname(data, view);
 				}
 			},
 		},
 		after: {
 			async find(context)
 			{
-				for(var r of context.result)
-				{
-					await rename(r, view);
-				}
+				context.result = await Promise.all(context.result.map(r => rename(r, view)));
 			},
 			async get(context)
 			{
-				await rename(context.result, view);
+				context.result = await rename(context.result, view);
 			},
 		},
 	}));
