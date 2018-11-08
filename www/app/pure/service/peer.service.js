@@ -142,6 +142,8 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 				audio.autoplay = true;
 				audio.srcObject = stream;
 				
+				peer.send(notepack.encode('audio'));
+				
 				// doSend({_stream: id});
 			});
 			
@@ -153,6 +155,10 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 				if(packet === 'close')
 				{
 					peer.destroy();
+				}
+				else if(packet === 'audio')
+				{
+					this.events.emit('audio');
 				}
 				else
 				{

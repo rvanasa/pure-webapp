@@ -17,9 +17,14 @@ module.exports = {
 		}
 		
 		$ctrl.microphone = false;
+		$ctrl.audioLoaded = false;
+		
+		PeerService.events.on('audio', () => $ctrl.audioLoaded = true);
 		
 		$ctrl.toggleMicrophone = function(state)
 		{
+			$ctrl.audioLoaded = false;
+			
 			state = arguments.length > 0 ? !!state : !$ctrl.microphone;
 			$window.localStorage['microphone'] = state;
 			if(!$ctrl.isPausing())

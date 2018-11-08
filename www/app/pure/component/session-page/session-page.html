@@ -72,7 +72,8 @@
 				</div>
 				<hr>
 				<span class="btn mr-2" ng-class="'btn-'+($ctrl.microphone ? 'primary' : 'outline-info')" ng-click="$ctrl.toggleMicrophone()">
-					<i class="fa" ng-class="'fa-'+($ctrl.microphone ? 'microphone' : 'microphone-slash')"></i>
+					<i ng-if="!$ctrl.microphone || $ctrl.audioLoaded" class="fa" ng-class="'fa-'+($ctrl.microphone ? 'microphone' : 'microphone-slash')"></i>
+					<i ng-if="$ctrl.microphone && !$ctrl.audioLoaded" class="fa fa-circle-notch fa-spin"></i>
 				</span>
 				<h6 class="text-muted d-inline">
 					<span ng-if="$ctrl.microphone">Microphone is enabled</span>
