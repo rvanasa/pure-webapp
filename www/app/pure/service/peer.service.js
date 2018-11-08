@@ -224,7 +224,7 @@ module.exports = function PeerService($window, Config, Socket, SessionService, A
 			return Promise.resolve();
 		}
 		
-		return loadingPromise = $window.navigator.mediaDevices.getUserMedia({audio: true})
+		return loadingPromise = Promise.resolve($window.navigator.mediaDevices.getUserMedia({audio: true}))
 			.then(stream =>
 			{
 				audioStream = stream;
