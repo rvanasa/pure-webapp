@@ -3,10 +3,7 @@ var whiteboard = require('../../../whiteboard');
 module.exports = function DrawTool($timeout)
 {
 	var boardResolve;
-	var boardPromise = new Promise(resolve =>
-	{
-		boardResolve = resolve;
-	});
+	var boardPromise = new Promise(resolve => boardResolve = resolve);
 	
 	return {
 		id: 'draw',

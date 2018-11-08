@@ -88,6 +88,11 @@ module.exports = function ToolService(SessionService, PeerService, DrawTool, Tex
 	
 	PeerService.events.on('receive', (packet, peer) =>
 	{
+		if(!peer)
+		{
+			console.warn('No peer specified');
+		}
+		
 		if(Array.isArray(packet))
 		{
 			var [id, value] = packet;

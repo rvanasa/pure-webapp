@@ -9,7 +9,7 @@ module.exports = function(Socket, Auth)
 	Socket.on('connection', (connection) =>
 	{
 		var user = connection.request.user;
-		var fn = (id, data) => connection.emit(id, data);
+		var fn = (...args) => connection.emit(...args);
 		UserEvents.on(user._id, fn);
 		UserEvents.emit('join', user, connection);
 		connection.on('disconnect', () =>

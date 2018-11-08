@@ -35,15 +35,19 @@ module.exports = function($window, $timeout, TextTool)
 			{
 				ngModel.$render = () =>
 				{
-					var shouldDeselect = editor.getValue() == '';
+					// var shouldDeselect = !editor.getValue();
 					
-					editor.setValue(ngModel.$viewValue || '', 1);
+					var value = String(ngModel.$viewValue || '');
+					if(value !== editor.getValue())
+					{
+						editor.setValue(value, 1);
+					}
 					handleResize(editor, elem);
 					
-					if(shouldDeselect)
-					{
-						editor.selection.clearSelection();
-					}
+					// if(shouldDeselect)
+					// {
+					// 	editor.selection.clearSelection();
+					// }
 				};
 				
 				editor.on('change', () =>

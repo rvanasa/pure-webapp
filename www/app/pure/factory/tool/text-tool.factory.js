@@ -1,9 +1,8 @@
 module.exports = function TextTool($timeout, UserService)
 {
 	var editor = null;
-	var received = false;
 	var applying = false;
-	var inputBuffer = [];
+	var latestPeer = null;
 	
 	return {
 		id: 'text',
@@ -14,11 +13,6 @@ module.exports = function TextTool($timeout, UserService)
 		},
 		getHash()
 		{
-			if(!editor)
-			{
-				return null;
-			}
-			
 			var text = this.state || '';
 			var hash = 0;
 			if(!text)
@@ -40,11 +34,13 @@ module.exports = function TextTool($timeout, UserService)
 				this.state = text;
 			}
 			
-			if(editor)
+			var state = this.state || '';
+			if(editor && editor.getValue() !== state)
 			{
-				editor.setValue(this.state || '', 1);
+				var pos = editor.session.selection.toJSON();
+				editor.setValue(state);
+				editor.session.selection.fromJSON(pos);
 			}
-			
 			this.save();
 		},
 		save()
@@ -57,7 +53,7 @@ module.exports = function TextTool($timeout, UserService)
 			
 			this.update();
 			
-			editor.getSession().getDocument().applyDeltas(inputBuffer);
+			this.sendPacket({request: true}, latestPeer);
 			
 			editor.on('change', delta =>
 			{
@@ -88,49 +84,43 @@ module.exports = function TextTool($timeout, UserService)
 		},
 		onPeer(peer)
 		{
-			if(!received)
-			{
-				this.sendPacket({request: true}, peer);
-			}
 			// this.sendPacket({hash: this.getHash()}, peer);
+			
+			latestPeer = peer;
 		},
 		onPacket(packet, peer)
 		{
-			try
+			if(editor)
 			{
-				applying = true;
-				
-				if('hash' in packet)
+				try
 				{
-					if(this.getHash() !== packet.hash)
+					applying = true;
+					
+					if('request' in packet)
 					{
-						this.sendPacket({request: true}, peer);
+						this.sendPacket({state: this.state}, peer);
 					}
-				}
-				if('request' in packet)
-				{
-					this.sendPacket({state: this.state}, peer);
-				}
-				if('state' in packet)
-				{
-					received = true;
-					this.update(packet.state);
-				}
-				if('deltas' in packet)
-				{
-					if(editor)
+					if('state' in packet)
+					{
+						// received = true;
+						this.update(packet.state);
+					}
+					if('deltas' in packet)
 					{
 						editor.getSession().getDocument().applyDeltas(packet.deltas);
 					}
-					else
+					if('hash' in packet)
 					{
-						inputBuffer.push(...packet.deltas);
+						if(this.getHash() !== packet.hash)
+						{
+							this.sendPacket({request: true}, peer);
+						}
 					}
 				}
-			}
-			finally
-			{
-				applying = false;
+				finally
+				{
+					applying = false;
+				}
 			}
 		}
 	};
