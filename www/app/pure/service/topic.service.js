@@ -4,7 +4,7 @@ module.exports = function TopicService(API, Cache, UserService)
 	
 	Object.assign(this, Cache(
 		id => TopicAPI.get(id),
-		topic => !topic.user.displayName /*TEMP*/ && UserService.register(topic.user),
+		topic => topic.user !== UserService.user && UserService.register(topic.user),
 	));
 	
 	var userCache = Cache(id => TopicAPI.find({query: {user: id}}));

@@ -4,7 +4,7 @@ module.exports = function QuestionService(API)
 	
 	this.questions = [];
 	
-	var loadPromise = AnswerAPI.find({query: {history: true, next: 3}})
+	var loadPromise = AnswerAPI.find({query: {history: true, next: 2}})
 		.then(results =>
 		{
 			this.questions.length = 0;
