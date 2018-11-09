@@ -4,9 +4,9 @@
 			<input type="text"
 				class="form-control"
 				placeholder="Find a topic..."
-				focus-if="$ctrl.query || $ctrl.category || true"
+				focus-if="$ctrl.query || $ctrl.category"
 				ng-model="$ctrl.query"
-				ng-change="$ctrl.updateResults()">
+				ng-change="$ctrl.updateResults()"><!-- ... || true -->
 		</div>
 	</div>
 	<div class="container">

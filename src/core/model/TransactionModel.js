@@ -1,30 +1,56 @@
 module.exports = function(Model, Database, MoneyProp, SessionModel)
 {
 	var reasons = {
-		paypal(data)
-		{
-			return data.startsWith('PAY-');
+		paypal: {
+			to: true,
+			validate(data)
+			{
+				return data.startsWith('PAY-');
+			},
 		},
-		stellar(data)
-		{
-			return data.length === 56;
+		stellar: {
+			to: true,
+			validate(data)
+			{
+				return data.length === 56;
+			},
 		},
-		session(data)
-		{
-			return Database.base.Types.ObjectId.isValid(data);
+		escrow: {
+			to: true,
+			from: true,
+			validate(data)
+			{
+				return Database.base.Types.ObjectId.isValid(data);
+			},
+		},
+		session: {
+			to: true,
+			from: true,
+			validate(data)
+			{
+				return Database.base.Types.ObjectId.isValid(data);
+			},
 		},
 	};
 	
 	return Model('Transaction')
-		.prop('to', 'User')
-		.prop('from', 'User').opt()
+		.prop('to', 'User').opt().validate(validateUser('to'), 'Receiver must match reason constraints')
+		.prop('from', 'User').opt().validate(validateUser('from'), 'Sender must match reason constraints')
 		.prop('amount', null, MoneyProp).validate(val => val > 0, '{VALUE} cannot be zero')
-		.prop('reason', String).enum(...Object.keys(reasons)).opt()
-		.prop('data', String).opt().validate(validateData, '{VALUE} is invalid for tx reason')
+		.prop('reason', String).enum(...Object.keys(reasons))
+		.prop('data', String).validate(validateData, '{VALUE} is invalid for tx reason')
 		.build(Database);
+	
+	function validateUser(key)
+	{
+		return function(user)
+		{
+			return !!user === !!reasons[this.reason][key];
+		}
+	}
 	
 	function validateData(data)
 	{
-		return this.reason ? data && reasons[this.reason](data) : !data;
+		return data && reasons[this.reason].validate(data);
 	}
 }

@@ -1,4 +1,4 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, FundService, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, FundService, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents, TransactionModel)
 {
 	async function getJSON(session)
 	{
@@ -62,11 +62,53 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Fun
 					from: user,
 					to: session.teacher,
 					amount: session.rate,
-					reason: 'session',
+					reason: 'escrow',
 					data: session._id,
 				});
 			}
 		}
+	}
+	
+	async function getDuration(session, includeTrailing)
+	{
+		var users = [session.teacher, ...session.students];
+		var actions = await SessionActionModel.find({session, key: {$in: ['join', 'leave']}})
+			.lean().sort({$natural: 1});
+		
+		var duration = 0;
+		var available = new Set();
+		var unpauseTime = null;
+		for(var action of actions)
+		{
+			
+			if(!users.some(_id => _id.equals(action.user)))
+			{
+				continue;
+			}
+			
+			if(action.key === 'join')
+			{
+				available.add(String(action.user));
+				if(available.size === users.length)
+				{
+					unpauseTime = action._id.getTimestamp();
+				}
+			}
+			else if(action.key === 'leave')
+			{
+				available.delete(String(action.user));
+				if(available.size !== users.length && unpauseTime)
+				{
+					duration += (action._id.getTimestamp() - unpauseTime) / 1000 / 60;
+					unpauseTime = null;
+				}
+			}
+		}
+		if(includeTrailing && available.size === users.length)
+		{
+			duration += (Date.now() - unpauseTime) / 1000 / 60;
+		}
+		return duration;
 	}
 	
 	QueueService.register(async params =>
@@ -204,37 +246,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Fun
 			
 			if(key === 'join' || key === 'leave')
 			{
-				var actions = await SessionActionModel.find({session, key: {$in: ['join', 'leave']}})
-					.lean().sort({$natural: 1});
-				
-				var duration = 0;
-				var available = new Set();
-				var unpauseTime = null;
-				for(var action of actions)
-				{
-					if(!users.some(_id => _id.equals(action.user)))
-					{
-						continue;
-					}
-					
-					if(action.key === 'join')
-					{
-						available.add(String(action.user));
-						if(available.size === users.length)
-						{
-							unpauseTime = action._id.getTimestamp();
-						}
-					}
-					else if(action.key === 'leave')
-					{
-						available.delete(String(action.user));
-						if(available.size !== users.length && unpauseTime)
-						{
-							duration += (action._id.getTimestamp() - unpauseTime) / 1000 / 60;
-							unpauseTime = null;
-						}
-					}
-				}
+				var duration = await getDuration(session);
 				for(_id of users)
 				{
 					UserEvents.emit(_id, 'session.time', {duration});
@@ -266,12 +278,27 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Fun
 				{
 					UserEvents.emit(_id, 'session.end', session._id);
 				}
+				
+				var duration = await getDuration(session, true);
+				await Promise.all((await TransactionModel.find({reason: 'escrow', data: session._id}))
+					.map(async tx =>
+					{
+						tx.reason = 'session';
+						if(session.interval)
+						{
+							tx.amount = Math.ceil(tx.amount * Math.min(1, duration / session.interval));
+						}
+						else
+						{
+							//TODO
+						}
+						return tx.save();
+					}));
 			}
 			session.students.pull(user._id);
 			await session.begin ? session.save() : session.remove();
-			return 'Exited session';
 			
-			// TODO refunds
+			return 'Exited session';
 		})
 		.build(API);
 }

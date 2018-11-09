@@ -7,13 +7,13 @@ module.exports = function(TransactionModel, UserEvents)
 			var balance = 0;
 			for(var tx of await TransactionModel.find({$or: [{from: user}, {to: user}]}).lean())
 			{
+				if(tx.reason !== 'escrow' && id.equals(tx.to))
+				{
+					balance += tx.amount;
+				}
 				if(id.equals(tx.from))
 				{
 					balance -= tx.amount;
-				}
-				if(id.equals(tx.to))
-				{
-					balance += tx.amount;
 				}
 			}
 			return balance;
