@@ -1,4 +1,4 @@
-module.exports = function(Hooks)
+module.exports = function(Hooks, Database)
 {
 	function getSelector(view)
 	{
@@ -43,6 +43,12 @@ module.exports = function(Hooks)
 	
 	function unname(data, view)
 	{
+		if(Database.base.Types.ObjectId.isValid(data))
+		{
+			console.log('---',data)///
+			return data;
+		}
+		
 		data = Object.assign({}, data);
 		for(var key in view)
 		{

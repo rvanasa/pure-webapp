@@ -4,7 +4,7 @@ module.exports = function TopicService(API, Cache, UserService)
 	
 	Object.assign(this, Cache(
 		id => TopicAPI.get(id),
-		topic => topic.user !== UserService.user && UserService.register(topic.user),
+		topic => topic.user && UserService.register(topic.user),
 	));
 	
 	var userCache = Cache(id => TopicAPI.find({query: {user: id}}));
@@ -32,7 +32,8 @@ module.exports = function TopicService(API, Cache, UserService)
 			.then(id =>
 			{
 				topic._id = id;
-				topic.user = UserService.user;
+				UserService.get(UserService.user._id)
+					.then(user => topic.user = user);
 				listPromise.then(results => results.push(topic));
 			});
 	}

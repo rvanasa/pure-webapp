@@ -1,4 +1,4 @@
-module.exports = function(Model, Database, MoneyProp)
+module.exports = function(Model, Database, MoneyProp, SessionModel)
 {
 	var reasons = {
 		paypal(data)
@@ -9,6 +9,10 @@ module.exports = function(Model, Database, MoneyProp)
 		{
 			return data.length === 56;
 		},
+		session(data)
+		{
+			return Database.base.Types.ObjectId.isValid(data);
+		},
 	};
 	
 	return Model('Transaction')
@@ -16,7 +20,7 @@ module.exports = function(Model, Database, MoneyProp)
 		.prop('from', 'User').opt()
 		.prop('amount', null, MoneyProp).validate(val => val > 0, '{VALUE} cannot be zero')
 		.prop('reason', String).enum(...Object.keys(reasons)).opt()
-		.prop('data', String).opt().validate(validateData, '{VALUE} does not match tx reason')
+		.prop('data', String).opt().validate(validateData, '{VALUE} is invalid for tx reason')
 		.build(Database);
 	
 	function validateData(data)

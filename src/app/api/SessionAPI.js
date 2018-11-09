@@ -1,4 +1,4 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, FundService, SessionModel, SessionActionModel, TopicModel, UserModel, UserEvents)
 {
 	async function getJSON(session)
 	{
@@ -39,12 +39,34 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 	
 	async function findSessions({user})
 	{
-		var sessions = await SessionModel.find({$or: [
-			{teacher: user._id},
-			{students: user._id},
-		], end: {$exists: false}}).lean();
+		var sessions = await SessionModel.find({
+			$or: [{teacher: user._id}, {students: user._id}],
+			end: {$exists: false},
+		}).lean();
 		
 		return Promise.all(sessions.map(getJSON));
+	}
+	
+	async function chargeStudent(user, session)
+	{
+		if(session.rate > 0)
+		{
+			var balance = await FundService.getSpendableBalance(user);
+			if(balance < session.rate)
+			{
+				throw 'Insufficient balance';
+			}
+			else
+			{
+				await FundService.createTransaction({
+					from: user,
+					to: session.teacher,
+					amount: session.rate,
+					reason: 'session',
+					data: session._id,
+				});
+			}
+		}
 	}
 	
 	QueueService.register(async params =>
@@ -59,7 +81,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 		{
 			var [topic] = await Promise.all([(async () =>
 			{
-				var topic = await TopicModel.findById(id, {user: 1}).lean();
+				var topic = await TopicModel.findById(id, 'user rate interval').lean();
 				if(!topic)
 				{
 					throw 'Topic not found';
@@ -84,7 +106,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 				}
 			})()]);
 			
-			if(await SessionModel.count({teacher: topic.user, end: {$exists: false}}))
+			if(await SessionModel.count({$or: [{teacher: topic.user}, {students: topic.user}], end: {$exists: false}}))
 			{
 				throw 'Teacher is currently unavailable';
 			}
@@ -93,40 +115,57 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 				topic: id,
 				teacher: topic.user,
 				students: request ? [user._id] : [],
+				rate: topic.rate,
+				interval: topic.interval,
 			});
 			var json = await getJSON(session.toJSON());
 			if(request)
 			{
+				if((await FundService.getSpendableBalance(user)) < session.rate)
+				{
+					throw 'Insufficient funds';
+				}
+				
 				UserEvents.emit(session.teacher, 'session.request', json);
 			}
 			return json;
 		})
 		.add('update', async (id, {}, {user}) =>
 		{
+			var now = Date.now();
 			var session = await SessionModel.findById(id).populate('topic');
 			if(!session)
 			{
 				throw 'Session not found';
 			}
+			
 			if(user._id.equals(session.teacher))
 			{
 				if(!session.students.length)
 				{
 					throw 'No students';
 				}
-				session.begin = Date.now();
+				await Promise.all(session.students.map(s => chargeStudent(s, session)));
+				session.begin = now;
 				var json = await getJSON(session.toJSON());
 				for(var participant of [session.teacher, ...session.students])
 				{
 					UserEvents.emit(participant, 'session.begin', json);
 				}
+				await session.save();
+				return 'Started session';
 			}
 			else if(session.students.length < session.topic.maxStudents)
 			{
+				await chargeStudent(user, session);
 				session.students.addToSet(user._id);
+				await session.save();
+				return 'Joined session';
 			}
-			await session.save();
-			return 'Started session';
+			else
+			{
+				throw 'No available spaces';
+			}
 		})
 		.add('patch', async (id, {key, data}, {user}) =>
 		{
@@ -208,14 +247,20 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 		})
 		.add('remove', async (id, {user}) =>
 		{
+			var now = Date.now();
 			var session = await SessionModel.findById(id);
 			if(!session)
 			{
 				throw 'Session not found';
 			}
+			else if(session.end < now)
+			{
+				return 'Exited session (already closed)';
+			}
+			
 			if(user._id.equals(session.teacher) || session.students.length <= 1)
 			{
-				session.end = Date.now();
+				session.end = now;
 				var users = [session.teacher, ...session.students];
 				for(var _id of users)
 				{
@@ -225,6 +270,8 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Ses
 			session.students.pull(user._id);
 			await session.begin ? session.save() : session.remove();
 			return 'Exited session';
+			
+			// TODO refunds
 		})
 		.build(API);
 }

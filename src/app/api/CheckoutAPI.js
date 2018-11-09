@@ -1,4 +1,4 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, PayPalIntegration, TransactionModel, Config)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, FundService, PayPalIntegration, Config)
 {
 	// Rate must be an integer
 	var rate = 90;
@@ -19,7 +19,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, PayPalIntegration
 				}
 				
 				var prevToken = token;
-				token = Math.ceil(fiat * rate);
+				token = Math.round(fiat * rate);
 				if(prevToken && token !== prevToken)
 				{
 					throw `Unexpected token/fiat ratio`;
@@ -27,7 +27,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, PayPalIntegration
 			}
 			else if(token)
 			{
-				fiat = Math.ceil(token / rate * 100) / 100;
+				fiat = Math.round(token / rate * 100) / 100;
 			}
 			
 			var payment = await PayPalIntegration.create({
@@ -59,8 +59,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, PayPalIntegration
 			try
 			{
 				var amount = payment.transactions.reduce((n, tx) => n + tx.amount.total, 0) * rate;
-				await TransactionModel.create({
-					// from: Config.platform.issuer,
+				await FundService.createTransaction({
 					to: user,
 					amount,
 					reason: 'paypal',

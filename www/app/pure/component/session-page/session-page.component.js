@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($window, $scope, Binder, SessionService, PeerService, ToolService, UserService)
+	controller: function($window, $scope, Binder, Alert, SessionService, PeerService, ToolService, UserService)
 	{
 		var $ctrl = this;
 		
@@ -65,13 +65,47 @@ module.exports = {
 		$ctrl.tools = ToolService.tools;
 		$ctrl.selectedTool = $ctrl.tools[0];
 		
+		var lastWarning;
+		
 		function updateTime(apply)
 		{
 			if(SessionService.current)
 			{
-				var duration = SessionService.current.duration * 60;
-				var offset = (SessionService.current.paused ? 0 : Date.now() - new Date(SessionService.current.durationReceived)) / 1000;
-				var seconds = Math.round(duration + offset);
+				var now = Date.now();
+				var session = SessionService.current;
+				
+				// if(SessionService.current.end)
+				// {
+				// 	var remainingMins = (new Date(SessionService.current.end) - now) * 1000 * 60;
+					
+				// 	if(remainingMins <= 0)
+				// 	{
+				// 		SessionService.close();
+				// 	}
+				// 	else if(!lastWarning && remainingMins <= .25)
+				// 	{
+				// 		lastWarning = true;
+				// 		Alert.toast(`15 seconds remaining!`, `You can request another session to continue.`, 'info');
+				// 	}
+				// }
+				
+				var duration = session.duration * 60;
+				var offset = (session.paused ? 0 : now - new Date(session.durationReceived)) / 1000;
+				var time = duration + offset;
+				
+				var remaining = session.interval * 60 - time;
+				if(remaining <= 0)
+				{
+					time = session.interval * 60;
+					SessionService.close();
+				}
+				else if(!lastWarning && remaining <= 15)
+				{
+					lastWarning = true;
+					Alert.toast(`15 seconds remaining!`, `You can always request another session.`, 'info');
+				}
+				
+				var seconds = Math.round(time);
 				if(Number.isNaN(seconds))
 				{
 					return;

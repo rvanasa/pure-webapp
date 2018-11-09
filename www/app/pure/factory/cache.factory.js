@@ -10,11 +10,11 @@ module.exports = function Cache()
 			}
 			
 			return this.cache[id] = Promise.resolve(find(id))
-				.then(topic => this.register(topic));
+				.then(obj => this.register(obj, id));
 		},
-		register(obj)
+		register(obj, id)
 		{
-			this.cache[obj._id] = Promise.resolve(obj);
+			this.cache[arguments.length >= 2 ? id : obj._id] = Promise.resolve(obj);
 			if(onRegister)
 			{
 				onRegister(obj);

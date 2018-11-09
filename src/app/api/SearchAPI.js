@@ -30,7 +30,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 				// 	.forEach(u => !user._id.equals(u._id) && online.push(u._id));
 				filter.user = {$in: online};
 			}
-			return TopicAPI.find({query, filter, select: {}, options: {}});
+			return (await TopicAPI.find({query, filter, select: {}, options: {}})).reverse();
 		})
 		.hooks(Hooks.limit(30))
 		.build(API);

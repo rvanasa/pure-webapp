@@ -1,21 +1,10 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, StellarIntegration, TransactionModel)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, StellarIntegration, FundService)
 {
 	async function loadActive(user)
 	{
-		var balance = 0;
-		for(var tx of await TransactionModel.find({$or: [{from: user}, {to: user}]}))
-		{
-			// console.log(user._id, '::',tx.from, tx.to,tx.amount)
-			if(user._id.equals(tx.from))
-			{
-				balance -= tx.amount;
-			}
-			if(user._id.equals(tx.to))
-			{
-				balance += tx.amount;
-			}
-		}
-		return {balance};
+		return {
+			balance: await FundService.getSpendableBalance(user),
+		};
 	}
 	
 	async function loadCrypto(user)

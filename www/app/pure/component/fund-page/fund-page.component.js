@@ -26,8 +26,8 @@ module.exports = {
 				.then(topic => loadPromise.then(() =>
 				{
 					$ctrl.topic = topic;
-					$ctrl.amount.fiat = Math.max(minFiat, (topic.rate - $ctrl.wallet.balance) / $ctrl.rate);
-					$ctrl.amount.token = $ctrl.amount.fiat * $ctrl.rate;
+					$ctrl.amount.fiat = Math.round(Math.max(minFiat, (topic.rate - $ctrl.wallet.balance) / $ctrl.rate) * 100) / 100;
+					$ctrl.amount.token = Math.round($ctrl.amount.fiat * $ctrl.rate);
 				}));
 		}
 		else
