@@ -93,16 +93,24 @@ module.exports = {
 				var offset = (session.paused ? 0 : now - new Date(session.durationReceived)) / 1000;
 				var time = duration + offset;
 				
-				var remaining = session.interval * 60 - time;
-				if(remaining <= 0)
+				if(session.interval)
 				{
-					time = session.interval * 60;
-					SessionService.close();
-				}
-				else if(!lastWarning && remaining <= 15)
-				{
-					lastWarning = true;
-					Alert.toast(`15 seconds remaining!`, `You can always request another session.`, 'info');
+					var remaining = session.interval * 60 - time;
+					if(remaining <= 0)
+					{
+						time = session.interval * 60;
+						SessionService.close();
+					}
+					else if(!(lastWarning <= 60) && remaining <= 60)
+					{
+						lastWarning = 60;
+						Alert.toast(`One minute remaining!`, null, 'info');
+					}
+					else if(!(lastWarning <= 15) && remaining <= 15)
+					{
+						lastWarning = 15;
+						Alert.toast(`15 seconds remaining!`, `You can always request another session.`, 'info');
+					}
 				}
 				
 				var seconds = Math.round(time);
