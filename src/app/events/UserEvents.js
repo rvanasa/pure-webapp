@@ -6,6 +6,8 @@ module.exports = function(Socket, Auth)
 	
 	Auth.setup(Socket, middleware => (socket, next) => middleware(socket.request, {}, next));
 	
+	Socket.use((socket, next) => next(socket.request.isAuthenticated() ? null : 'Not authenticated'));
+	
 	Socket.on('connection', (connection) =>
 	{
 		var user = connection.request.user;
