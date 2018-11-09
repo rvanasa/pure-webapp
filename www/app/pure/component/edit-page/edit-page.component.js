@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./edit-page.html'),
-	controller: function($routeParams, $location, API, Alert, TopicService, CategoryService)
+	controller: function($routeParams, $location, API, Alert, PageService, TopicService, CategoryService)
 	{
 		var $ctrl = this;
+		
+		PageService.info = () => $ctrl.topic && $ctrl.topic.name;
 		
 		var TopicAPI = API.service('topics');
 		

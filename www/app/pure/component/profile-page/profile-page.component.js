@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./profile-page.html'),
-	controller: function($location, API, QuestionService, InterestService, UserService, WalletService)
+	controller: function($location, API, PageService, QuestionService, InterestService, UserService, WalletService)
 	{
 		var $ctrl = this;
+		
+		PageService.info = () => $ctrl.user.displayName;
 		
 		$ctrl.interests = InterestService;
 		

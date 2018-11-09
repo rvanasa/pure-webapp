@@ -1,4 +1,4 @@
-module.exports = function FavoriteService(API, TopicService)
+module.exports = function FavoriteService(API, Alert, TopicService)
 {
 	var FavoriteAPI = API.service('favorites');
 	
@@ -36,12 +36,20 @@ module.exports = function FavoriteService(API, TopicService)
 		if(index > -1)
 		{
 			return FavoriteAPI.remove(topic._id)
-				.then(() => this.favorites.splice(index, 1));
+				.then(() =>
+				{
+					this.favorites.splice(index, 1);
+					Alert.toast(`Removed from favorites.`, null, 'info');
+				});
 		}
 		else if(topic)
 		{
 			this.favorites.push(topic);
 			return FavoriteAPI.create({topic: topic._id})
+				.then(() =>
+				{
+					Alert.toast(`Added to favorites.`, null, 'info');
+				})
 				.catch(err =>
 				{
 					this.favorites.splice(this.favorites.indexOf(topic, 1));

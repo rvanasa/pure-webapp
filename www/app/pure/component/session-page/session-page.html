@@ -1,7 +1,16 @@
 <div class="row no-gutters">
 	<div class="col-md-7 col-lg-8">
+		<div class="bg-light pb-1">
+			<div class="container">
+				<span class="btn-group">
+					<span class="btn mx-1" ng-repeat="tool in $ctrl.tools" ng-class="'btn-'+($ctrl.selectedTool == tool ? 'info' : 'outline-info')" ng-click="$ctrl.selectedTool = tool">
+						<i class="fa fa-fw" ng-class="'fa-'+tool.icon"></i>
+					</span>
+				</span>
+			</div>
+		</div>
 		<div ng-if="$ctrl.selectedTool.id == 'draw'">
-			<canvas whiteboard class="whiteboard d-block w-100" ng-mouseup=""></canvas>
+			<canvas whiteboard class="whiteboard d-block w-100"></canvas>
 			<div class="noselect d-flex bg-secondary text-white p-1 pt-2">
 				<span class="w-100">
 					<span class="whiteboard-button mx-2" ng-click="$ctrl.takeScreenshot()">
@@ -34,16 +43,11 @@
 				ace-editor>
 			</div>
 		</div>
-		<span class="btn-group btn-group-lg float-right mt-2 mr-2">
-			<span class="btn mx-1" ng-repeat="tool in $ctrl.tools" ng-class="'btn-'+($ctrl.selectedTool == tool ? 'info' : 'outline-info')" ng-click="$ctrl.selectedTool = tool">
-				<i class="fa fa-fw" ng-class="'fa-'+tool.icon"></i>
-			</span>
-		</span>
-		<h3 class="text-muted m-3" line-clamp="1" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h3>
+		<!--<h3 class="text-muted m-3" line-clamp="1" ng-if="$ctrl.sessions.current" ng-bind="$ctrl.sessions.current.topic.name"></h3>-->
 	</div>
 	<div class="col-md-5 col-lg-4">
 		<div class="bg-light">
-			<div class="container noselect pt-2 pb-3">
+			<div class="container noselect py-2">
 				<div class="row no-gutters">
 					<div class="col-5">
 						<div ng-if="$ctrl.time">
@@ -80,13 +84,13 @@
 					<span ng-if="!$ctrl.microphone">Microphone is disabled</span>
 				</h6>
 			</div>
+			<form ng-if="$ctrl.sessions.current" ng-submit="$ctrl.sendChat()" class="p-1 pt-0">
+				<div class="input-group input-group-sm">
+					<input type="text" class="form-control" placeholder="Type a message..." ng-model="$ctrl.chatInput">
+				</div>
+			</form>
 		</div>
 		<div class="scroll-region" style="min-height:10vh; max-height:80vh">
-			<!--<div class="mb-2" ng-repeat="item in $ctrl.screenshots | orderBy:'$index':true">-->
-			<!--	<div ng-switch="item.type">-->
-			<!--		<img ng-switch-when="screenshot" class="w-100" ng-style="{background:$ctrl.options.background}" ng-src="{{item.src}}">-->
-			<!--	</div>-->
-			<!--</div>-->
 			<small class="mb-2 d-block" ng-repeat="action in $ctrl.sessions.current.actions | orderBy:'$index':true">
 				<span class="text-muted d-inline-block" style="min-width:60px" ng-bind="action.time | date:'h:mm a'"></span>
 				<small class="mr-1"><b ng-bind="action.user.name"></b></small>
@@ -100,6 +104,11 @@
 					<span ng-switch-when="screenshot">
 						<span>took a screenshot:</span>
 						<img class="w-100" ng-src="{{$ctrl.screenshotPrefix + action.data}}">
+					</span>
+					<span ng-switch-when="chat">
+						<div class="card d-inline-block px-3 py-2" ng-class="action.user._id != $ctrl.user._id ? 'text-info' : 'bg-light'">
+							<span ng-bind="action.data"></span>
+						</div>
 					</span>
 				</span>
 			</small>

@@ -1,6 +1,6 @@
 module.exports = {
 	template: require('./app.html'),
-	controller: function($route, $location, API, PageList, UserService, SessionService, Alert)
+	controller: function(API, UserService, PageService, SessionService, Alert)
 	{
 		var $ctrl = this;
 		
@@ -8,7 +8,7 @@ module.exports = {
 		
 		$ctrl.user = UserService.user;
 		
-		$ctrl.pages = PageList;
+		$ctrl.pages = PageService;
 		$ctrl.sessions = SessionService;
 		
 		$ctrl.sessionPages = ['topic', 'session'];
@@ -22,24 +22,7 @@ module.exports = {
 			}
 		});
 		
-		$ctrl.isPage = function(id)
-		{
-			return $route.current && $route.current.id == id;
-		}
 		
-		$ctrl.getPage = function(id)
-		{
-			for(var i = 0; i < $ctrl.pages.length; i++)
-			{
-				var page = $ctrl.pages[i];
-				if(page.id == id) return page;
-			}
-		}
-		
-		$ctrl.setPage = function(id)
-		{
-			$location.path('/' + id);
-		}
 		
 		$ctrl.leftPage = function()
 		{

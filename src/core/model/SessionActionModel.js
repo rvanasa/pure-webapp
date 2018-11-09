@@ -1,6 +1,6 @@
 module.exports = function(Model, Database)
 {
-	var keys = ['join', 'leave', 'screenshot'];
+	var keys = ['join', 'leave', 'screenshot', 'chat'];
 	
 	return Model('SessionAction')
 		.prop('session', 'Session')
@@ -14,6 +14,10 @@ module.exports = function(Model, Database)
 		if(this.key === 'screenshot')
 		{
 			// TODO store screenshot URL
+			return !!val;
+		}
+		else if(this.key === 'chat')
+		{
 			return !!val;
 		}
 		else

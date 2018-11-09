@@ -92,6 +92,10 @@ textarea {
 	}
 }
 
+.click-select {
+	user-select: all;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

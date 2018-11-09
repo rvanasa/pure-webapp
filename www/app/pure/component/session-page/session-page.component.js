@@ -1,14 +1,30 @@
 module.exports = {
 	template: require('./session-page.html'),
-	controller: function($window, $scope, Binder, Alert, SessionService, PeerService, ToolService, UserService)
+	controller: function($window, $scope, Binder, Alert, PageService, SessionService, UserService, PeerService, ToolService)
 	{
 		var $ctrl = this;
 		
+		PageService.info = () => SessionService.current && SessionService.current.topic.name;
+		
 		$ctrl.sessions = SessionService;
+		$ctrl.user = UserService.user;
 		
 		$ctrl.board = ToolService.getOptions('draw');
 		
 		$ctrl.screenshotPrefix = 'data:image/png;base64,';
+		
+		$ctrl.chatInput = null;
+		
+		$ctrl.sendChat = function()
+		{
+			if(!$ctrl.chatInput)
+			{
+				return;
+			}
+			
+			$ctrl.sessions.sendAction('chat', $ctrl.chatInput);
+			$ctrl.chatInput = null;
+		}
 		
 		$ctrl.takeScreenshot = function()
 		{
@@ -74,25 +90,11 @@ module.exports = {
 				var now = Date.now();
 				var session = SessionService.current;
 				
-				// if(SessionService.current.end)
-				// {
-				// 	var remainingMins = (new Date(SessionService.current.end) - now) * 1000 * 60;
-					
-				// 	if(remainingMins <= 0)
-				// 	{
-				// 		SessionService.close();
-				// 	}
-				// 	else if(!lastWarning && remainingMins <= .25)
-				// 	{
-				// 		lastWarning = true;
-				// 		Alert.toast(`15 seconds remaining!`, `You can request another session to continue.`, 'info');
-				// 	}
-				// }
-				
 				var duration = session.duration * 60;
 				var offset = (session.paused ? 0 : now - new Date(session.durationReceived)) / 1000;
 				var time = duration + offset;
 				
+				// TODO keep active while away from session page
 				if(session.interval)
 				{
 					var remaining = session.interval * 60 - time;
@@ -104,12 +106,12 @@ module.exports = {
 					else if(!(lastWarning <= 60) && remaining <= 60)
 					{
 						lastWarning = 60;
-						Alert.toast(`One minute remaining!`, null, 'info');
+						Alert.toast(`One minute remaining!`, null, 'warning');
 					}
 					else if(!(lastWarning <= 15) && remaining <= 15)
 					{
 						lastWarning = 15;
-						Alert.toast(`15 seconds remaining!`, `You can always request another session.`, 'info');
+						Alert.toast(`15 seconds remaining!`, `You can always request another session.`, 'warning');
 					}
 				}
 				

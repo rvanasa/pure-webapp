@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./search-page.html'),
-	controller: function($location, $routeParams, Binder, API, CategoryService, TopicService, FavoriteService)
+	controller: function($location, $routeParams, Binder, API, PageService, CategoryService, TopicService, FavoriteService)
 	{
 		var $ctrl = this;
+		
+		// PageService.info = () => $ctrl.category && $ctrl.category.name;
 		
 		var SearchAPI = API.service('search');
 		

@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./topic-page.html'),
-	controller: function($window, $location, $routeParams, TopicService, SessionService, StatusService)
+	controller: function($window, $location, $routeParams, PageService, TopicService, SessionService, StatusService)
 	{
 		var $ctrl = this;
+		
+		PageService.info = () => $ctrl.topic && $ctrl.topic.name;
 		
 		$ctrl.sessions = SessionService;
 		

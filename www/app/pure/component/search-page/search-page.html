@@ -3,8 +3,8 @@
 		<div class="input-group input-group-lg">
 			<input type="text"
 				class="form-control"
-				placeholder="Search for a topic..."
-				focus-if="$ctrl.query || $ctrl.category"
+				placeholder="Find a topic..."
+				focus-if="$ctrl.query || $ctrl.category || true"
 				ng-model="$ctrl.query"
 				ng-change="$ctrl.updateResults()">
 		</div>

@@ -1,8 +1,10 @@
 module.exports = {
 	template: require('./user-page.html'),
-	controller: function($routeParams, $location, UserService, TopicService)
+	controller: function($routeParams, $location, PageService, UserService, TopicService)
 	{
 		var $ctrl = this;
+		
+		PageService.info = () => $ctrl.user && ($ctrl.user.name || $ctrl.user.displayName);
 		
 		var id = $routeParams.id;
 		if(id)
