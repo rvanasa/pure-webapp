@@ -4,6 +4,7 @@ var webpack = require('webpack');
 
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var CopyPlugin = require('copy-webpack-plugin');
+var WorkboxPlugin = require('workbox-webpack-plugin');
 
 var ENV = process.env.npm_lifecycle_event;
 var isBuild = ENV === 'build';
@@ -52,6 +53,10 @@ var config = {
 		// }),
 		new MiniCssExtractPlugin({
 			filename: 'bundle/[name].css',
+		}),
+		new WorkboxPlugin.InjectManifest({
+			swSrc: srcPath + '/app/sw.js',
+			// globPatterns: [srcPath + '/www/**/*'],
 		}),
 	],
 	externals: {

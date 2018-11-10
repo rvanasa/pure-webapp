@@ -9,6 +9,12 @@ module.exports = function(Config)
 			url: Config.turn.url,
 		},
 		provider: {
+			google: {
+				analytics: Config.provider.google.analytics,
+			},
+			mixpanel: {
+				token: Config.provider.mixpanel.token,
+			},
 			paypal: {
 				env: Config.provider.paypal.env,
 			},
