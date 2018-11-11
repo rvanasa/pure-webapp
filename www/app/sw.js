@@ -1,10 +1,8 @@
 /* global workbox, __precacheManifest */
 
-// TODO generate revision for /profile
-
 // Offline
 workbox.googleAnalytics.initialize();
-workbox.precaching.precacheAndRoute([/*'/index.html', */'/profile', ...__precacheManifest || []]);
+workbox.precaching.precacheAndRoute(__precacheManifest || []);
 
 // Google
 workbox.routing.registerRoute(/^https:\/\/fonts\.googleapis\.com/, workbox.strategies.staleWhileRevalidate({
