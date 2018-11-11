@@ -5,7 +5,7 @@
   "repository": "rvanasa/pure-webapp",
   "author": "Platform Pure",
   "scripts": {
-    "start": "node index"
+    "start": "node index prod"
   },
   "dependencies": {
     "@feathersjs/express": "^1.2.7",
@@ -30,7 +30,6 @@
     "socket.io": "^2.1.1",
     "socket.io-msgpack-parser": "^2.2.0",
     "sorc": "^0.4.0",
-    "spdy": "^3.4.7",
     "stellar-sdk": "^0.11.0",
     "use-strict": "^1.0.1",
     "webpack": "^4.23.1",

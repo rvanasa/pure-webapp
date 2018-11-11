@@ -50,7 +50,6 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 	App.use('/api', API);
 	
 	App.get('/offline', (req, res) => res.render('offline'));
-	// App.get('/', (req, res) => res.render('login'));////
 	App.get('*', AuthMiddleware, (req, res) => res.render('webapp'));
 	
 	this.queue(() =>

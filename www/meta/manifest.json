@@ -1,6 +1,8 @@
 {
 	"name": "Platform Pure",
 	"short_name": "Pure",
+	"lang": "en-US",
+	"description": "We connect students and tutors with shared interests and learning styles to create powerful, memorable learning experiences.",
 	"icons": [{
 		"src": "/assets/img/icon-144.png",
 		"type": "image/png",
@@ -18,5 +20,5 @@
 	"start_url": "/profile",
 	"scope": "/",
 	"background_color": "#343A40",
-	"theme_color": "#343A40"
+	"theme_color": "#F8F9FA"
 }
