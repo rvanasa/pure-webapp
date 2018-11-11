@@ -36,9 +36,10 @@ module.exports = function(Model, Database, MoneyProp, SessionModel)
 	return Model('Transaction')
 		.prop('to', 'User').opt().validate(validateUser('to'), 'Receiver must match reason constraints')
 		.prop('from', 'User').opt().validate(validateUser('from'), 'Sender must match reason constraints')
-		.prop('amount', null, MoneyProp).validate(val => val > 0, '{VALUE} cannot be zero')
+		.prop('amount', null, MoneyProp).validate(val => val > 0, '{VALUE} must be a positive number')
 		.prop('reason', String).enum(...Object.keys(reasons))
 		.prop('data', String).validate(validateData, '{VALUE} is invalid for tx reason')
+		.prop('reverted', Boolean).default(false)
 		.build(Database);
 	
 	function validateUser(key)

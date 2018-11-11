@@ -42,7 +42,7 @@ module.exports = {
 			$ctrl.audioLoaded = false;
 			
 			state = arguments.length > 0 ? !!state : !$ctrl.microphone;
-			$window.localStorage['microphone'] = state;
+			$window.localStorage['session.microphone'] = state;
 			if(!$ctrl.isPausing())
 			{
 				var promise;
@@ -131,7 +131,7 @@ module.exports = {
 			}
 		}
 		
-		if($window.localStorage['microphone'] === 'true')
+		if($window.localStorage['session.microphone'] === 'true')
 		{
 			$ctrl.toggleMicrophone();
 		}

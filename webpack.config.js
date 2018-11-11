@@ -56,7 +56,6 @@ var config = {
 		}),
 		new WorkboxPlugin.InjectManifest({
 			swSrc: srcPath + '/app/sw.js',
-			// globPatterns: [srcPath + '/www/**/*'],
 		}),
 	],
 	externals: {

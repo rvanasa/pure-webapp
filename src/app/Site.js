@@ -34,14 +34,19 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 	Auth.setup(App);
 	Auth.routes(App);
 	
+	App.use((req, res, next) =>
+	{
+		res.locals.user = req.isAuthenticated() ? req.user.toJSON() : null;
+		res.locals.config = ClientConfig;
+		next();
+	});
+	
 	App.use(morgan('dev'));
 	
 	App.use('/api', API);
 	
-	App.get('*', AuthMiddleware, (req, res) => res.render('webapp', {
-		user: req.user.toJSON(),
-		config: ClientConfig,
-	}));
+	// App.get('/', (req, res) => res.render('login'));////
+	App.get('*', AuthMiddleware, (req, res) => res.render('webapp'));
 	
 	this.queue(() =>
 	{
@@ -51,7 +56,6 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 			res.render('error', {
 				error: err,
 				status: res.statusCode,
-				config: ClientConfig,
 			});
 		});
 	});

@@ -15,9 +15,7 @@ module.exports = function(Auth, Config, ClientConfig)
 			req.session.redirectURL = req.originalUrl;
 			if(req.originalUrl === '/')
 			{
-				res.render('login', {
-					config: ClientConfig,
-				});
+				res.render('login');
 			}
 			else
 			{

@@ -5,7 +5,7 @@ module.exports = function(TransactionModel, UserEvents)
 		{
 			var id = user._id || user;
 			var balance = 0;
-			for(var tx of await TransactionModel.find({$or: [{from: user}, {to: user}]}).lean())
+			for(var tx of await TransactionModel.find({$or: [{from: user}, {to: user}], reverted: false}).lean())
 			{
 				if(tx.reason !== 'escrow' && id.equals(tx.to))
 				{

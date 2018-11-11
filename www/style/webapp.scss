@@ -2,9 +2,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import "_common";
 
-// Disabled for landing page
-@import "util/_scrolling";
-
 @keyframes pulse {
 	0% {transform: scale(1)}
 	60% {transform: scale(1.2)}

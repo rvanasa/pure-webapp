@@ -286,7 +286,15 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, QueueService, Fun
 						tx.reason = 'session';
 						if(session.interval)
 						{
-							tx.amount = Math.ceil(tx.amount * Math.min(1, duration / session.interval));
+							var amount = Math.ceil(tx.amount * Math.min(1, duration / session.interval));
+							if(amount > 0)
+							{
+								tx.amount = amount;
+							}
+							else
+							{
+								tx.reverted = true;
+							}
 						}
 						else
 						{

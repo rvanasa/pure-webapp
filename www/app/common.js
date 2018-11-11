@@ -2,7 +2,7 @@ window.jQuery = window.$ = require('jquery');
 
 require('bootstrap');
 
-document.addEventListener('DOMContentLoaded', () => require('aos').init({
+window.$(() => require('aos').init({
 	offset: 60,
 }));
 
