@@ -8,5 +8,5 @@ window.$(() => require('aos').init({
 
 if('serviceWorker' in window.navigator)
 {
-	window.addEventListener('load', () => window.navigator.serviceWorker.register('/sw.js'));
+	window.addEventListener('load', () => window.navigator.serviceWorker.register('/service-worker.js'));
 }

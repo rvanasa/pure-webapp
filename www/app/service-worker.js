@@ -1,8 +1,36 @@
-/* global workbox, __precacheManifest */
+/* global workbox, __precacheManifest, Request, fetch, caches */
 
 // Offline
 workbox.googleAnalytics.initialize();
 workbox.precaching.precacheAndRoute(__precacheManifest || []);
+
+addEventListener('install', event =>
+{
+	var request = new Request('/offline');
+	event.waitUntil(fetch(request)
+		.then(response =>
+		{
+			if(!response.status || response.status === 200)
+			{
+				return caches.open('offline')
+					.then(cache => cache.put(request, response));
+			}
+		}));
+});
+	
+addEventListener('fetch', event =>
+{
+	var request = event.request;
+	if (request.method === 'GET' && request.headers.get('accept').includes('text/html'))
+	{
+		event.respondWith(fetch(request)
+			.catch(error =>
+			{
+				return caches.open('offline')
+					.then(cache => cache.match('/offline'));
+			}));
+	}
+});
 
 // Google
 workbox.routing.registerRoute(/^https:\/\/fonts\.googleapis\.com/, workbox.strategies.staleWhileRevalidate({

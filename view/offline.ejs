@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Offline | Platform Pure</title>
+
+<%- include('common/head.ejs') %>
+
+<link rel="stylesheet" href="/bundle/login.css">
+<script src="/bundle/login.js"></script>
+
+<script>
+setInterval(() =>
+{
+	$.get('/')
+		.then(() =>
+		{
+			if(location.href.endsWith('/offline'))
+			{
+				location.href = '/';
+			}
+			else
+			{
+				location.reload();
+			}
+		}, () => {});
+}, 1000);
+</script>
+
+</head>
+<body>
+	<noscript>This application requires JavaScript.</noscript>
+	<div class="container text-center" style="margin-top:25vh">
+		<h1 class="display-4 text-lowercase text-muted">Platform Pure</h1>
+		<hr>
+		<h2 class="text-thin text-muted">You're currently offline.</h2>
+		<div class="mt-5">
+			<i class="fa fa-circle-notch fa-spin fa-3x fa-fw text-muted" style="opacity:.5"></i>
+		</div>
+	</div>
+</body>
+</html>

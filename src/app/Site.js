@@ -5,6 +5,10 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 {
 	App.set('views', 'view');
 	App.set('view engine', 'ejs');
+	if(this.env != 'dev')
+	{
+		App.set('view cache', true);
+	}
 	
 	var config = Config.server;
 	
@@ -45,6 +49,7 @@ module.exports = function(Logger, App, Auth, API, Config, ClientConfig, AuthMidd
 	
 	App.use('/api', API);
 	
+	App.get('/offline', (req, res) => res.render('offline'));
 	// App.get('/', (req, res) => res.render('login'));////
 	App.get('*', AuthMiddleware, (req, res) => res.render('webapp'));
 	

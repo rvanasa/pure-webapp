@@ -55,7 +55,7 @@ var config = {
 			filename: 'bundle/[name].css',
 		}),
 		new WorkboxPlugin.InjectManifest({
-			swSrc: srcPath + '/app/sw.js',
+			swSrc: srcPath + '/app/service-worker.js',
 		}),
 	],
 	externals: {

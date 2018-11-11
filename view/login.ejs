@@ -48,7 +48,7 @@
 		<div class="bg-dark py-3 text-center">
 			<span class="btn-group">
 				<% for(var icon of config.social.links) { %>
-					<a class="btn btn-light text-primary" href="<%= icon.url %>" target="_blank">
+					<a class="btn btn-light text-primary" href="<%= icon.url %>" target="_blank" rel="noopener">
 						<i class="fab fa-fw fab-color fa-<%= icon.icon %>"></i>
 					</a>
 				<% } %>
@@ -154,7 +154,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 mb-5">
-					<h4 class="text-thin display-4 text-muted text-lowercase text-center">Student</h4>
+					<h4 class="text-thin display-4 text-muted text-center">Student</h4>
 					<hr class="my-4">
 					<ul class="list-group">
 						<li class="list-group-item">
@@ -195,7 +195,7 @@
 					</ul>
 				</div>
 				<div class="col-lg-6 mb-5">
-					<h4 class="text-thin display-4 text-muted text-center text-lowercase text-center">Teacher</h4>
+					<h4 class="text-thin display-4 text-muted text-center">Teacher</h4>
 					<hr class="my-4">
 					<ul class="list-group">
 						<li class="list-group-item">
