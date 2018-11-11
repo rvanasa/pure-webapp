@@ -5,7 +5,7 @@
   "repository": "rvanasa/pure-webapp",
   "author": "Platform Pure",
   "scripts": {
-    "start": "node index prod"
+    "start": "node index"
   },
   "dependencies": {
     "@feathersjs/express": "^1.2.7",
