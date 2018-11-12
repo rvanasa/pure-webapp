@@ -1,4 +1,4 @@
-module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicAPI)
+module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicAPI, ExternalTopicModel)
 {
 	return Endpoint('search')
 		.add('find', async ({user, query}) =>
@@ -15,8 +15,9 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 			var filter = {};
 			if(input)
 			{
-				var regex = new RegExp(input.replace(/\s/g, ''), 'i');
-				filter.name = {$regex: regex};
+				var regex = new RegExp(input.trim().replace(/\s+/g, ''), 'i');
+				var match = {$regex: regex};
+				filter.$or = [{name: match}, {blurb: match}];
 			}
 			if(category)
 			{
@@ -30,7 +31,14 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 				// 	.forEach(u => !user._id.equals(u._id) && online.push(u._id));
 				filter.user = {$in: online};
 			}
-			return (await TopicAPI.find({query, filter, select: {}, options: {}})).reverse();
+			return [
+				...(await TopicAPI.find({query, filter, select: {}, options: {}})).reverse(),
+				...(match ? await ExternalTopicModel.find({$or: filter.$or}).lean().limit(20) : []).map(topic =>
+				{
+					delete topic._id;
+					return topic;
+				}),
+			];
 		})
 		.hooks(Hooks.limit(30))
 		.build(API);

@@ -42,7 +42,10 @@ module.exports = {
 					$ctrl.results = results;
 					for(var topic of results)
 					{
-						TopicService.register(topic);
+						if(topic._id)////
+						{
+							TopicService.register(topic);
+						}
 					}
 				});
 		}
@@ -66,6 +69,11 @@ module.exports = {
 		var params = $location.search();
 		$ctrl.query = params['q'];
 		$ctrl.updateResults();
+		
+		$ctrl.onChangeQuery = function()
+		{
+			$location.search('q', $ctrl.query);
+		}
 		
 		Binder($ctrl).onDestroy(() =>
 		{

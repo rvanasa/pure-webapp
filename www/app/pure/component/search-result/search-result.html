@@ -1,12 +1,11 @@
 <div class="list-hover"
 	ng-class="{selected:$ctrl.selected == $ctrl.topic}"
 	ng-click="$ctrl.selected = $ctrl.topic"
-	ng-dblclick="$ctrl.viewDetails()"
-	on-long-press="$ctrl.viewDetails()">
+	ng-dblclick="$ctrl.viewDetails()">
 	<div class="row no-gutters">
-		<div class="col-8 col-sm-9 col-md-10">
+		<div ng-class="{'col-8 col-sm-9 col-md-10': $ctrl.topic._id}">
 			<user-status class="float-left mr-2" user="$ctrl.topic.user"></user-status>
-			<h5 class="mb-1" line-clamp="1" ng-bind="$ctrl.topic.user.name"></h5>
+			<h5 class="mb-1" line-clamp="1" ng-bind="$ctrl.topic.user.name || $ctrl.topic.userLabel"></h5>
 			<div ng-if="$ctrl.selected != $ctrl.topic">
 				<b line-clamp="1" ng-bind="$ctrl.topic.name"></b>
 			</div>
@@ -15,7 +14,7 @@
 			</div>
 			<topic-rate topic="$ctrl.topic"></topic-rate>
 		</div>
-		<div class="col-4 col-sm-3 col-md-2">
+		<div class="col-4 col-sm-3 col-md-2" ng-if="$ctrl.topic._id">
 			<topic-stats stats="$ctrl.topic.stats" include="['reputation', 'lessons', 'style']"></topic-stats>
 		</div>
 	</div>
@@ -23,23 +22,28 @@
 		<hr class="mb-0">
 		<div class="row">
 			<div class="col-sm-6 col-md-7">
-				<div class="my-2" style="overflow-y:auto; max-height:3em" ng-bind="$ctrl.topic.blurb"></div>
+				<div class="my-2" style="overflow-y:auto; max-height:4.5em" ng-bind="$ctrl.topic.blurb"></div>
 			</div>
 			<div class="col-sm-6 col-md-5">
 				<span class="btn-group mt-sm-3 d-block">
-					<if-owned user="$ctrl.topic.user">
-						<span class="btn btn-outline-success w-100" ng-click="$ctrl.viewDetails()">View Details</span>
-					</if-owned>
-					<if-owned user="$ctrl.topic.user" invert="true">
-						<span class="d-flex">
-							<span class="btn btn-outline-primary w-100" ng-click="$ctrl.viewDetails()">More Details</span>
-							<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">
-								<i class="fa fa-chalkboard mr-1"></i>
-								Start Session
+					<span ng-if="$ctrl.user">
+						<if-owned user="$ctrl.topic._id">
+							<span class="btn btn-outline-success w-100" ng-click="$ctrl.viewDetails()">View Details</span>
+						</if-owned>
+						<if-owned user="$ctrl.topic._id" invert="true">
+							<span class="d-flex">
+								<span class="btn btn-outline-primary w-100" ng-click="$ctrl.viewDetails()">More Details</span>
+								<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">
+									<i class="fa fa-chalkboard mr-1"></i>
+									Start Session
+								</span>
+								<favorite-button topic="$ctrl.topic" ng-if="$ctrl.status($ctrl.topic.user) != 'available'"></favorite-button>
 							</span>
-							<favorite-button topic="$ctrl.topic" ng-if="$ctrl.status($ctrl.topic.user) != 'available'"></favorite-button>
-						</span>
-					</if-owned>
+						</if-owned>
+					</span>
+					<span ng-if="!$ctrl.user">
+						<span class="btn btn-info w-100" ng-click="$ctrl.viewDetails()">View Resource</span>
+					</span>
 				</span>
 			</div>
 		</div>

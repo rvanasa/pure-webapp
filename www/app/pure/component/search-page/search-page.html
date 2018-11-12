@@ -41,6 +41,7 @@
 		</div>
 	</div>
 	<div ng-show="$ctrl.results">
+		<hr class="mt-0">
 		<search-result topic="result" selected="$ctrl.selected" ng-repeat="result in $ctrl.results"></search-result>
 		<div ng-show="!$ctrl.results.length">
 			<hr>

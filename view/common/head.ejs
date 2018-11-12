@@ -83,3 +83,8 @@ gtag('set', {user_id: <%- JSON.stringify(user._id) %>});
 <% } %>
 </script>
 <% } %>
+
+<script>
+var UserData = <%- JSON.stringify(user) %>
+var ClientConfig = <%- JSON.stringify(config) %>
+</script>

@@ -14,11 +14,18 @@ module.exports = {
 		
 		$ctrl.viewDetails = function(requestSession)
 		{
-			if(requestSession)
+			if(!$ctrl.topic._id)
 			{
-				SessionService.request($ctrl.topic);
+				window.open($ctrl.topic.url, '_blank');
 			}
-			$location.path('/topic/' + $ctrl.topic._id);
+			else
+			{
+				if(requestSession)
+				{
+					SessionService.request($ctrl.topic);
+				}
+				$location.path('/topic/' + $ctrl.topic._id);
+			}
 		}
 	}
 };

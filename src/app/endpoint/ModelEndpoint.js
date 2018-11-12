@@ -13,6 +13,7 @@ module.exports = function()
 	{
 		if(!result)
 		{
+			// TODO 404 status
 			throw 'Not found';
 		}
 		return result;

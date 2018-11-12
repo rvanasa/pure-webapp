@@ -15,11 +15,14 @@ module.exports = function StatusService($window, $interval, API, UserService)
 	
 	this.status = function(user)
 	{
-		if(user._id === UserService.user._id)
+		if(!user)
+		{
+			return 'external';
+		}
+		else if(user._id === UserService.user._id)
 		{
 			return 'self';
 		}
-		
 		return user && user.available ? 'available' : 'offline';
 	}
 }

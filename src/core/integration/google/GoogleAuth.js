@@ -4,6 +4,16 @@ var GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 module.exports = function(UserModel, GoogleAccountModel)
 {
+	function getDisplayName(name)
+	{
+		var parts = name.trim().split(' ');
+		if(parts.length >= 2)
+		{
+			parts[parts.length - 1] = parts[parts.length - 1][0].toUpperCase() + '.';
+		}
+		return parts.join(' ');
+	}
+	
 	return function(config)
 	{
 		return new GoogleStrategy({
@@ -33,7 +43,7 @@ module.exports = function(UserModel, GoogleAccountModel)
 			
 			Object.assign(user, {
 				email: user.email || account.email,
-				displayName: user.displayName || profile.displayName,
+				displayName: user.displayName || getDisplayName(profile.displayName),
 				firstName: profile.name.givenName,
 				lastName: profile.name.familyName,
 			});

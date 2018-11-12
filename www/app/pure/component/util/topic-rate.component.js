@@ -10,6 +10,9 @@ module.exports = {
 			<span>Free session</span>
 			<span ng-if="$ctrl.topic.interval > 0">- <span ng-bind="$ctrl.intervalNumber | number"></span> <span ng-bind="$ctrl.intervalWord"></span></span>
 		</span>
+		<span ng-if="!$ctrl.topic._id">
+			<span>Free resource</span>
+		</span>
 	`,
 	bindings: {
 		topic: '<',
