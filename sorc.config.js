@@ -22,5 +22,8 @@ module.exports = {
         include: {
             Config: () => require('./config'),
         },
+    }, {
+        path: '/src/validate',
+        eager: true,
     }],
 };
