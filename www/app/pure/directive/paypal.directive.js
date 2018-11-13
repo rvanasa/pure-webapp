@@ -14,12 +14,9 @@ module.exports = function($timeout, $parse, API, Config, Alert)
 			$attrs.$observe('amount', attr => amount = $scope.$eval(attr));
 			
 			var env = config.env;
-			// var client = {};
-			// client[env] = config.key;
 			
 			paypal.Button.render({
 				env,
-				// client,
 				style: {
 					layout: 'vertical',
 					size:   'responsive',
@@ -27,6 +24,7 @@ module.exports = function($timeout, $parse, API, Config, Alert)
 					color:  'gold',
 				},
 				funding: {
+					allowed: [paypal.FUNDING.VENMO],
 					disallowed: [paypal.FUNDING.CREDIT],
 				},
 				commit: true,
@@ -46,12 +44,6 @@ module.exports = function($timeout, $parse, API, Config, Alert)
 						{
 							$scope.$eval($attrs.callback);
 						});
-					
-					// return actions.payment.execute()
-					// 	.then(payment =>
-					// 	{
-					// 		console.log(payment)////
-					// 	});
 				}
 			}, $elem[0]);
 		},

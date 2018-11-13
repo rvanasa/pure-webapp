@@ -4,6 +4,8 @@ module.exports = function(Config, ExternalTopicModel)
 {
 	var client = khan(Config.provider.khan.key, Config.provider.khan.secret);
 	
+	// ExternalTopicModel.findAndUpdate({}, {category: 'study'})///
+	
 	async function populateTopics()
 	{
 		var fs = require('fs');

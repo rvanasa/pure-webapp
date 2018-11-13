@@ -5,8 +5,20 @@ module.exports = {
 		var $ctrl = this;
 		
 		var RatingAPI = API.service('ratings');
+		var AcceptAPI = API.service('accept');
 		
 		$ctrl.user = UserService.user;
+		
+		if(!$ctrl.user.accepted)
+		{
+			Alert({
+				title: `Welcome to\nPlatform Pure Beta!`,
+				text: `In order to give you the best experience possible, we collect simple statistics about how people prefer to use the site. This can easily be disabled via your Settings page.`,
+				type: 'success',
+			})
+			.then(() => AcceptAPI.create({}))
+			.then(() => $ctrl.user.accepted = true);
+		}
 		
 		$ctrl.pages = PageService;
 		$ctrl.sessions = SessionService;
@@ -21,8 +33,6 @@ module.exports = {
 				$ctrl.prevSession = session;
 			}
 		});
-		
-		
 		
 		$ctrl.leftPage = function()
 		{

@@ -81,5 +81,15 @@ module.exports = {
 		{
 			return $location.path('/fund');
 		}
+		
+		$ctrl.selectLearn = function()
+		{
+			return $location.path('/search');
+		}
+		
+		$ctrl.selectTeach = function()
+		{
+			return $location.path('/edit');
+		}
 	}
 };

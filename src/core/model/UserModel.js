@@ -12,5 +12,6 @@ module.exports = function(Model, Database, EmailProp)
 		.prop('favorites', 'Topic').array()
 		.prop('lastOnline', Date).default(Date.now)
 		.prop('available', Boolean).default(false)
+		.prop('accepted', Boolean).default(false)
 		.build(Database);
 }

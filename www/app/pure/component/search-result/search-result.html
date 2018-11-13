@@ -26,11 +26,11 @@
 			</div>
 			<div class="col-sm-6 col-md-5">
 				<span class="btn-group mt-sm-3 d-block">
-					<span ng-if="$ctrl.user">
-						<if-owned user="$ctrl.topic._id">
+					<span ng-if="$ctrl.topic._id">
+						<if-owned user="$ctrl.topic.user">
 							<span class="btn btn-outline-success w-100" ng-click="$ctrl.viewDetails()">View Details</span>
 						</if-owned>
-						<if-owned user="$ctrl.topic._id" invert="true">
+						<if-owned user="$ctrl.topic.user" invert="true">
 							<span class="d-flex">
 								<span class="btn btn-outline-primary w-100" ng-click="$ctrl.viewDetails()">More Details</span>
 								<span class="btn btn-primary w-100" ng-if="$ctrl.status($ctrl.topic.user) == 'available'" ng-click="$ctrl.viewDetails(true)">
@@ -41,7 +41,7 @@
 							</span>
 						</if-owned>
 					</span>
-					<span ng-if="!$ctrl.user">
+					<span ng-if="!$ctrl.topic._id">
 						<span class="btn btn-info w-100" ng-click="$ctrl.viewDetails()">View Resource</span>
 					</span>
 				</span>
