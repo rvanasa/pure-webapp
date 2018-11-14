@@ -23,11 +23,11 @@ module.exports = function(TransactionModel, UserEvents)
 			await TransactionModel.create(tx);
 			if(tx.to)
 			{
-				UserEvents.emit(tx.to._id || tx.to, 'wallet.receive', {from: tx.from._id || tx.from, amount: tx.amount});
+				UserEvents.emit(tx.to._id || tx.to, 'wallet.receive', {from: tx.from && tx.from._id || tx.from, amount: tx.amount});
 			}
 			if(tx.from)
 			{
-				UserEvents.emit(tx.from._id || tx.from, 'wallet.send', {to: tx.to._id || tx.to, amount: tx.amount});
+				UserEvents.emit(tx.from._id || tx.from, 'wallet.send', {to: tx.to && tx.to._id || tx.to, amount: tx.amount});
 			}
 		},
 	};

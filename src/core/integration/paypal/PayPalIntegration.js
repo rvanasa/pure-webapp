@@ -47,7 +47,6 @@ module.exports = function(Logger, Config)
 		{
 			return loadProfile().then(profile => new Promise((resolve, reject) =>
 			{
-				console.log(profile)
 				payment.experience_profile_id = profile.id;
 				paypal.payment.create(payment, (err, payment) => err ? reject(err) : resolve(payment));
 			}));
