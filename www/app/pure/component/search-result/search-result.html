@@ -5,6 +5,8 @@
 	<div class="row no-gutters">
 		<div ng-class="{'col-8 col-sm-9 col-md-10': $ctrl.topic._id}">
 			<user-status class="float-left mr-2" user="$ctrl.topic.user"></user-status>
+			<span class="badge badge-pill badge-brand float-right mt-1" ng-if="$ctrl.sharedInterests.length" ng-bind="$ctrl.sharedInterests.length+'+'"></span>
+			<small class="float-right" ng-if="$ctrl.topic.user.badges.length"><user-badge class="mx-1" badge="$ctrl.topic.user.badges[$ctrl.topic.user.badges.length - 1]"></user-badge></small>
 			<h5 class="mb-1" line-clamp="1" ng-bind="$ctrl.topic.user.name || $ctrl.topic.userLabel"></h5>
 			<div ng-if="$ctrl.selected != $ctrl.topic">
 				<b line-clamp="1" ng-bind="$ctrl.topic.name"></b>
@@ -22,6 +24,7 @@
 		<hr class="mb-0">
 		<div class="row">
 			<div class="col-sm-6 col-md-7">
+				<interest-tag interest="interest" ng-repeat="interest in $ctrl.sharedInterests"></interest-tag>
 				<div class="my-2" style="overflow-y:auto; max-height:4.5em" ng-bind="$ctrl.topic.blurb"></div>
 			</div>
 			<div class="col-sm-6 col-md-5">

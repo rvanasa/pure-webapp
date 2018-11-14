@@ -19,7 +19,7 @@ module.exports = function Alert()
 	{
 		return function(title, text, type)
 		{
-			return alert(arguments.length <= 1 ? title : {
+			return alert.queue(arguments.length <= 1 ? title : {
 				titleText: title,
 				text,
 				type,

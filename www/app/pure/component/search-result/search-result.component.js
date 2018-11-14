@@ -4,13 +4,21 @@ module.exports = {
 		topic: '<',
 		selected: '=',
 	},
-	controller: function($location, SessionService, StatusService)
+	controller: function($scope, $location, UserService, SessionService, StatusService)
 	{
 		var $ctrl = this;
 		
 		$ctrl.sessions = SessionService;
 		
 		$ctrl.status = StatusService.status;
+		
+		$scope.$watch('$ctrl.topic', topic =>
+		{
+			if(topic._id && topic.user._id !== UserService.user._id)
+			{
+				$ctrl.sharedInterests = topic.user.interests.filter(interest => UserService.user.interests.includes(interest));
+			}
+		});
 		
 		$ctrl.viewDetails = function(requestSession)
 		{

@@ -42,15 +42,14 @@ module.exports = function BadgeService($timeout, $compile, $rootScope, QueueServ
 					Alert({
 						titleText: `You received a badge!`,
 						html: elem.html(),
-						// type: 'success',
 						showCancelButton: true,
 						confirmButtonText: `Add to Profile`,
 						cancelButtonText: `Done`,
 					})
 					.then(result =>
 					{
-						var enabled = result.dismiss === 'confirm';
-						return AwardsAPI.patch(badge._id, {enabled: result.dismiss === 'confirm'})
+						var enabled = result.value;
+						return AwardsAPI.patch(badge._id, {enabled})
 							.then(() =>
 							{
 								if(enabled)
