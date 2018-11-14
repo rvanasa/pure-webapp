@@ -18,6 +18,7 @@ git reset HEAD~1
 
 rm -f config.json
 rm -rf dist
+date
 
 ##  Helpful for testing:  ##
 # git add . && git commit --amend --no-edit && git push heroku master --force && heroku logs -t
