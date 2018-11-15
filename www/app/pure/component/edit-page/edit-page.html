@@ -9,7 +9,7 @@
 					</div>
 					<div class="container" uib-collapse="!($ctrl.showSuggestions && $ctrl.suggestions.length)">
 						<ul class="list-group" style="overflow-y:scroll; max-height:10em">
-							<li class="list-group-item p-2 bg-light text-muted">Existing topics:</li>
+							<li class="list-group-item p-2 bg-light text-muted noselect">Existing topics:</li>
 							<li class="list-group-item p-2 list-hover clickable" ng-repeat="suggestion in $ctrl.suggestions" ng-bind="suggestion.name" ng-click="$ctrl.topic.name = suggestion.name"></li>
 						</ul>
 					</div>

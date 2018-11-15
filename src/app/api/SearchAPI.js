@@ -31,6 +31,10 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 				// 	.forEach(u => !user._id.equals(u._id) && online.push(u._id));
 				filter.user = {$in: online};
 			}
+			if(flags.includes('n') && filter.$or)
+			{
+				filter.$or.length = 1;
+			}
 			return [
 				...(await TopicAPI.find({query, filter: Object.assign({}, filter), select: {}, options: {}})).reverse(),
 				...(filter.user ? [] : (await ExternalTopicModel.find(filter).lean().limit(20))

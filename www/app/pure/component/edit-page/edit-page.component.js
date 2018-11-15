@@ -33,7 +33,7 @@ module.exports = {
 				return $ctrl.suggestions = null;
 			}
 			
-			return TopicService.search({q: $ctrl.topic.name})
+			return TopicService.search({q: $ctrl.topic.name, f: 'n'})
 				.then(results =>
 				{
 					// results.unshift($ctrl.topic);
