@@ -11,12 +11,11 @@ module.exports = function()
 	
 	function ensureResult(result)
 	{
-		if(!result)
-		{
-			// TODO 404 status
-			throw 'Not found';
-		}
-		return result;
+		// if(!result)
+		// {
+		// 	throw 'Not found';
+		// }
+		return result || undefined;
 	}
 	
 	return (Model) => ({

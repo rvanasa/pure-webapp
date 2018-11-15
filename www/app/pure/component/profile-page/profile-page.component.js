@@ -9,8 +9,8 @@ module.exports = {
 		$ctrl.interests = InterestService;
 		
 		$ctrl.user = UserService.user;
-		WalletService.getWallet()
-			.then(wallet => $ctrl.wallet = wallet);
+		$ctrl.wallet = WalletService.wallet;
+		WalletService.fetchWallet();
 		
 		$ctrl.index = 0;
 		

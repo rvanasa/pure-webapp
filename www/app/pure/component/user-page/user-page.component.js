@@ -1,10 +1,18 @@
 module.exports = {
 	template: require('./user-page.html'),
-	controller: function($routeParams, $location, PageService, UserService, TopicService)
+	controller: function($routeParams, $location, API, PageService, UserService, TopicService, WalletService)
 	{
 		var $ctrl = this;
 		
+		var StatsAPI = API.service('stats');//TODO StatsService
+		
 		PageService.info = () => $ctrl.user && ($ctrl.user.name || $ctrl.user.displayName);
+		
+		$ctrl.wallet = WalletService.wallet;
+		WalletService.fetchWallet();
+		
+		StatsAPI.get('teacher')
+			.then(result => $ctrl.stats = result);
 		
 		var id = $routeParams.id;
 		if(id)
@@ -18,14 +26,7 @@ module.exports = {
 		}
 		
 		TopicService.findByUser(id || $ctrl.user._id)
-			.then(results =>
-			{
-				$ctrl.topics = results;
-				// if(!results.length)
-				// {
-				// 	$ctrl.startNewTopic();
-				// }
-			});
+			.then(results => $ctrl.topics = results);
 		
 		$ctrl.startNewTopic = function(fields)
 		{

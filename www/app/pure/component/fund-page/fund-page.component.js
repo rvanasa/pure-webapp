@@ -4,12 +4,8 @@ module.exports = {
 	{
 		var $ctrl = this;
 		
-		var loadPromise = Promise.all([ExchangeService.getBuyRate(), WalletService.getWallet()])
-			.then(([rate, wallet]) =>
-			{
-				$ctrl.rate = rate;
-				$ctrl.wallet = wallet;
-			});
+		var loadPromise = ExchangeService.getBuyRate()
+			.then(([rate]) => $ctrl.rate = rate);
 		
 		$ctrl.amounts = [10, 25, 150];
 		
@@ -23,10 +19,10 @@ module.exports = {
 		if(id)
 		{
 			TopicService.get(id)
-				.then(topic => loadPromise.then(() =>
+				.then(topic => Promise.all([WalletService.update(), loadPromise]).then(([wallet]) =>
 				{
 					$ctrl.topic = topic;
-					$ctrl.amount.fiat = Math.round(Math.max(minFiat, (topic.rate - $ctrl.wallet.balance) / $ctrl.rate) * 100) / 100;
+					$ctrl.amount.fiat = Math.round(Math.max(minFiat, (topic.rate - wallet.balance) / $ctrl.rate) * 100) / 100;
 					$ctrl.amount.token = Math.round($ctrl.amount.fiat * $ctrl.rate);
 				}));
 		}

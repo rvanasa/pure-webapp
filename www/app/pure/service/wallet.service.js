@@ -11,17 +11,17 @@ module.exports = function WalletService(API, Socket, Alert)
 		Alert.toast(`Sent ${amount} XP`, null, 'success');
 	});
 	
-	this.getWallet = function()
+	this.wallet = {};
+	
+	this.fetchWallet = function()
 	{
-		return WalletAPI.get('primary');
+		return WalletAPI.get('primary')
+			.then(result => Object.assign(this.wallet, result));
 	}
 	
 	this.checkFundsForTopic = function(topic)
 	{
-		return this.getWallet()
-			.then(wallet =>
-			{
-				return wallet.balance >= topic.rate;
-			});
+		return this.fetchWallet()
+			.then(wallet => wallet.balance >= topic.rate);
 	}
 }

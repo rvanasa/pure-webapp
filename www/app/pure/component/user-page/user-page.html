@@ -1,10 +1,10 @@
-<!--<if-owned user="$ctrl.user">-->
-<!--	<div class="bg-light">-->
-<!--		<div class="container pb-2">-->
-<!--			<span class="btn btn-outline-success bg-white text-success btn-lg d-block" ng-click="$ctrl.startNewTopic()">Teach a new topic</span>-->
-<!--		</div>-->
-<!--	</div>-->
-<!--</if-owned>-->
+<if-owned user="$ctrl.user">
+	<div class="bg-light">
+		<div class="container pb-2">
+			<h5 class="text-brand">My total earnings: <xp-label amount="$ctrl.stats.earnings"></xp-label></h5>
+		</div>
+	</div>
+</if-owned>
 <if-owned user="$ctrl.user" invert="true">
 	<div class="container">
 		<h2 class="mt-2" ng-bind="$ctrl.user.name"></h2>
