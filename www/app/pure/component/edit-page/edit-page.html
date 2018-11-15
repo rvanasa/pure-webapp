@@ -14,7 +14,7 @@
 						</ul>
 					</div>
 					<div class="d-flex flex-row mt-2">
-						<label class="text-label mt-2">This is a</label>
+						<label class="text-label mt-2">This is a<span ng-if="'AEIOU'.includes($ctrl.topic.category[0].toUpperCase())">n</span></label>
 						<div class="mx-2">
 							<select class="form-control" ng-model="$ctrl.topic.category" ng-options="category.id as category.name for category in $ctrl.categories"></select>
 						</div>

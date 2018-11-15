@@ -15,7 +15,7 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 			var filter = {};
 			if(input)
 			{
-				var regex = new RegExp(`(^|[^a-zA-Z0-9])${input.trim().replace(/\s+/g, ' ')}`, 'i');
+				var regex = new RegExp(`(^|[^a-zA-Z0-9])${input.trim().replace(/\s+/g, ' ').replace(/[.*+?^${}()|[\]\\]/g, '\\s*')}`, 'i');
 				var match = {$regex: regex};
 				filter.$or = [{name: match}, {blurb: match}];
 			}

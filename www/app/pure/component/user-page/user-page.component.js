@@ -4,7 +4,7 @@ module.exports = {
 	{
 		var $ctrl = this;
 		
-		var StatsAPI = API.service('stats');//TODO StatsService
+		var StatsAPI = API.service('stats');//TODO combine with topic list API call
 		
 		PageService.info = () => $ctrl.user && ($ctrl.user.name || $ctrl.user.displayName);
 		
