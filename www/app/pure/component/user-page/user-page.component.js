@@ -21,10 +21,10 @@ module.exports = {
 			.then(results =>
 			{
 				$ctrl.topics = results;
-				if(!results.length)
-				{
-					$ctrl.startNewTopic();
-				}
+				// if(!results.length)
+				// {
+				// 	$ctrl.startNewTopic();
+				// }
 			});
 		
 		$ctrl.startNewTopic = function(fields)

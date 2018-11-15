@@ -1,16 +1,14 @@
 module.exports = {
 	template: require('./search-page.html'),
-	controller: function($location, $routeParams, Binder, API, PageService, CategoryService, TopicService, FavoriteService)
+	controller: function($location, $routeParams, Binder, PageService, CategoryService, TopicService, FavoriteService)
 	{
 		var $ctrl = this;
 		
 		// PageService.info = () => $ctrl.category && $ctrl.category.name;
 		
-		var SearchAPI = API.service('search');
-		
 		$ctrl.categories = CategoryService.categories;
 		
-		SearchAPI.find({query: {f: 'a'}})
+		TopicService.search({f: 'a'})
 			.then(results => $ctrl.availableTopics = results);
 		
 		FavoriteService.request()
@@ -36,13 +34,13 @@ module.exports = {
 			{
 				params['c'] = $ctrl.category.id;
 			}
-			return SearchAPI.find({query: params})
+			return TopicService.search(params)
 				.then(results =>
 				{
 					$ctrl.results = results;
 					for(var topic of results)
 					{
-						if(topic._id)////
+						if(topic._id)
 						{
 							TopicService.register(topic);
 						}

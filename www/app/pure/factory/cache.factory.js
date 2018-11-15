@@ -2,8 +2,13 @@ module.exports = function Cache()
 {
 	return (find, onRegister) => ({
 		cache: {},
-		get(id)
+		get(id, refresh)
 		{
+			if(refresh)
+			{
+				delete this.cache[id];
+			}
+			
 			if(this.cache.hasOwnProperty(id))
 			{
 				return this.cache[id];

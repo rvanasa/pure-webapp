@@ -6,14 +6,12 @@ module.exports = {
 		
 		PageService.info = () => $ctrl.topic && $ctrl.topic.name;
 		
-		var TopicAPI = API.service('topics');
-		
 		$ctrl.categories = CategoryService.categories;
 		
 		var id = $routeParams.id;
 		if(id)
 		{
-			TopicAPI.get(id)
+			TopicService.get(id, true)
 				.then(topic => $ctrl.topic = topic)
 				.then(topic => TopicService.register(topic));
 		}
@@ -25,6 +23,22 @@ module.exports = {
 				rate: 0,
 				interval: 60,
 			};
+		}
+		
+		$ctrl.suggestions = null;
+		$ctrl.updateSuggestions = function()
+		{
+			if(!$ctrl.topic.name)
+			{
+				return $ctrl.suggestions = null;
+			}
+			
+			return TopicService.search({q: $ctrl.topic.name})
+				.then(results =>
+				{
+					// results.unshift($ctrl.topic);
+					$ctrl.suggestions = results;
+				});
 		}
 		
 		var savePromise;

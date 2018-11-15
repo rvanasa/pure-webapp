@@ -1,6 +1,7 @@
 module.exports = function TopicService(API, Cache, UserService)
 {
 	var TopicAPI = API.service('topics');
+	var SearchAPI = API.service('search');
 	
 	Object.assign(this, Cache(
 		id => TopicAPI.get(id),
@@ -8,6 +9,11 @@ module.exports = function TopicService(API, Cache, UserService)
 	));
 	
 	var userCache = Cache(id => TopicAPI.find({query: {user: id}}));
+	
+	this.search = function(query)
+	{
+		return SearchAPI.find({query});
+	}
 	
 	this.findByUser = function(id)
 	{

@@ -32,12 +32,13 @@ module.exports = function(API, Endpoint, ModelEndpoint, Hooks, UserModel, TopicA
 				filter.user = {$in: online};
 			}
 			return [
-				...(await TopicAPI.find({query, filter, select: {}, options: {}})).reverse(),
-				...(match ? await ExternalTopicModel.find({$or: filter.$or}).lean().limit(20) : []).map(topic =>
-				{
-					delete topic._id;
-					return topic;
-				}),
+				...(await TopicAPI.find({query, filter: Object.assign({}, filter), select: {}, options: {}})).reverse(),
+				...(filter.user ? [] : (await ExternalTopicModel.find(filter).lean().limit(20))
+					.map(topic =>
+					{
+						delete topic._id;
+						return topic;
+					})),
 			];
 		})
 		.hooks(Hooks.limit(30))
