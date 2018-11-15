@@ -33,7 +33,7 @@ module.exports = function(Logger, API, Endpoint, ModelEndpoint, Hooks, UserModel
 					throw `Please double-check your birth year.`;
 				}
 			}
-			else
+			else if(key !== 'tracking' && key !== 'newsletter')
 			{
 				throw `Invalid key: ${key}`;
 			}

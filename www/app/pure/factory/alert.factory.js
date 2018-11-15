@@ -15,19 +15,31 @@ module.exports = function Alert()
 		timer: 3000,
 	});
 	
-	function showAlert(alert)
+	function showAlert(alert, waitForPrior)
 	{
-		return function(title, text, type)
+		if(!waitForPrior)
 		{
-			return alert.queue(arguments.length <= 1 ? title : {
+			return handle;
+		}
+		
+		var alertPromise = Promise.resolve();
+		return function()
+		{
+			return alertPromise
+				.then(() => alertPromise = handle.apply(this, arguments));
+		}
+		
+		function handle(title, text, type)
+		{
+			alert(arguments.length <= 1 ? title : {
 				titleText: title,
 				text,
 				type,
-			});
+			})
 		}
 	}
 	
-	var Alert = showAlert(mainAlert);
+	var Alert = showAlert(mainAlert, true);
 	Alert.toast = showAlert(toastAlert);
 	
 	return Alert;

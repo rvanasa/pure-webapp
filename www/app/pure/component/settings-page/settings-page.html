@@ -19,5 +19,27 @@
 				ng-focus="$ctrl.focus()"
 				ng-blur="$ctrl.update('birthdate')">
 		</div>
+		<hr class="my-3">
+		<p>We are very respectful with information that you share with us while using Platform Pure. However, you can choose to disable these features if desired.</p>
+		<div class="form-check my-2">
+			<input type="checkbox"
+				id="tracking-toggle"
+				class="form-check-input"
+				ng-model="$ctrl.user.tracking"
+				ng-true-value="false"
+				ng-false-value="true"
+				ng-change="$ctrl.update('tracking')">
+			<label class="form-check-label text-muted" for="tracking-toggle">Opt out of user analytics</label>
+		</div>
+		<div class="form-check my-2">
+			<input type="checkbox"
+				id="newsletter-toggle"
+				class="form-check-input"
+				ng-model="$ctrl.user.newsletter"
+				ng-true-value="false"
+				ng-false-value="true"
+				ng-change="$ctrl.update('newsletter')">
+			<label class="form-check-label text-muted" for="newsletter-toggle">Opt out of monthly newsletter</label>
+		</div>
 	</form>
 </div>
